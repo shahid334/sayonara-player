@@ -400,30 +400,7 @@ void Application::setFiles2Play(const QStringList& filelist) {
 
 QString Application::getVersion() {
 
-    ifstream istr;
-    QString version_file = Helper::getSharePath() + "VERSION";
-
-    istr.open(version_file.toUtf8()  );
-    if(!istr || !istr.is_open() ) return "0.6";
-
-    QMap<QString, int> map;
-
-    while(istr.good()) {
-        string type;
-        int version;
-        istr >> type >> version;
-        if(type.size() > 0)
-            qDebug() << type.c_str() << ": " << version;
-
-        map[QString(type.c_str())] = version;
-    }
-
-    istr.close();
-
-    QString version_str = QString::number(map["MAJOR"]) + "." +
-            QString::number(map["MINOR"]) + "." +
-            QString::number(map["SUBMINOR"]) + " r" + QString::number(map["BUILD"]);
-    return version_str;
+   return QString(SAYONARA_VERSION) + "-" + QDate::currentDate().toString("yyMMdd");
 }
 
 QMainWindow* Application::getMainWindow() {
