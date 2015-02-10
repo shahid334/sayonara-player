@@ -43,59 +43,6 @@
     </message>
 </context>
 <context>
-    <name>AlternateCovers</name>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="213"/>
-        <source>Search alternative image</source>
-        <translation>Пошук альтернативних обкладинок</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="221"/>
-        <source>Close</source>
-        <translation>Закрити</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="222"/>
-        <source>Save</source>
-        <translation>Зберегти</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="215"/>
-        <source>Search</source>
-        <translation>Пошук</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="216"/>
-        <source>...</source>
-        <translation>...</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="217"/>
-        <source>Online search</source>
-        <translation>Пошук онлайн</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="218"/>
-        <source>Local search</source>
-        <translation>Локальний пошук</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="219"/>
-        <source>Select and preview multiple covers</source>
-        <translation>Вибір та попередній перегляд обкладинок</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="223"/>
-        <source>Alternative Cover</source>
-        <translation>Альтернативна обкладинка</translation>
-    </message>
-    <message>
-        <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="224"/>
-        <source>for</source>
-        <translation>для</translation>
-    </message>
-</context>
-<context>
     <name>AlternativeCovers</name>
     <message>
         <location filename="../GUI/AlternativeCovers/GUI_AlternativeCovers.ui" line="14"/>
@@ -962,22 +909,22 @@
         <translation>Не вдається ввійти у Last.fm</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="528"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="522"/>
         <source>Ctrl+P</source>
         <translation>Ctrl+P</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="539"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="533"/>
         <source>Ctrl+L</source>
         <translation>Ctrl+L</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="775"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="769"/>
         <source>Info</source>
         <translation>Інформація</translation>
     </message>
     <message>
-        <location filename="../GUI/player/GUI_Player.cpp" line="776"/>
+        <location filename="../GUI/player/GUI_Player.cpp" line="770"/>
         <source>A new version is available!</source>
         <translation>Доступна нова версія!</translation>
     </message>
@@ -1251,12 +1198,14 @@ Playlists</source>
     <name>GUI_SetLibrary</name>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="48"/>
+        <location filename="../GUI/library/ui_GUI_LibraryPath.h" line="97"/>
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="97"/>
         <source>You haven&apos;t specified a library path yet</source>
         <translation>Ви ще не вказали шлях до бібліотеки</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_LibraryPath.ui" line="73"/>
+        <location filename="../GUI/library/ui_GUI_LibraryPath.h" line="98"/>
         <location filename="../GUI/ui_GUI_LibraryPath.h" line="98"/>
         <source>Set library path</source>
         <translation>Вказати шлях до бібліотеки</translation>
@@ -1985,54 +1934,63 @@ Please choose another folder</source>
     <name>ImportFolder</name>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="14"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="240"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="240"/>
         <source>Dialog</source>
         <translation>Діалог</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="180"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="247"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="247"/>
         <source>Copy tracks to library</source>
         <translation>Копіювати треки в бібліотеку</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="127"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="243"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="243"/>
         <source>Import tracks to library</source>
         <translation>Імпортувати треки в бібліотеку</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="86"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="242"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="242"/>
         <source>Select target folder</source>
         <translation>Вибрати каталог</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="31"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="250"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="250"/>
         <source>Import</source>
         <translation>Імпорт</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="145"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="244"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="244"/>
         <source>Cancel</source>
         <translation>Відмінити</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="161"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="245"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="245"/>
         <source>OK</source>
         <translation>ОК</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="170"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="246"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="246"/>
         <source>/music/library</source>
         <translation>/музика/бібліотека</translation>
     </message>
     <message>
         <location filename="../GUI/library/ImportFolderDialog/GUI_ImportFolder.ui" line="235"/>
+        <location filename="../GUI/library/ui_GUI_ImportFolder.h" line="248"/>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="248"/>
         <source>...</source>
         <translation>...</translation>
@@ -2146,48 +2104,56 @@ Please choose another folder</source>
     <name>Library_Info_Box</name>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="14"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="159"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="159"/>
         <source>Info</source>
         <translation>Інформація</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="40"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="162"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="162"/>
         <source>LastFM Playcount</source>
         <translation>Програшів на Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="53"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="163"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="163"/>
         <source>Artists</source>
         <translation>Виконавці</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="80"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="166"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="166"/>
         <source>Tracks</source>
         <translation>Треки</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="93"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="167"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="167"/>
         <source>Duration</source>
         <translation>Тривалість</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="106"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="168"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="168"/>
         <source>Albums</source>
         <translation>Альбоми</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="157"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="171"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="171"/>
         <source>Filesize</source>
         <translation>Розмір файла</translation>
     </message>
     <message>
         <location filename="../GUI/library/InfoBox/GUI_Library_Info_Box.ui" line="198"/>
+        <location filename="../GUI/library/ui_GUI_Library_Info_Box.h" line="173"/>
         <location filename="../GUI/ui_GUI_Library_Info_Box.h" line="173"/>
         <source>Close</source>
         <translation>Закрити</translation>
@@ -2197,51 +2163,64 @@ Please choose another folder</source>
     <name>Library_windowed</name>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="26"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="257"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="246"/>
         <source>Library</source>
         <translation>Бібліотека</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="305"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="265"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="254"/>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
         <translation>Комбінація клавіш:&lt;br /&gt;Пошук &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Жанр &lt;span style=&quot; font-weight:600;&quot;&gt;g:&lt;br /&gt;&lt;/span&gt;Шлях &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="318"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="260"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="249"/>
         <source>Search</source>
         <translation>Пошук</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="323"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="261"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="250"/>
         <source>Genre</source>
         <translation>Жанр</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="328"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="262"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="251"/>
         <source>Path</source>
         <translation>Шлях</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="351"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="268"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="257"/>
         <source>Search for title, interprets and albums</source>
         <translation>Пошук за назвами,виконавцями та альбомами</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="373"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="271"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="260"/>
         <source>Show all interprets, albums, tracks</source>
         <translation>Показати всі альбоми, треки та виконавців</translation>
     </message>
     <message>
         <location filename="../GUI/library/GUI_Library_windowed.ui" line="451"/>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="278"/>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="266"/>
         <source>Information</source>
         <translation>Інформація</translation>
+    </message>
+    <message>
+        <location filename="../GUI/library/ui_GUI_Library_windowed.h" line="275"/>
+        <source>Music Library  </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2539,276 +2518,276 @@ Please choose another folder</source>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="35"/>
         <location filename="../GUI/player/GUI_Player.ui" line="839"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="783"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="833"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="776"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="826"/>
         <source>Sayonara Player</source>
         <translation>Sayonara Player</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1156"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="838"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="831"/>
         <source>Correct Metadata</source>
         <translation>Виправити метадані</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1014"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="835"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="828"/>
         <source>Written by Lucio Carreras</source>
         <translation>Автор Lucio Carreras</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="600"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="829"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="822"/>
         <source>Ctrl+S</source>
         <translation>Ctrl+S</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1100"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="836"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="829"/>
         <source>Copyright 2011-2013</source>
         <translation>Copyright 2011-2013</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1193"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="841"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="834"/>
         <source>File</source>
         <translation>Файл</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1210"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="842"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="835"/>
         <source>View</source>
         <translation>Вигляд</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1221"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="843"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="836"/>
         <source>Preferences</source>
         <translation>Налаштування</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1241"/>
         <location filename="../GUI/player/GUI_Player.ui" line="1365"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="803"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="844"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="796"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="837"/>
         <source>Help</source>
         <translation>Допомога</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1253"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="784"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="777"/>
         <source>Open File</source>
         <translation>Відкрити файл</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1258"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="785"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="778"/>
         <source>Open Folder</source>
         <translation>Відкрити каталог</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1263"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="786"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="779"/>
         <source>Close</source>
         <translation>Закрити</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1274"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="787"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="780"/>
         <source>Equalizer</source>
         <translation>Еквалайзер</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1285"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="788"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="781"/>
         <source>Dark</source>
         <translation>Темний інтерфейс</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1294"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="789"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="782"/>
         <source>Last.fm</source>
         <translation>Last.fm</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1299"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="790"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="783"/>
         <source>Reload Library</source>
         <translation>Перезавантажити бібліотеку</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1304"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="791"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="784"/>
         <source>Clear Library</source>
         <translation>Очистити бібліотеку</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1309"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="792"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="785"/>
         <source>Library Path</source>
         <translation>Шлях до бібліотеки</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1314"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="793"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="786"/>
         <source>Fetch all covers</source>
         <translation>Завантажити всі обкладинки</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1322"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="794"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="787"/>
         <source>Radio</source>
         <translation>Радіо</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1336"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="796"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="789"/>
         <source>Start up</source>
         <translation>Налаштування запуску</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1339"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="798"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="791"/>
         <source>Load playlist on startup</source>
         <translation>Завантажити плейлист при запуску</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1344"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="800"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="793"/>
         <source>Import Folder</source>
         <translation>Імпорт каталога</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1349"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="801"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="794"/>
         <source>Import Files</source>
         <translation>Імпорт файлів</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1357"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="802"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="795"/>
         <source>Playlist Chooser</source>
         <translation>Вибір плейлиста</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1370"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="804"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="797"/>
         <source>About</source>
         <translation>Про Saoynara</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1381"/>
         <location filename="../GUI/player/GUI_Player.ui" line="1489"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="805"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="820"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="798"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="813"/>
         <source>Notifications</source>
         <translation>Повідомлення</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1386"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="806"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="799"/>
         <source>Open Stream</source>
         <translation>Відкрити потік</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1397"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="807"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="800"/>
         <source>&amp;Library</source>
         <translation>&amp;Бібліотека</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1408"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="808"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="801"/>
         <source>Close to tray</source>
         <translation>Згорнути в лоток</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1416"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="809"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="802"/>
         <source>Only one instance</source>
         <translation>Тільки один екземпляр</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1424"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="810"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="803"/>
         <source>Fullscreen </source>
         <translation>Повний екран</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1432"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="811"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="804"/>
         <source>Small Playlist Items</source>
         <translation>Компактні елементи в плейлисті</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1440"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="812"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="805"/>
         <source>Only tracks in library</source>
         <translation>Тільки треки з бібліотеки</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1445"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="813"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="806"/>
         <source>Sound Engine</source>
         <translation>Звуковий рушій</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1450"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="814"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="807"/>
         <source>Gstreamer</source>
         <translation>Gstreamer</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1455"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="815"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="808"/>
         <source>Phonon</source>
         <translation>Phonon</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1463"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="816"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="809"/>
         <source>Stream recorder</source>
         <translation>Запис потоку</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1468"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="817"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="810"/>
         <source>Set Streamripper Path</source>
         <translation>Задати шлях для запису потоку</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1476"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="818"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="811"/>
         <source>Stream</source>
         <translation>Потік</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1484"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="819"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="812"/>
         <source>Socket connection</source>
         <translation>З&apos;єднання через сокет</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1497"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="821"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="814"/>
         <source>Podcasts</source>
         <translation>Подкасти</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1508"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="822"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="815"/>
         <source>Library live search</source>
         <translation>Живий пошук в бібліотеці</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1519"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="823"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="816"/>
         <source>Update notifier</source>
         <translation>Повідомлення про нову версію</translation>
     </message>
     <message>
         <location filename="../GUI/player/GUI_Player.ui" line="1524"/>
-        <location filename="../GUI/ui_GUI_Player.h" line="824"/>
+        <location filename="../GUI/ui_GUI_Player.h" line="817"/>
         <source>Language</source>
         <translation>Мова</translation>
     </message>

@@ -5,49 +5,49 @@
     <name>AbstractLibrary</name>
     <message>
         <source>entries</source>
-        <translation type="unfinished">Einträge</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>files</source>
-        <translation type="unfinished">Fájl</translation>
+        <translation>Fájl</translation>
     </message>
     <message>
         <source>All %1 could be removed</source>
-        <translation type="unfinished">Alle %1 konnten gelöscht werden</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>%1 of %2 %3 could not be removed</source>
-        <translation type="unfinished">%1 von %2 %3n konnten nicht gelöscht werden</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>AlbumInfo</name>
     <message>
         <source>yes</source>
-        <translation type="unfinished">igen</translation>
+        <translation>igen</translation>
     </message>
     <message>
         <source>no</source>
-        <translation type="unfinished">nem</translation>
+        <translation>nem</translation>
     </message>
     <message>
         <source>by</source>
-        <translation type="unfinished">által</translation>
+        <translation>által</translation>
     </message>
 </context>
 <context>
-    <name>AlternateCovers</name>
+    <name>AlternativeCovers</name>
+    <message>
+        <source>Search alternative image</source>
+        <translation>Alternatív kép keresése</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation>Keresés</translation>
+    </message>
     <message>
         <source>...</source>
         <translation>...</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation>Mentés</translation>
-    </message>
-    <message>
-        <source>Close</source>
-        <translation>Bezárás</translation>
     </message>
     <message>
         <source>Online search</source>
@@ -55,62 +55,19 @@
     </message>
     <message>
         <source>Local search</source>
-        <translation>helyi keresés</translation>
-    </message>
-    <message>
-        <source>Search</source>
-        <translation>Keresés</translation>
+        <translation>Helyi keresés</translation>
     </message>
     <message>
         <source>Select and preview multiple covers</source>
         <translation>Többet is kiválaszthatsz</translation>
     </message>
     <message>
-        <source>Search alternative image</source>
-        <translation>Alternatív kép keresése</translation>
-    </message>
-    <message>
-        <source>Alternative Cover</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>for</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
-    <name>AlternativeCovers</name>
-    <message>
-        <source>Search alternative image</source>
-        <translation type="unfinished">Alternatív kép keresése</translation>
-    </message>
-    <message>
-        <source>Search</source>
-        <translation type="unfinished">Keresés</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation type="unfinished">...</translation>
-    </message>
-    <message>
-        <source>Online search</source>
-        <translation type="unfinished">Online keresés</translation>
-    </message>
-    <message>
-        <source>Local search</source>
-        <translation type="unfinished">helyi keresés</translation>
-    </message>
-    <message>
-        <source>Select and preview multiple covers</source>
-        <translation type="unfinished">Többet is kiválaszthatsz</translation>
-    </message>
-    <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezárás</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Mentés</translation>
+        <translation>Mentés</translation>
     </message>
     <message>
         <source>Alternative Cover</source>
@@ -125,7 +82,7 @@
     <name>Application</name>
     <message>
         <source>Le&amp;vel</source>
-        <translation type="unfinished">Szi&amp;nt</translation>
+        <translation>Szi&amp;nt</translation>
     </message>
     <message>
         <source>&amp;Spectrum</source>
@@ -141,11 +98,11 @@
     </message>
     <message>
         <source>&amp;Equalizer</source>
-        <translation type="unfinished">&amp;Equalizer</translation>
+        <translation>&amp;Equalizer</translation>
     </message>
     <message>
         <source>Pla&amp;ylists</source>
-        <translation type="unfinished"></translation>
+        <translation>Lejátszási lista</translation>
     </message>
     <message>
         <source>&amp;mp3 Converter</source>
@@ -199,23 +156,23 @@
     <name>GUI_AbstractLibrary</name>
     <message>
         <source>Title</source>
-        <translation type="unfinished">Cím</translation>
+        <translation>Cím</translation>
     </message>
     <message>
         <source>Artist</source>
-        <translation type="unfinished">Előadó</translation>
+        <translation>Előadó</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished">Album</translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Év</translation>
     </message>
     <message>
         <source>Dur.</source>
-        <translation type="unfinished"></translation>
+        <translation>Időtartam</translation>
     </message>
     <message>
         <source>Bitrate</source>
@@ -223,15 +180,15 @@
     </message>
     <message>
         <source>Filesize</source>
-        <translation type="unfinished">Fájlméret</translation>
+        <translation>Fájlméret</translation>
     </message>
     <message>
         <source>Duration</source>
-        <translation type="unfinished"></translation>
+        <translation>Időtartam</translation>
     </message>
     <message>
         <source>#Tracks</source>
-        <translation type="unfinished">#Szám</translation>
+        <translation>#Szám</translation>
     </message>
     <message>
         <source>Rating</source>
@@ -239,7 +196,7 @@
     </message>
     <message>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Információ</translation>
     </message>
 </context>
 <context>
@@ -258,7 +215,7 @@
     </message>
     <message>
         <source>&quot; by &quot;</source>
-        <translation type="unfinished"></translation>
+        <translation>által</translation>
     </message>
     <message>
         <source>for artist</source>
@@ -270,11 +227,11 @@
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished">Információ</translation>
+        <translation>Információ</translation>
     </message>
     <message>
         <source>This cover does not exist</source>
-        <translation type="unfinished">Ez a cover nem létezik</translation>
+        <translation>Ez a cover nem létezik</translation>
     </message>
     <message>
         <source> covers found</source>
@@ -282,18 +239,18 @@
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Keresés</translation>
+        <translation>Keresés</translation>
     </message>
     <message>
         <source>Open image files</source>
-        <translation type="unfinished">kép-fájl megnyitása</translation>
+        <translation>Kép-fájl megnyitása</translation>
     </message>
 </context>
 <context>
     <name>GUI_AudioConvert</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <source>Quality</source>
@@ -313,11 +270,11 @@
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished">x</translation>
+        <translation>x</translation>
     </message>
     <message>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiválás</translation>
     </message>
 </context>
 <context>
@@ -335,7 +292,7 @@
     <name>GUI_Bookmarks</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <source>Bookmarks</source>
@@ -343,7 +300,7 @@
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished">x</translation>
+        <translation>x</translation>
     </message>
     <message>
         <source>Loop</source>
@@ -354,11 +311,11 @@
     <name>GUI_BroadcasSetup</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Párbeszédpanel</translation>
     </message>
     <message>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiválás</translation>
     </message>
     <message>
         <source>Ask for permission</source>
@@ -377,7 +334,7 @@
     <name>GUI_Broadcast</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <source>3 users listening</source>
@@ -389,7 +346,7 @@
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished">x</translation>
+        <translation>x</translation>
     </message>
     <message>
         <source>Dismiss</source>
@@ -418,7 +375,7 @@
     </message>
     <message>
         <source>OK?</source>
-        <translation type="unfinished"></translation>
+        <translation>OK?</translation>
     </message>
     <message>
         <source>Incoming request</source>
@@ -442,18 +399,18 @@
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Figyelem</translation>
     </message>
 </context>
 <context>
     <name>GUI_BroadcastSetup</name>
     <message>
         <source>Dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Párbeszédpanel</translation>
     </message>
     <message>
         <source>Activate</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiválás</translation>
     </message>
     <message>
         <source>Ask for permission</source>
@@ -515,11 +472,11 @@
     </message>
     <message>
         <source>Cancelled</source>
-        <translation type="unfinished">Abgebrochen</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>No tracks</source>
-        <translation type="unfinished">Keine Titel</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>Rollback</source>
@@ -531,7 +488,7 @@
     </message>
     <message>
         <source>Info</source>
-        <translation type="unfinished"></translation>
+        <translation>Információ</translation>
     </message>
 </context>
 <context>
@@ -624,7 +581,7 @@
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -666,7 +623,7 @@
     </message>
     <message>
         <source>Open Directory</source>
-        <translation type="unfinished">könyvtár megnyitása</translation>
+        <translation>könyvtár megnyitása</translation>
     </message>
 </context>
 <context>
@@ -807,11 +764,11 @@
     </message>
     <message>
         <source>Track</source>
-        <translation type="unfinished">Szám</translation>
+        <translation>Szám</translation>
     </message>
     <message>
         <source>Tracks</source>
-        <translation type="unfinished">Számok</translation>
+        <translation>Számok</translation>
     </message>
 </context>
 <context>
@@ -867,7 +824,7 @@ Playlists</source>
     </message>
     <message>
         <source>File</source>
-        <translation type="unfinished">Fájl</translation>
+        <translation>Fájl</translation>
     </message>
 </context>
 <context>
@@ -940,35 +897,35 @@ Playlists</source>
     <name>GUI_SoundcloudLibrary</name>
     <message>
         <source>Library</source>
-        <translation type="unfinished">Könyvtár</translation>
+        <translation>Könyvtár</translation>
     </message>
     <message>
         <source>Shortcuts: &lt;br /&gt;Search &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;Genre &lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;Path &lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</source>
-        <translation type="unfinished">Kürzel: &lt;br /&gt;keresés &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;műfaj&lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;elérési út&lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
+        <translation>Kürzel: &lt;br /&gt;keresés &lt;span style=&quot; font-weight:600;&quot;&gt;s: &lt;br /&gt; &lt;/span&gt;műfaj&lt;span style=&quot; font-weight:600;&quot;&gt;g: &lt;br /&gt;&lt;/span&gt;elérési út&lt;span style=&quot; font-weight:600;&quot;&gt;p:&lt;br/&gt;</translation>
     </message>
     <message>
         <source>Search</source>
-        <translation type="unfinished">Keresés</translation>
+        <translation>Keresés</translation>
     </message>
     <message>
         <source>Genre</source>
-        <translation type="unfinished">műfaj</translation>
+        <translation>műfaj</translation>
     </message>
     <message>
         <source>Path</source>
-        <translation type="unfinished">elérési út</translation>
+        <translation>elérési út</translation>
     </message>
     <message>
         <source>Search for title, interprets and albums</source>
-        <translation type="unfinished">Search for title, interprets and albums</translation>
+        <translation>Search for title, interprets and albums</translation>
     </message>
     <message>
         <source>Show all interprets, albums, tracks</source>
-        <translation type="unfinished">Összes mutatása interprets, albumok, műsorszámok</translation>
+        <translation>Összes mutatása interprets, albumok, műsorszámok</translation>
     </message>
     <message>
         <source>Information</source>
-        <translation type="unfinished">Információ</translation>
+        <translation>Információ</translation>
     </message>
 </context>
 <context>
@@ -982,11 +939,11 @@ Playlists</source>
     <name>GUI_Speed</name>
     <message>
         <source>Form</source>
-        <translation type="unfinished">Form</translation>
+        <translation>Form</translation>
     </message>
     <message>
         <source>1.0</source>
-        <translation type="unfinished"></translation>
+        <translation>1.0</translation>
     </message>
     <message>
         <source>Speed</source>
@@ -994,7 +951,7 @@ Playlists</source>
     </message>
     <message>
         <source>x</source>
-        <translation type="unfinished">x</translation>
+        <translation>x</translation>
     </message>
     <message>
         <source>Active</source>
@@ -1029,7 +986,7 @@ Playlists</source>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -1137,7 +1094,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -1148,7 +1105,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Close</source>
-        <translation type="unfinished"></translation>
+        <translation>Bezárás</translation>
     </message>
     <message>
         <source>Spectrum</source>
@@ -1211,7 +1168,7 @@ Kérjük, válasszon egy másik mappát</translation>
     <name>GUI_StyleSettings</name>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Figyelem</translation>
     </message>
     <message>
         <source>There are some unsaved settings&lt;br /&gt;Save now?</source>
@@ -1302,7 +1259,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Disc Nr</source>
-        <translation type="unfinished"></translation>
+        <translation>CD-szám</translation>
     </message>
     <message>
         <source>Expression</source>
@@ -1326,7 +1283,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Mentés</translation>
+        <translation>Mentés</translation>
     </message>
     <message>
         <source>Cannot apply tag for</source>
@@ -1334,7 +1291,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>by</source>
-        <translation type="unfinished">által</translation>
+        <translation>által</translation>
     </message>
     <message>
         <source>Ignore these tracks?</source>
@@ -1342,7 +1299,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Warning</source>
-        <translation type="unfinished"></translation>
+        <translation>Figyelem</translation>
     </message>
 </context>
 <context>
@@ -1373,7 +1330,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Save</source>
-        <translation type="unfinished">Mentés</translation>
+        <translation>Mentés</translation>
     </message>
 </context>
 <context>
@@ -1451,11 +1408,11 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Cancel</source>
-        <translation type="unfinished">Mégse</translation>
+        <translation>Mégse</translation>
     </message>
     <message>
         <source>OK</source>
-        <translation type="unfinished">OK</translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -1482,11 +1439,11 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Paths</source>
-        <translation type="unfinished"></translation>
+        <translation>Elérési út</translation>
     </message>
     <message>
         <source>Sublable</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1603,6 +1560,10 @@ Kérjük, válasszon egy másik mappát</translation>
         <source>Search for title, interprets and albums</source>
         <translation>Search for title, interprets and albums</translation>
     </message>
+    <message>
+        <source>Music Library  </source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>LyricLookupThread</name>
@@ -1615,11 +1576,11 @@ Kérjük, válasszon egy másik mappát</translation>
     <name>MetaDataInfo</name>
     <message>
         <source>Various tracks</source>
-        <translation type="unfinished">különböző számok</translation>
+        <translation>különböző számok</translation>
     </message>
     <message>
         <source>by </source>
-        <translation type="unfinished">által </translation>
+        <translation>által </translation>
     </message>
     <message>
         <source>track on</source>
@@ -1631,7 +1592,7 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Various artists</source>
-        <translation type="unfinished">különböző előadók</translation>
+        <translation>Különböző előadók</translation>
     </message>
     <message>
         <source>Various albums</source>
@@ -1639,43 +1600,43 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>1st</source>
-        <translation type="unfinished">1.</translation>
+        <translation>1.</translation>
     </message>
     <message>
         <source>2nd</source>
-        <translation type="unfinished">2.</translation>
+        <translation>2.</translation>
     </message>
     <message>
         <source>3rd</source>
-        <translation type="unfinished">3.</translation>
+        <translation>3.</translation>
     </message>
     <message>
         <source>th</source>
-        <translation type="unfinished">.</translation>
+        <translation>.</translation>
     </message>
     <message>
         <source>#Tracks</source>
-        <translation type="unfinished">#Szám</translation>
+        <translation>#Szám</translation>
     </message>
     <message>
         <source>#Albums</source>
-        <translation type="unfinished">#Album</translation>
+        <translation>#Album</translation>
     </message>
     <message>
         <source>#Artists</source>
-        <translation type="unfinished">#Előadó</translation>
+        <translation>#Előadó</translation>
     </message>
     <message>
         <source>Filesize</source>
-        <translation type="unfinished">Fájlméret</translation>
+        <translation>Fájlméret</translation>
     </message>
     <message>
         <source>Playing time</source>
-        <translation type="unfinished">lejátszási idő</translation>
+        <translation>Lejátszási idő</translation>
     </message>
     <message>
         <source>Year</source>
-        <translation type="unfinished"></translation>
+        <translation>Év</translation>
     </message>
     <message>
         <source>Sampler? </source>
@@ -1683,11 +1644,11 @@ Kérjük, válasszon egy másik mappát</translation>
     </message>
     <message>
         <source>Bitrate</source>
-        <translation type="unfinished">Bitrate</translation>
+        <translation>Bitrate</translation>
     </message>
     <message>
         <source>Genre</source>
-        <translation type="unfinished">műfaj</translation>
+        <translation>Műfaj</translation>
     </message>
 </context>
 <context>
@@ -1743,11 +1704,11 @@ Kérjük, válasszon egy másik mappát</translation>
     <name>PlaylistItemModel</name>
     <message>
         <source>Artist</source>
-        <translation type="unfinished">Előadó</translation>
+        <translation>Előadó</translation>
     </message>
     <message>
         <source>Album</source>
-        <translation type="unfinished">Album</translation>
+        <translation>Album</translation>
     </message>
     <message>
         <source>Goto row</source>
@@ -2026,23 +1987,23 @@ Kérjük, válasszon egy másik mappát</translation>
     <name>Ui</name>
     <message>
         <source>Edit</source>
-        <translation type="unfinished">Szerkesztés</translation>
+        <translation>Szerkesztés</translation>
     </message>
     <message>
         <source>Ctrl+.</source>
-        <translation type="unfinished">Ctrl+.</translation>
+        <translation>Ctrl+.</translation>
     </message>
     <message>
         <source>Sayonara Player</source>
-        <translation type="unfinished">Sayonara Player</translation>
+        <translation>Sayonara Player</translation>
     </message>
     <message>
         <source>Written by</source>
-        <translation type="unfinished">Írta</translation>
+        <translation>Írta</translation>
     </message>
     <message>
         <source>Copyright</source>
-        <translation type="unfinished">Copyright</translation>
+        <translation>Copyright</translation>
     </message>
 </context>
 </TS>

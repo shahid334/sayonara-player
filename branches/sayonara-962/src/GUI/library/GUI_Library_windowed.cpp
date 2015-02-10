@@ -40,7 +40,7 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 	_lib_info_dialog = new GUI_Library_Info_Box(this);
 
 
-    setAcceptDrops(true);
+	setAcceptDrops(true);
 
 	connect(lv_album, SIGNAL(sig_disc_pressed(int)), this, SLOT(disc_pressed(int)));
 
@@ -51,7 +51,7 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 
 	connect(_library, SIGNAL(sig_no_library_path()), this, SLOT(lib_no_lib_path()));
 
-    hide();
+	hide();
 }
 
 
@@ -70,38 +70,38 @@ void GUI_Library_windowed::language_changed() {
 
 LocalLibrary::TrackDeletionMode GUI_Library_windowed::show_delete_dialog(int n_tracks) {
 
-		QMessageBox dialog(this);
-		QAbstractButton* clicked_button;
-		QPushButton* only_library_button;
+	QMessageBox dialog(this);
+	QAbstractButton* clicked_button;
+	QPushButton* only_library_button;
 
-		dialog.setFocus();
-		dialog.setIcon(QMessageBox::Warning);
-		dialog.setText("<b>" + tr("Warning") + "!</b>");
-		dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-		only_library_button = dialog.addButton(tr("Only from library"), QMessageBox::AcceptRole);
-		dialog.setDefaultButton(QMessageBox::No);
-		QString info_text = tr("You are about to delete %1 files").arg(n_tracks);
+	dialog.setFocus();
+	dialog.setIcon(QMessageBox::Warning);
+	dialog.setText("<b>" + tr("Warning") + "!</b>");
+	dialog.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+	only_library_button = dialog.addButton(tr("Only from library"), QMessageBox::AcceptRole);
+	dialog.setDefaultButton(QMessageBox::No);
+	QString info_text = tr("You are about to delete %1 files").arg(n_tracks);
 
-		dialog.setInformativeText(info_text + "\n" + tr("Continue?") );
+	dialog.setInformativeText(info_text + "\n" + tr("Continue?") );
 
-		int answer = dialog.exec();
-		clicked_button = dialog.clickedButton();
-		dialog.close();
+	int answer = dialog.exec();
+	clicked_button = dialog.clickedButton();
+	dialog.close();
 
 
-		if(answer == QMessageBox::No){
-			return LocalLibrary::TrackDeletionModeNone;
-		}
+	if(answer == QMessageBox::No){
+		return LocalLibrary::TrackDeletionModeNone;
+	}
 
-		if(answer == QMessageBox::Yes){
-			return LocalLibrary::TrackDeletionModeAlsoFiles;
-		}
+	if(answer == QMessageBox::Yes){
+		return LocalLibrary::TrackDeletionModeAlsoFiles;
+	}
 
-		if(clicked_button->text() == only_library_button->text()) {
-			return LocalLibrary::TrackDeletionModeOnlyLibrary;
-		}
+	if(clicked_button->text() == only_library_button->text()) {
+		return LocalLibrary::TrackDeletionModeOnlyLibrary;
+	}
 
-		return LocalLibrary::TrackDeletionModeNone;;
+	return LocalLibrary::TrackDeletionModeNone;;
 }
 
 
@@ -125,7 +125,7 @@ void GUI_Library_windowed::lib_no_lib_path(){
 
 
 void GUI_Library_windowed::import_files(const QStringList & lst) {
-    emit sig_import_files(lst);
+	emit sig_import_files(lst);
 }
 
 
