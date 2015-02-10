@@ -1,6 +1,6 @@
 Name:           sayonara
 Version:        <<VERSION>>
-Release:        1.<<REVISION>>
+Release:        <<REVISION>>
 Summary:        A lightweight Qt Audio player
 
 License:        GPLv3
@@ -99,7 +99,7 @@ fi
 %{_datadir}/icons/hicolor/*/*/*.png
 
 
-%changelog
+<<CHANGELOG>>
 * Mon Feb 09 2015 Martin Gansser <martinkg@fedoraproject.org> - 0.4.1-1.5.svn992
 - rebuild for new svn release
 
