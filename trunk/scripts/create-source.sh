@@ -1,10 +1,8 @@
 #!/bin/bash
 
-svn update
-
-REV=`svn info | grep Revision | tail -c 4`
-TARGET_FILENAME="sayonara-player-r${REV}"
+TARGET_FILENAME="sayonara-player"
 TARGET_PATH="/tmp/${TARGET_FILENAME}"
+rm -f $TARGET_PATH
 
 ARG="b"
 if [ $# -ge 1 ] ; then
@@ -16,7 +14,8 @@ echo "Checking out..."
 if [ $ARG = "a" ] ; then
 	svn export "https://sayonara-player.googlecode.com/svn/" ${TARGET_PATH} 
 else
-	svn export "https://sayonara-player.googlecode.com/svn/trunk" ${TARGET_PATH} 
+	SVNPATH=`svn info | grep URL | grep -v Relative | awk '{print $2}'`
+	svn export ${SVNPATH} ${TARGET_PATH} 
 fi
 
 echo "Creating archive"

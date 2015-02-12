@@ -43,6 +43,8 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 
 	// eq -> autoaudiosink is packaged into a bin
 	do {
+		bool broadcast_branch = true;
+
 		bool success = false;
 		// create equalizer element
 		GstElement* tmp_pipeline = gst_pipeline_new("Pipeline");
@@ -70,7 +72,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		if(!create_element(&_spectrum_sink,"fakesink", "spectrum_sink")) break;
 
 		if(!create_element(&_lame_queue, "queue", "lame_queue")) break;
-		if(!create_element(&_lame, "lamemp3enc")) break;
+		broadcast_branch = create_element(&_lame, "lamemp3enc");
 		if(!create_element(&_resampler, "audioresample", "lame_resampler")) break;
 		if(!create_element(&_lame_audio_convert, "audioconvert", "lame_audioconvert")) break;
 		if(!create_element(&_app_sink, "appsink", "lame_appsink")) break;
@@ -84,9 +86,12 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 						 _eq_queue, _volume, _audio_sink,
 						 _level_queue, _level_audio_convert, _level, _level_sink,
 						 _spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink,
-                         _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink,
 
 						 NULL);
+
+
+
+
 
 		success = gst_element_link_many(_eq_queue, _volume, _audio_sink, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;
@@ -102,8 +107,16 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		success = gst_element_link_many(_audio_convert, _equalizer, _tee, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link audio convert with tee")) break;
 
-        success = gst_element_link_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
-		if(!_test_and_error_bool(success, "Engine: Cannot link lame stuff")) break;
+		if(broadcast_branch){
+			gst_bin_add_many(GST_BIN(tmp_pipeline), _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
+			success = gst_element_link_many( _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);
+			if(!_test_and_error_bool(success, "Engine: Cannot link lame stuff")) break;
+		}
+
+		else{
+			_settings->set(Set::BroadCast_Active, false);
+		}
+
 
 		// create tee pads
 		tee_src_pad_template = gst_element_class_get_pad_template (GST_ELEMENT_GET_CLASS (_tee), "src_%u");
@@ -112,7 +125,10 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		tee_connect(tee_src_pad_template, _level_queue, "Level");
 		tee_connect(tee_src_pad_template, _spectrum_queue, "Spectrum");
 		tee_connect(tee_src_pad_template, _eq_queue, "Equalizer");
-		tee_connect(tee_src_pad_template, _lame_queue, "Lame");
+
+		if(broadcast_branch){
+			tee_connect(tee_src_pad_template, _lame_queue, "Lame");
+		}
 
 		guint64 interval = 30000000;
 		gint threshold = - crop_spectrum_at;
@@ -138,14 +154,16 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 					  NULL);
 
 
-		g_object_set(G_OBJECT (_lame),
+		if(broadcast_branch){
+			g_object_set(G_OBJECT (_lame),
 
-					 "perfect-timestamp", true,
-					 "target", 1,
-					 "cbr", true,
-					 "bitrate", 128,
-					 "encoding-engine-quality", 2,
-					 NULL);
+						 "perfect-timestamp", true,
+						 "target", 1,
+						 "cbr", true,
+						 "bitrate", 128,
+						 "encoding-engine-quality", 2,
+						 NULL);
+		}
 
 		/* run synced and not as fast as we can */
 		g_object_set (G_OBJECT (_level_sink), "sync", true, NULL);
@@ -471,7 +489,6 @@ void GSTPlaybackPipeline::_sl_broadcast_clients_changed(){
 
     gst_element_set_state(GST_ELEMENT(_pipeline), state);
 }
-
 
 
 

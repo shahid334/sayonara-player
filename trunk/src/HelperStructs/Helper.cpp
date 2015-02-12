@@ -26,6 +26,12 @@
  *      Author: luke
  */
 
+#ifndef Q_OS_WIN
+#ifndef LIB_INSTALL_DIR
+#define LIB_INSTALL_DIR "/usr/lib"
+#endif
+#endif
+
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/WebAccess.h"
@@ -144,7 +150,7 @@ QString Helper::getLibPath() {
 #ifndef Q_OS_WIN
     qDebug() << "Check for " << _install_path + "/lib/sayonara";
     if(QFile::exists(_install_path + "/lib/sayonara")) path = _install_path + "/lib/sayonara/";
-    else if(QFile::exists("/usr/lib/sayonara")) path = "/usr/lib/sayonara/";
+    else if(QFile::exists(LIB_INSTALL_DIR "/sayonara")) path = LIB_INSTALL_DIR "/sayonara/";
     else path = "";
 #else
     path = QDir::homePath() + QString("\\.Sayonara\\images\\");

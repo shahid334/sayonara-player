@@ -400,7 +400,7 @@ void Application::setFiles2Play(const QStringList& filelist) {
 
 QString Application::getVersion() {
 
-   return QString(SAYONARA_VERSION) + "-" + QDate::currentDate().toString("yyMMdd");
+   return QString(SAYONARA_VERSION);
 }
 
 QMainWindow* Application::getMainWindow() {

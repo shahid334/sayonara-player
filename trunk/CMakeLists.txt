@@ -1,66 +1,38 @@
+#VERSION 0.6.2
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
+
 project("Sayonara Player")
+SET(VAR_SAYONARA_VERSION "0.6.2")
+ADD_DEFINITIONS( -DSAYONARA_VERSION=\"${VAR_SAYONARA_VERSION}\" )
 ADD_SUBDIRECTORY(src)
-#ADD_SUBDIRECTORY(linux_packages/resources)
-
-
-IF(${UNIX})
-        execute_process(COMMAND sh ${CMAKE_BINARY_DIR}/scripts/setversion.sh ${CMAKE_BINARY_DIR})
-ENDIF(${UNIX})
 
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 	SET(CMAKE_INSTALL_PREFIX "/usr")
 ENDIF(NOT DEFINED CMAKE_INSTALL_PREFIX)
 
+MESSAGE("Create Sayonara v${VAR_SAYONARA_VERSION}")
 MESSAGE("Will install to ${CMAKE_INSTALL_PREFIX}")
 MESSAGE("To change this, use the -DCMAKE_INSTALL_PREFIX parameter")
-
-ADD_DEFINITIONS(-std=c++11)
 
 SET(CMAKE_SKIP_RPATH:BOOL ON) 
 SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 
-SET(CPACK_GENERATOR "RPM")
-SET(CPACK_PACKAGE_SUMMARY "Audio player and library organizer")
-SET(CPACK_PACKAGE_NAME "sayonara")
-SET(CPACK_PACKAGE_VERSION "0.6")
-SET(CPACK_PACKAGE_RELEASE "1")
-SET(CPACK_PACKAGE_VENDOR "Lucio Carreras")
-SET(CPACK_PACKAGE_CONTACT "LucioCarreras@gmail.com")
-SET(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_PACKAGE_RELEASE}.${CMAKE_SYSTEM_PROCESSOR}")
-
-
-SET(CPACK_RPM_PACKAGE_NAME ${CPACK_PACKAGE_FILE_NAME})
-SET(CPACK_RPM_PACKAGE_LICENSE "GPLv3")
-SET(CPACK_RPM_PACKAGE_ARCHITECTURE ${CPACK_SYSTEM_PROCESSOR})
-SET(CPACK_RPM_PACKAGE_GROUP "Applications/Multimedia")
-SET(CPACK_RPM_PACKAGE_SUMMARY "Audio player and library organizer")
-SET(CPACK_RPM_PACKAGE_DESCRIPTION "Description: A small and lightweight music player.
-  Its main focus is on managing libraries and playing sound out of it.
-  It contains a music library, custom playlists, dynamic playlists,
-  ID3 Tag Editor, LastFM scrobbling, LastFM radio, web streaming, equalizer,
-  lyrics, stream recorder and podcasts"
+FILE(WRITE linux_packages/resources/sayonara "?package(sayonara): \\
+  needs=\"X11\" \\
+  section=\"Applications/Sound\" \\
+  title=\"Sayonara\" \\
+  command=\"${CMAKE_INSTALL_PREFIX}/bin/sayonara\" \\
+  icon=\"${CMAKE_INSTALL_PREFIX}/share/sayonara/sayonara.xpm\""
 )
 
-#SET(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST 
-#	/usr/bin
-#	/usr/lib
-#	/usr/share
-#)
-
-
-
-SET(CPACK_PACKAGING_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-INCLUDE(CPack)
-
 INSTALL(FILES "empty.db" DESTINATION share/sayonara)
-INSTALL(FILES "VERSION" DESTINATION share/sayonara)
 INSTALL(FILES "linux_packages/resources/sayonara.desktop" DESTINATION share/applications)
+INSTALL(FILES "linux_packages/resources/sayonara" DESTINATION share/menu)
 INSTALL(DIRECTORY "linux_packages/resources/logos/" DESTINATION share/icons/hicolor)
 
 IF(${UNIX})
 	execute_process(COMMAND update-menus)
-
 ENDIF(${UNIX})
 
 

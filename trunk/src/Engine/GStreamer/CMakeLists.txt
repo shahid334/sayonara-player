@@ -94,4 +94,4 @@ TARGET_LINK_LIBRARIES(sayonara_gstreamer
     ${GSTREAMER_BASE_APP_LIBRARIES}
 )
 
-INSTALL(TARGETS sayonara_gstreamer DESTINATION lib/sayonara)
+INSTALL(TARGETS sayonara_gstreamer DESTINATION lib${LIB_SUFFIX}/sayonara)

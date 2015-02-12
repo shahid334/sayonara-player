@@ -1,5 +1,6 @@
-?package(sayonara):needs="X11" \
- section="Applications/Sound" \
- title="Sayonara" \
- command="/usr/bin/sayonara" \
- icon="/usr/share/sayonara/sayonara.xpm"
+?package(sayonara): \
+  needs="X11" \
+  section="Applications/Sound" \
+  title="Sayonara" \
+  command="/usr/bin/sayonara" \
+  icon="/usr/share/sayonara/sayonara.xpm"
