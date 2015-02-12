@@ -39,7 +39,7 @@ if (LIBNOTIFY_FOUND)
     ADD_LIBRARY(sayonara_libnotify SHARED ${SOURCES} ${HEADERS_MOC})
     TARGET_LINK_LIBRARIES(sayonara_libnotify notify)
 
-    INSTALL(TARGETS sayonara_libnotify DESTINATION lib/sayonara)
+    INSTALL(TARGETS sayonara_libnotify DESTINATION ${LIB_INSTALL_DIR}/sayonara)
 
 else ()
 

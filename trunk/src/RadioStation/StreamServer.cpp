@@ -39,9 +39,6 @@ StreamServer::StreamServer(QObject* parent) :
 
 	_pending_socket = NULL;
 
-
-
-
 	REGISTER_LISTENER(Set::BroadCast_Active, active_changed);
 	REGISTER_LISTENER_NO_CALL(Set::Broadcast_Port, port_changed);
 	REGISTER_LISTENER(Set::Broadcast_Prompt, prompt_changed);
@@ -70,7 +67,12 @@ void StreamServer::run(){
 
 
 	forever{
-		while(_server && _server->isListening()){
+
+		if(!_settings->get(Set::BroadCast_Active)){
+			Helper::sleep_ms(100);
+		}
+
+		else if(_server && _server->isListening()){
 			Helper::sleep_ms(100);
 		}
 
@@ -78,7 +80,7 @@ void StreamServer::run(){
 			break;
 		}
 
-		Helper::sleep_ms(1000);
+		Helper::sleep_ms(250);
     }
 
 	qDebug() << "Radio station: Bye";
