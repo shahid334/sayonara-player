@@ -2,5 +2,5 @@
   needs="X11" \
   section="Applications/Sound" \
   title="Sayonara" \
-  command="/usr/bin/sayonara" \
-  icon="/usr/share/sayonara/sayonara.xpm"
+  command="/usr/local/bin/sayonara" \
+  icon="/usr/local/share/sayonara/sayonara.xpm"
