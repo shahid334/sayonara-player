@@ -9,6 +9,7 @@ if [ $# -ge 1 ] ; then
 	ARG=$1
 fi
 
+
 echo "Checking out..."
 if [ $ARG = "a" ] ; then
 	svn export "https://sayonara-player.googlecode.com/svn/" ${TARGET_PATH} 
