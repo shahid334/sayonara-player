@@ -32,14 +32,14 @@ if (LIBNOTIFY_FOUND)
 
     QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
-
     INCLUDE(${QT_USE_FILE})
 	#ADD_DEFINITIONS(${QT_DEFINITIONS})
 
     ADD_LIBRARY(sayonara_libnotify SHARED ${SOURCES} ${HEADERS_MOC})
     TARGET_LINK_LIBRARIES(sayonara_libnotify notify)
+ 
 
-    INSTALL(TARGETS sayonara_libnotify DESTINATION ${LIB_INSTALL_DIR}/sayonara)
+    INSTALL(TARGETS sayonara_libnotify DESTINATION lib${LIB_SUFFIX}/sayonara)
 
 else ()
 
