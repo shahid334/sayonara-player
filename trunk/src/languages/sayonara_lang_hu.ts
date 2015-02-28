@@ -36,6 +36,41 @@
     </message>
 </context>
 <context>
+    <name>AlternateCovers</name>
+    <message>
+        <source>Search alternative image</source>
+        <translation type="unfinished">Alternatív kép keresése</translation>
+    </message>
+    <message>
+        <source>Close</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Mentés</translation>
+    </message>
+    <message>
+        <source>Search</source>
+        <translation type="unfinished">Keresés</translation>
+    </message>
+    <message>
+        <source>...</source>
+        <translation type="unfinished">...</translation>
+    </message>
+    <message>
+        <source>Online search</source>
+        <translation type="unfinished">Online keresés</translation>
+    </message>
+    <message>
+        <source>Local search</source>
+        <translation type="unfinished">Helyi keresés</translation>
+    </message>
+    <message>
+        <source>Select and preview multiple covers</source>
+        <translation type="unfinished">Többet is kiválaszthatsz</translation>
+    </message>
+</context>
+<context>
     <name>AlternativeCovers</name>
     <message>
         <source>Search alternative image</source>
@@ -583,6 +618,21 @@
         <source>OK</source>
         <translation>OK</translation>
     </message>
+    <message>
+        <source>Save</source>
+        <translation type="unfinished">Mentés</translation>
+    </message>
+</context>
+<context>
+    <name>GUI_Level</name>
+    <message>
+        <source>Level</source>
+        <translation type="unfinished">Szint</translation>
+    </message>
+    <message>
+        <source>x</source>
+        <translation type="unfinished">x</translation>
+    </message>
 </context>
 <context>
     <name>GUI_LevelPainter</name>
@@ -826,6 +876,14 @@ Playlists</source>
         <source>File</source>
         <translation>Fájl</translation>
     </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Saved&lt;br/&gt;Playlists&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GUI_Podcasts</name>
@@ -988,6 +1046,10 @@ Playlists</source>
         <source>OK</source>
         <translation>OK</translation>
     </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GUI_Stream</name>
@@ -1095,6 +1157,14 @@ Kérjük, válasszon egy másik mappát</translation>
     <message>
         <source>OK</source>
         <translation>OK</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Only complete tracks</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1301,6 +1371,27 @@ Kérjük, válasszon egy másik mappát</translation>
         <source>Warning</source>
         <translation>Figyelem</translation>
     </message>
+    <message>
+        <source>Apply expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tag from path</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Tag
+expression</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Undo expression</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>GUI_Target_Playlist_Dialog</name>
@@ -1331,6 +1422,10 @@ Kérjük, válasszon egy másik mappát</translation>
     <message>
         <source>Save</source>
         <translation>Mentés</translation>
+    </message>
+    <message>
+        <source>Ok</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1413,6 +1508,14 @@ Kérjük, válasszon egy másik mappát</translation>
     <message>
         <source>OK</source>
         <translation>OK</translation>
+    </message>
+    <message>
+        <source>cancel</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>ok</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -1559,6 +1662,10 @@ Kérjük, válasszon egy másik mappát</translation>
     <message>
         <source>Search for title, interprets and albums</source>
         <translation>Search for title, interprets and albums</translation>
+    </message>
+    <message>
+        <source>Music Library  </source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
