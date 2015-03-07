@@ -24,6 +24,8 @@
 #ifndef GUI_TAGEDIT_H_
 #define GUI_TAGEDIT_H_
 
+#include <QLineEdit>
+#include <QFocusEvent>
 #include <QString>
 #include <QRegExp>
 
@@ -61,8 +63,6 @@ private slots:
 	void year_all_changed(bool);
 	void discnumber_all_changed(bool);
 
-	void tag_selection_changed();
-
 	void btn_title_checked(bool b);
 	void btn_artist_checked(bool b);
 	void btn_album_checked(bool b);
@@ -94,9 +94,6 @@ private:
 
 	int _discnumber_all;
 	int _year_all;
-
-	int _tag_selection_start;
-	int _tag_selection_len;
 
 
 	// keys: The different tags like <al>...

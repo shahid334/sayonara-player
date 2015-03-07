@@ -21,10 +21,12 @@
 
 
 #include "GUI/tagedit/GUI_TagEdit.h"
+#include "GUI/tagedit/TagLineEdit.h"
 #include "TagEdit/TagExpression.h"
 #include "HelperStructs/Helper.h"
 #include <QDir>
 #include <QMessageBox>
+
 
 GUI_TagEdit::GUI_TagEdit(TagEdit* tag_edit, QWidget* parent) :
 	SayonaraWidget(parent)
@@ -48,7 +50,6 @@ GUI_TagEdit::GUI_TagEdit(TagEdit* tag_edit, QWidget* parent) :
 	connect(btn_undo, SIGNAL(clicked()), this, SLOT(undo_clicked()));
 	connect(btn_undo_all, SIGNAL(clicked()), this, SLOT(undo_all_clicked()));
 
-	connect(le_tag, SIGNAL(selectionChanged()), this, SLOT(tag_selection_changed()));
 	connect(btn_title, SIGNAL(toggled(bool)), this, SLOT(btn_title_checked(bool)));
 	connect(btn_artist, SIGNAL(toggled(bool)), this, SLOT(btn_artist_checked(bool)));
 	connect(btn_album, SIGNAL(toggled(bool)), this, SLOT(btn_album_checked(bool)));
@@ -443,16 +444,12 @@ void GUI_TagEdit::apply_tag_all_clicked(){
 	}
 }
 
-void GUI_TagEdit::tag_selection_changed(){
-
-	_tag_selection_start = le_tag->selectionStart();
-	_tag_selection_len = le_tag->selectedText().size();
-
-}
 
 bool GUI_TagEdit::replace_selected_tag_text(Tag t, bool b){
 
-	if(_tag_selection_start < 0 && b) {
+	TextSelection ts = le_tag->get_text_selection();
+
+	if(ts.selection_start < 0 && b) {
 		qDebug() << "Nothing selected...";
 		return false;
 	}
@@ -462,10 +459,10 @@ bool GUI_TagEdit::replace_selected_tag_text(Tag t, bool b){
 	// replace the string by a tag
 	if(b){
 
-		ReplacedString selected_text = text.mid( _tag_selection_start, _tag_selection_len );
+		ReplacedString selected_text = text.mid( ts.selection_start, ts.selection_size );
 		if(!_tag_expression.check_tag(t, selected_text)) return false;
 
-		text.replace( _tag_selection_start, _tag_selection_len, t );
+		text.replace( ts.selection_start, ts.selection_size, t );
 		le_tag->setText(text);
 
 		_tag_str_map[t] = selected_text;

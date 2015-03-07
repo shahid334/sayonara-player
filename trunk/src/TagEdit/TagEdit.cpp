@@ -87,7 +87,7 @@ void TagEdit::check_for_new_artists_and_albums(QStringList& new_artists, QString
 
 	foreach(QString album_name, albums){
 		int id = _db->getAlbumID(album_name);
-		qDebug() << "Album: " << album_name << ": " << id;
+		//qDebug() << "Album: " << album_name << ": " << id;
 		if(id < 0) new_albums << album_name;
 	}
 

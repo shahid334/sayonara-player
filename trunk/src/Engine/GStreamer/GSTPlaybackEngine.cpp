@@ -79,9 +79,10 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 
 	_jump_play_s = 0;
 
-	if(_settings->get(Set::PL_LastTrack) >= 0 &&
+	if( _settings->get(Set::PL_LastTrack) >= 0 &&
 		_settings->get(Set::PL_Load) &&
-		_settings->get(Set::PL_RememberTime)){
+		_settings->get(Set::PL_RememberTime))
+	{
 		_jump_play_s = _settings->get(Set::Engine_CurTrackPos_s);
 	}
 
@@ -153,9 +154,7 @@ void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
 
 void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 
-	if(start_play && !md.is_equal(_md) && _md.id >= 0){
-		_jump_play_s = 0;
-	}
+	qDebug() << "Change track " << md.title;
 
 	bool success = false;
 	if(md.radio_mode() != RadioModeOff){

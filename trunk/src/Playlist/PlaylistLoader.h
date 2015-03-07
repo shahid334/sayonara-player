@@ -27,18 +27,12 @@
 
 class PlaylistLoader : public QObject, protected SayonaraClass
 {
-    Q_OBJECT
+
+	Q_OBJECT
+
 public:
     explicit PlaylistLoader(QObject *parent = 0);
-    void load_old_playlist();
-    
-signals:
-	void sig_create_playlist(const MetaDataList&);
-	void sig_change_track(int);
-    
-public slots:
-
-    
+	MetaDataList load_old_playlist();
 };
 
 #endif // PLAYLISTLOADER_H

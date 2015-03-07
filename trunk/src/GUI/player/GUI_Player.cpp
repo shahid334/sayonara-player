@@ -165,7 +165,10 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	stopClicked(false);
 
-	psl_set_play(_settings->get(Set::PL_StartPlaying));
+	bool start_playing = _settings->get(Set::PL_StartPlaying);
+	bool has_last_track = (_settings->get(Set::PL_LastTrack) >= 0);
+
+	psl_set_play( start_playing && has_last_track );
 
 	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 	REGISTER_LISTENER(Set::Engine_SR_Active, _sl_sr_active_changed);
@@ -755,19 +758,24 @@ void GUI_Player::really_close(bool b) {
 
 void GUI_Player::awa_version_finished() {
 
+
     QString new_version = *(m_awa_version->get_data());
 	QString cur_version = _settings->get(Set::Player_Version);
 	bool notify_new_version = _settings->get(Set::Player_NotifyNewVersion);
+	bool dark = (_settings->get(Set::Player_Style) == 1);
 
 	new_version = new_version.trimmed();
 
 	qDebug() << "Newest Version: " << new_version;
 	qDebug() << "This Version:   " << cur_version;
 
+	QString link;
+	LINK("http://sayonara.luciocarreras.de", "http://sayonara.luciocarreras.de", dark, link);
+
 	if(new_version > cur_version && notify_new_version) {
 		QMessageBox::information(this, 
 					tr("Info"), 
-					tr("A new version is available!"));
+					tr("A new version is available!") + "<br />" +  link);
 	}
 }
 

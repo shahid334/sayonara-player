@@ -40,8 +40,8 @@
 
 
 // name, target, dark, string
-#define LINK(n, t, d, s) if(d) s="<a href=\"t\">LIGHT_BLUE(n)</a>"; \
-                         else  s="<a href=\"t\">DARK_BLUE(n)</a>";
+#define LINK(n, t, d, s) if(d) s=QString("<a href=\"t\">)") + LIGHT_BLUE(n) + QString("</a>"); \
+						 else  s=QString("<a href=\"t\">)") + DARK_BLUE(n) + QString("</a>");
 
 #define SAYONARA_ORANGE_STR QString("#e8841a")
 #define SAYONARA_ORANGE_COL QColor(232, 132, 26)

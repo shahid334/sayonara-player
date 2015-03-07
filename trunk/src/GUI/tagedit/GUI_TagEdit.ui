@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>877</width>
+    <width>926</width>
     <height>505</height>
    </rect>
   </property>
@@ -220,7 +220,7 @@
       <string/>
      </property>
      <property name="pixmap">
-      <pixmap>:/icons/id3.svg.png</pixmap>
+      <pixmap resource="../Icons.qrc">:/icons/id3.svg.png</pixmap>
      </property>
      <property name="scaledContents">
       <bool>true</bool>
@@ -465,11 +465,7 @@
     </spacer>
    </item>
    <item row="7" column="1" colspan="5">
-    <widget class="QLineEdit" name="le_tag">
-     <property name="readOnly">
-      <bool>false</bool>
-     </property>
-    </widget>
+    <widget class="TagLineEdit" name="le_tag"/>
    </item>
    <item row="7" column="6">
     <widget class="QPushButton" name="btn_apply_tag">
@@ -595,7 +591,7 @@
         <string>Save</string>
        </property>
        <property name="icon">
-        <iconset>
+        <iconset resource="../Icons.qrc">
          <normaloff>:/icons/save.svg.png</normaloff>:/icons/save.svg.png</iconset>
        </property>
        <property name="iconSize">
@@ -610,6 +606,15 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <customwidgets>
+  <customwidget>
+   <class>TagLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>GUI/tagedit/TagLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

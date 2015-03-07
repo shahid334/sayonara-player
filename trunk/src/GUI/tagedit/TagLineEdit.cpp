@@ -1,4 +1,4 @@
-/* SayonaraMessageBox.h */
+/* TagLineEdit.cpp */
 
 /* Copyright (C) 2011-2014  Lucio Carreras
  *
@@ -20,3 +20,8 @@
 
 
 
+#include "TagLineEdit.h"
+
+TagLineEdit::TagLineEdit()
+{
+}

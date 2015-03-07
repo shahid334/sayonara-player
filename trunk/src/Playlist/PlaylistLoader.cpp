@@ -37,21 +37,24 @@ PlaylistLoader::PlaylistLoader(QObject *parent) :
 }
 
 
-void PlaylistLoader::load_old_playlist() {
+MetaDataList PlaylistLoader::load_old_playlist() {
+
+		MetaDataList v_md;
+
 
         CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 		bool load_playlist = _settings->get(Set::PL_Load);
-		if( !load_playlist ) return;
+		if( !load_playlist ) return v_md;
 
 		bool load_last_track = _settings->get(Set::PL_LoadLastTrack);
 		int last_track_idx = _settings->get(Set::PL_LastTrack);
 
 		QStringList saved_playlist = _settings->get(Set::PL_Playlist);
 
-        if(saved_playlist.size() == 0) return;
+		if(saved_playlist.size() == 0) return v_md;
 
-        MetaDataList v_md;
+
 
         // run over all tracks
         for(int i=0; i<saved_playlist.size(); i++) {
@@ -104,15 +107,18 @@ void PlaylistLoader::load_old_playlist() {
             v_md.push_back(track);
         }
 
-        if(v_md.size() == 0) return;
+		if(v_md.size() == 0)  {
+			return v_md;
+		}
 
-
-		emit sig_create_playlist(v_md);
-
-		if(last_track_idx >= v_md.size() || last_track_idx < 0) return;
+		if(last_track_idx >= v_md.size() || last_track_idx < 0){
+			return v_md;
+		}
 
 		if(load_last_track) {
-			emit sig_change_track(last_track_idx);
+			v_md.setCurPlayTrack(last_track_idx);
         }
+
+		return v_md;
 }
 

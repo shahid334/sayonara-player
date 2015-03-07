@@ -230,14 +230,23 @@ MetaDataList::~MetaDataList() {
 
 void MetaDataList::setCurPlayTrack(int idx) {
 
-    if(_cur_played_track >= 0){
-        (this->data() + _cur_played_track)->pl_playing = false;
-    }
+	if(_cur_played_track >= 0 && _cur_played_track < this->size() ){
+		(this->data() + _cur_played_track)->pl_playing = false;
+	}
 
-	if(idx < 0) return;
+	else{
+		_cur_played_track = -1;
+	}
+
+	if(idx < 0 || idx >= this->size()) {
+		_cur_played_track = -1;
+		return;
+	}
 
 	_cur_played_track = idx;
-    (this->data() + _cur_played_track)->pl_playing = true;
+
+	(this->data() + _cur_played_track)->pl_playing = true;
+
 }
 
 int MetaDataList::getCurPlayTrack() const {

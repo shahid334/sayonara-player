@@ -59,6 +59,7 @@ SET(HEADERS
     playlist_chooser/GUI_PlaylistChooser.h
     soundcloud/GUI_SoundcloudLibrary.h
     tagedit/GUI_TagEdit.h
+    tagedit/TagLineEdit.h
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
 
     Podcasts/GUI_Podcasts.h

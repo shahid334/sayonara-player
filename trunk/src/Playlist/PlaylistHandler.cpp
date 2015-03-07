@@ -110,14 +110,23 @@ void PlaylistHandler::load_old_playlist(){
 	}
 
 	_playlist_loader = new PlaylistLoader(this);
+	MetaDataList v_md = _playlist_loader->load_old_playlist();
+	int last_track = v_md.getCurPlayTrack();
 
-	connect(_playlist_loader, SIGNAL(sig_create_playlist(const MetaDataList&)),
-			this, SLOT(create_playlist(const MetaDataList&)));
 
-	connect(_playlist_loader, SIGNAL(sig_change_track(int)),
-			this, SLOT(psl_change_track(int)));
+	get_current()->create_playlist(v_md);
+	emit_playlist_created();
+	if(last_track != -1){
+		qDebug() << "Last track = " << last_track;
+		psl_change_track(last_track);
+	}
 
-	_playlist_loader->load_old_playlist();
+
+
+
+
+	delete _playlist_loader;
+	_playlist_loader = 0;
 }
 
 
@@ -166,19 +175,18 @@ Playlist* PlaylistHandler::new_playlist(PlaylistType type, int playlist_idx) {
 // create a playlist, where metadata is already available
 void PlaylistHandler::create_playlist(const MetaDataList& v_md) {
 
-	if(v_md.size() == 0 && _state == PlaylistWaiting){
-		_state = PlaylistStop;
-	}
+	if(_state == PlaylistWaiting){
 
-	if(!get_current()->is_empty() && _state == PlaylistWaiting){
-		_state = PlaylistStop;
+		if(v_md.size() == 0	){
+			_state = PlaylistStop;
+		}
 	}
 
 	get_current()->create_playlist(v_md);
 
 	emit_playlist_created();
 
-	if(_state == PlaylistStop ){
+	if(_state == PlaylistStop && v_md.size() > 0){
 
 		psl_play();
 	}
@@ -331,7 +339,9 @@ void PlaylistHandler::psl_clear_playlist() {
 // play a track
 void PlaylistHandler::psl_play() {
 
-	if(_state == PlaylistPause || _state == PlaylistWaiting){
+	if( _state == PlaylistPause ||
+		_state == PlaylistWaiting )
+	{
 		emit sig_goon_playing();
 	}
 
