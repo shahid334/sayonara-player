@@ -47,42 +47,42 @@
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="190"/>
         <source>Search alternative image</source>
-        <translation type="unfinished">Hledat náhradní obrázek</translation>
+        <translation>Hledat náhradní obrázek</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="191"/>
         <source>Close</source>
-        <translation type="unfinished">Zavřít</translation>
+        <translation>Zavřít</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="192"/>
         <source>Save</source>
-        <translation type="unfinished">Uložit</translation>
+        <translation>Uložit</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="194"/>
         <source>Search</source>
-        <translation type="unfinished">Hledat</translation>
+        <translation>Hledat</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="195"/>
         <source>...</source>
-        <translation type="unfinished">...</translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="196"/>
         <source>Online search</source>
-        <translation type="unfinished">Hledání na internetu</translation>
+        <translation>Hledání na internetu</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="197"/>
         <source>Local search</source>
-        <translation type="unfinished">Místní hledání</translation>
+        <translation>Místní hledání</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Alternate_Covers.h" line="198"/>
         <source>Select and preview multiple covers</source>
-        <translation type="unfinished">Výběr a náhled více obalů</translation>
+        <translation>Výběr a náhled více obalů</translation>
     </message>
 </context>
 <context>
@@ -813,7 +813,7 @@
     <message>
         <location filename="../GUI/ui_GUI_LastFM_Dialog.h" line="187"/>
         <source>Save</source>
-        <translation type="unfinished">Uložit</translation>
+        <translation>Uložit</translation>
     </message>
 </context>
 <context>
@@ -821,12 +821,12 @@
     <message>
         <location filename="../GUI/ui_GUI_Level.h" line="462"/>
         <source>Level</source>
-        <translation type="unfinished">Úroveň</translation>
+        <translation>Úroveň</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_Level.h" line="463"/>
         <source>x</source>
-        <translation type="unfinished">x</translation>
+        <translation>x</translation>
     </message>
 </context>
 <context>
@@ -1152,12 +1152,12 @@ seznamy skladeb</translation>
     <message>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="216"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;File&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Soubor&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_PlaylistChooser.h" line="217"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Saved&lt;br/&gt;Playlists&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;right&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Uložené&lt;br/&gt;seznamy skladeb&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
 </context>
 <context>
@@ -1387,7 +1387,7 @@ seznamy skladeb</translation>
     <message>
         <location filename="../GUI/ui_GUI_Startup_Dialog.h" line="139"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -1545,12 +1545,12 @@ Vyberte, prosím, jinou složku</translation>
     <message>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="184"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_StreamRecorder.h" line="187"/>
         <source>Only complete tracks</source>
-        <translation type="unfinished"></translation>
+        <translation>Jen úplné skladby</translation>
     </message>
 </context>
 <context>
@@ -1863,28 +1863,29 @@ Vyberte, prosím, jinou složku</translation>
     <message>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="424"/>
         <source>Apply expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Použít</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="434"/>
         <source>Tag from path</source>
-        <translation type="unfinished"></translation>
+        <translation>Značku vytáhnout z cesty</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="435"/>
         <source>Tag
 expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Značka
+Výraz</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="443"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_TagEdit.h" line="447"/>
         <source>Undo expression</source>
-        <translation type="unfinished"></translation>
+        <translation>Zpět</translation>
     </message>
 </context>
 <context>
@@ -1932,7 +1933,7 @@ expression</source>
     <message>
         <location filename="../GUI/ui_GUI_Target_Playlist_Dialog.h" line="123"/>
         <source>Ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -2053,12 +2054,12 @@ expression</source>
     <message>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="230"/>
         <source>cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>Zrušit</translation>
     </message>
     <message>
         <location filename="../GUI/ui_GUI_ImportFolder.h" line="231"/>
         <source>ok</source>
-        <translation type="unfinished"></translation>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -2095,7 +2096,7 @@ expression</source>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="158"/>
         <location filename="../GUI/ui_GUI_InfoDialog.h" line="264"/>
         <source>Sublable</source>
-        <translation type="unfinished"></translation>
+        <translation>Sublable</translation>
     </message>
     <message>
         <location filename="../GUI/InfoDialog/GUI_InfoDialog.ui" line="178"/>
@@ -2269,7 +2270,7 @@ expression</source>
     <message>
         <location filename="../GUI/ui_GUI_Library_windowed.h" line="270"/>
         <source>Music Library  </source>
-        <translation type="unfinished"></translation>
+        <translation>Hudební sbírka</translation>
     </message>
 </context>
 <context>
