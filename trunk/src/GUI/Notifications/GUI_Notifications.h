@@ -42,7 +42,7 @@ private:
     NotificationPluginLoader* _plugin_loader;
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 };
 

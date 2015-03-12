@@ -63,7 +63,7 @@ private:
     void play_podcasts(QString url, QString name);
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 
 

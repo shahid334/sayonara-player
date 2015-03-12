@@ -156,13 +156,16 @@ void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 
 	qDebug() << "Change track " << md.title;
 
+	if( ! md.is_equal(_md ) && (_md.id >= 0) ){
+		_jump_play_s = 0;
+	}
+
 	bool success = false;
 	if(md.radio_mode() != RadioModeOff){
 		_settings->set(Set::Engine_CurTrackPos_s, 0);
 	}
 
 	if(_wait_for_gapless_track) {
-
 		change_track_gapless(md);
 		_wait_for_gapless_track = false;
 		return;
@@ -368,10 +371,13 @@ void GSTPlaybackEngine::update_duration() {
 
 	_pipeline->refresh_duration();
 
+	qDebug() << "Update duration";
+
 	if(_jump_play_s > 0){
 		_pipeline->seek_abs(_jump_play_s * GST_SECOND);
 		_jump_play_s = 0;
 	}
+
 	qint64 duration_ms = _pipeline->get_duration_ms();
 	quint32 duration_s = duration_ms / 1000;
 	quint32 md_duration_s = _md.length_ms / 1000;

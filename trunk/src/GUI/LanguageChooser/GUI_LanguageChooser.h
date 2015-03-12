@@ -46,7 +46,7 @@ private:
 
 protected:
 	void showEvent(QShowEvent*);
-	void language_changed();
+	virtual void language_changed();
 };
 
 #endif // GUI_LANGUAGECHOOSER_H

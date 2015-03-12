@@ -87,7 +87,7 @@ private:
 
 protected:
 	void closeEvent(QCloseEvent* e);
-	void language_changed();
+	virtual void language_changed();
 };
 
 #endif /* GUI_ALTERNATE_COVERS_H_ */

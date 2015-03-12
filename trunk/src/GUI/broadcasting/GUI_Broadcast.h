@@ -60,7 +60,7 @@ private:
 	void set_status_label();
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 
 

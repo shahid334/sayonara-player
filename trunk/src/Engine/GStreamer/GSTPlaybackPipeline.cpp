@@ -59,7 +59,7 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 
 		if(!create_element(&_eq_queue, "queue", "eq_queue")) break;
 		if(!create_element(&_volume, "volume")) break;
-		if(!create_element(&_audio_sink, "alsasink")) break;
+		if(!create_element(&_audio_sink, "autoaudiosink")) break;
 
 		if(!create_element(&_level_queue, "queue", "level_queue")) break;
 		if(!create_element(&_level_audio_convert, "audioconvert", "level_convert")) break;
@@ -88,10 +88,6 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 						 _spectrum_queue, _spectrum_audio_convert, _spectrum, _spectrum_sink,
 
 						 NULL);
-
-
-
-
 
 		success = gst_element_link_many(_eq_queue, _volume, _audio_sink, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link eq with audio sink")) break;

@@ -112,7 +112,7 @@ private:
 	bool check_idx(int idx);
 
 protected:
-	void language_changed();
+	virtual void  language_changed();
 };
 
 #endif

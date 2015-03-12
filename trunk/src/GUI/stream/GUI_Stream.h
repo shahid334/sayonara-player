@@ -61,7 +61,7 @@ public:
 	void setup_stations(const QMap<QString, QString>&);
 
 protected:
-	void language_changed();
+	virtual void  language_changed();
 
 
 };

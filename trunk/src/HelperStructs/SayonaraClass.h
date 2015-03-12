@@ -50,11 +50,8 @@ class SayonaraDialog : public QDialog, protected SayonaraClass {
 	Q_OBJECT
 
 protected slots:
-	virtual void _language_changed(){ language_changed(); }
+	virtual void language_changed(){}
 	virtual void skin_changed(){}
-
-protected:
-	void language_changed(){}
 
 public:
 	SayonaraDialog(QWidget* parent=0) :
@@ -62,7 +59,7 @@ public:
 		SayonaraClass()
 
 	{
-		REGISTER_LISTENER(Set::Player_Language, _language_changed);
+		REGISTER_LISTENER(Set::Player_Language, language_changed);
 		REGISTER_LISTENER(Set::Player_Style, skin_changed);
 	}
 
@@ -76,13 +73,9 @@ class SayonaraWidget : public QWidget, protected SayonaraClass {
 	Q_OBJECT
 
 protected slots:
-	virtual void _language_changed(){
-		language_changed();
-	}
+	virtual void language_changed(){}
 	virtual void skin_changed(){}
 
-protected:
-	void language_changed(){}
 
 public:
 	SayonaraWidget(QWidget* parent=0) :
@@ -90,7 +83,7 @@ public:
 		SayonaraClass()
 
 	{
-		REGISTER_LISTENER(Set::Player_Language, _language_changed);
+		REGISTER_LISTENER(Set::Player_Language, language_changed);
 		REGISTER_LISTENER(Set::Player_Style, skin_changed);
 	}
 
@@ -105,11 +98,11 @@ class SayonaraMainWindow : public QMainWindow, protected SayonaraClass {
 	Q_OBJECT
 
 private slots:
-	virtual void _language_changed(){ language_changed(); }
+	virtual void language_changed(){}
 	virtual void skin_changed(){}
 
 protected:
-	void language_changed(){}
+
 
 public:
 	SayonaraMainWindow(QWidget* parent=0) :
@@ -117,7 +110,7 @@ public:
 		SayonaraClass()
 
 	{
-		REGISTER_LISTENER(Set::Player_Language, _language_changed);
+		REGISTER_LISTENER(Set::Player_Language, language_changed);
 		REGISTER_LISTENER(Set::Player_Style, skin_changed);
 	}
 

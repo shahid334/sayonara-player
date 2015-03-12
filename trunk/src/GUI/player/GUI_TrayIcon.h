@@ -92,7 +92,7 @@ private slots:
 	void mute_clicked();
 
 protected:
-	void language_changed();
+	virtual void  language_changed();
 
 private:
     /// some shared actions

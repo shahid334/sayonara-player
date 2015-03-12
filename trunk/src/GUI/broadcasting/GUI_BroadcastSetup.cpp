@@ -57,7 +57,7 @@ void GUI_BroadcastSetup::accept(){
 }
 
 void GUI_BroadcastSetup::language_changed(){
-	
+	retranslateUi(this);
 }
 
 void GUI_BroadcastSetup::reject(){

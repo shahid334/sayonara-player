@@ -73,7 +73,7 @@ private:
 	void disable_next();
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 };
 

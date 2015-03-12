@@ -67,7 +67,7 @@ public slots:
 
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 private:
 

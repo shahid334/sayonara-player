@@ -69,7 +69,7 @@ GUI_ImportFolder::~GUI_ImportFolder() {
 }
 
 void GUI_ImportFolder::language_changed(){
-
+	retranslateUi(this);
 }
 
 

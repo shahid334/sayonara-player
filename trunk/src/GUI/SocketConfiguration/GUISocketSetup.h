@@ -46,7 +46,7 @@ public:
 	virtual ~GUI_SocketSetup();
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 
 private:

@@ -59,7 +59,7 @@ private:
 	void setLFMActive(bool b);
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 public:
 	void set_username_and_password(QString username, QString password);

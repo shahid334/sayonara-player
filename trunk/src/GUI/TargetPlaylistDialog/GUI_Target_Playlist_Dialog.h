@@ -41,7 +41,7 @@ private slots:
     void ok_button_clicked();
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 
     

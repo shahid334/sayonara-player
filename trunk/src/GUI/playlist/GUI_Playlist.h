@@ -124,7 +124,7 @@ private:
 protected:
 	void changeEvent(QEvent* e);
 	void resizeEvent(QResizeEvent *e);
-	void language_changed();
+	virtual void  language_changed();
 
 
 };

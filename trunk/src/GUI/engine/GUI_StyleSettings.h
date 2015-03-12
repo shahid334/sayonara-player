@@ -81,7 +81,7 @@ private:
 
 protected:
     void closeEvent(QCloseEvent *);
-	void language_changed();
+	virtual void language_changed();
 };
 
 #endif // STYLESETTINGS_H

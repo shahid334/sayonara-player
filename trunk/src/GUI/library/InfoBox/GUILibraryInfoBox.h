@@ -51,7 +51,7 @@ public slots:
 	void lfm_data_available();
 
 protected:
-	void language_changed();
+	virtual void language_changed();
 
 private:
 

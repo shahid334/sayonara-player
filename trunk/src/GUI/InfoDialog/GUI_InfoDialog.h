@@ -76,7 +76,7 @@ private slots:
 
 protected:
     void closeEvent(QCloseEvent *e);
-	void language_changed();
+	virtual void language_changed();
 
 public:
     GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit);

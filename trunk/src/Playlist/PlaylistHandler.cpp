@@ -121,9 +121,9 @@ void PlaylistHandler::load_old_playlist(){
 		psl_change_track(last_track);
 	}
 
-
-
-
+	if(_state == PlaylistWaiting && v_md.isEmpty()){
+		_state = PlaylistStop;
+	}
 
 	delete _playlist_loader;
 	_playlist_loader = 0;

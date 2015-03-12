@@ -35,7 +35,7 @@ public:
     virtual ~GUI_Startup_Dialog();
     
 protected:
-	void language_changed();
+	virtual void  language_changed();
 
 private slots:
     void cb_toggled(bool);

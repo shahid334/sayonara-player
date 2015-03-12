@@ -48,7 +48,7 @@ public:
 		virtual ~GUI_StreamRecorder();
 
 	protected:
-		void language_changed();
+		virtual void language_changed();
 
 	private:
 

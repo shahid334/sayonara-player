@@ -70,7 +70,7 @@ GUI_TagEdit::~GUI_TagEdit(){
 }
 
 void GUI_TagEdit::language_changed(){
-
+	retranslateUi(this);
 }
 
 

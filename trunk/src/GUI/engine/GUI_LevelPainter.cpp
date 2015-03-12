@@ -51,7 +51,7 @@ GUI_LevelPainter::GUI_LevelPainter(QString name, QWidget *parent) :
 }
 
 void GUI_LevelPainter::language_changed(){
-
+	retranslateUi(this);
 }
 
 

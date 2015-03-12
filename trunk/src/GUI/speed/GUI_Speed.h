@@ -34,7 +34,7 @@ public:
 	explicit GUI_Speed(QString name, QWidget *parent = 0);
 
 protected:
-	void language_changed();
+	virtual void  language_changed();
 		
 signals:
 	void sig_speed_changed(float);
