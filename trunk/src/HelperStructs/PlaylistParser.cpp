@@ -32,9 +32,7 @@
 #include <qdom.h>
 
 
-static int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path="");
-static int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path="");
-static int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path="");
+
 static CDatabaseConnector* db = CDatabaseConnector::getInstance();
 
 QString _correct_filepath(QString filepath, QString abs_path) {
@@ -76,7 +74,7 @@ QString _correct_filepath(QString filepath, QString abs_path) {
 }
 
 
-int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
+int PlaylistParser::parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
 	QStringList list = file_content.split('\n');
 
     QString artist;
@@ -100,6 +98,10 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
                 if(len > 0){
                     len_ms = (quint64) (len * 1000);
                 }
+
+				else{
+					len_ms = 0;
+				}
             }
 
             if(sl1.size() > 1){
@@ -122,6 +124,11 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
         }
 
         MetaData md;
+
+
+		if(Helper::is_playlistfile(line)){
+			return parse_playlist(line, v_md);
+		}
 
         if( !Helper::is_www(line)) {
 
@@ -172,7 +179,7 @@ int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path) {
 }
 
 
-int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path) {
+int PlaylistParser::parse_asx(QString file_content, MetaDataList& v_md, QString abs_path) {
 
 
 	v_md.clear();
@@ -187,6 +194,7 @@ int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path) {
 	do{
 
 		MetaData md;
+		md.length_ms = 0;
 		md.album = "";
 
 		for(int entry_child=0; entry_child<entry.childNodes().size(); entry_child++)
@@ -228,7 +236,7 @@ int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path) {
 }
 
 
-int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path) {
+int PlaylistParser::parse_pls(QString file_content, MetaDataList& v_md, QString abs_path) {
 
 	// abs_path = "", if file is not local
 
@@ -318,7 +326,14 @@ int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path) {
 		}
 
 		else if(line.toLower().startsWith("length")) {
-			v_md[track_idx - 1].length_ms = val.toInt() * 1000;
+			int len = val.toInt();
+			if(len > 0){
+				v_md[track_idx - 1].length_ms = len * 1000;
+			}
+
+			else{
+				len = 0;
+			}
 		}
 	}
 

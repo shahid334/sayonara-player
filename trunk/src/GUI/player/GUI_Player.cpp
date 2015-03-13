@@ -157,7 +157,11 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
     this->setupConnections();
     m_awa_version->set_url("http://sayonara.luciocarreras.de/current_version");
     m_awa_translators->set_url("http://sayonara.luciocarreras.de/translators");
-    m_awa_version->start();
+
+	if(_settings->get(Set::Player_NotifyNewVersion)){
+		m_awa_version->start();
+	}
+
     m_awa_translators->start();
 
 	plugin_widget->resize(plugin_widget->width(), 0);

@@ -283,6 +283,7 @@ void GSTPlaybackPipeline::stop() {
 
 	_timer->stop();
 
+	qDebug() << "stop: set duration to 0";
 	_duration_ms = 0;
 	_uri = 0;
 
@@ -309,23 +310,26 @@ void GSTPlaybackPipeline::unmute() {
 
 bool GSTPlaybackPipeline::_seek(gint64 ns){
 
-	float f;
-
+	bool success;
 	if(_speed_active){
-		f = _speed_val;
+		float f = _speed_val;
+		success = gst_element_seek(_audio_src,
+									f,
+									GST_FORMAT_TIME,
+									(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
+									GST_SEEK_TYPE_SET, ns,
+									GST_SEEK_TYPE_SET, _duration_ms * MIO);
+
 	}
 
 	else {
-		f = 1.0f;
+		success = gst_element_seek_simple( _audio_src,
+								 GST_FORMAT_TIME,
+								 (GstSeekFlags) (GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SNAP_NEAREST),
+								ns);
 	}
 
-	return gst_element_seek(_audio_src,
-							f,
-							GST_FORMAT_TIME,
-							(GstSeekFlags)(GST_SEEK_FLAG_FLUSH | GST_SEEK_FLAG_SKIP),
-							GST_SEEK_TYPE_SET, ns,
-							GST_SEEK_TYPE_SET, _duration_ms * MIO);
-
+	return success;
 }
 
 gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns) {

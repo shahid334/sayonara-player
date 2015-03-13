@@ -157,6 +157,9 @@ void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 	qDebug() << "Change track " << md.title;
 
 	if( ! md.is_equal(_md ) && (_md.id >= 0) ){
+		qDebug() << md.filepath() << " not equal " << _md.filepath();
+		qDebug() << "Md id = " << _md.id;
+		qDebug() << "-->Jump play = 0";
 		_jump_play_s = 0;
 	}
 
@@ -371,10 +374,22 @@ void GSTPlaybackEngine::update_duration() {
 
 	_pipeline->refresh_duration();
 
-	qDebug() << "Update duration";
+	qDebug() << "===========================";
+	qDebug() << Q_FUNC_INFO;
+	qDebug() << "Jump play = " << _jump_play_s;
+	qDebug() << "get duration = " << _pipeline->get_duration_ms();
+	qDebug() << "state = " << _pipeline->get_state();
+	qDebug() << "===========================";
 
-	if(_jump_play_s > 0){
+	if( _jump_play_s > 0 &&
+		(_pipeline->get_duration_ms() > 0) &&
+		( (_pipeline->get_state() == GST_STATE_PLAYING || _pipeline->get_state() == GST_STATE_PAUSED) ))
+	{
+
 		_pipeline->seek_abs(_jump_play_s * GST_SECOND);
+
+		qDebug() << "Reset jump play";
+
 		_jump_play_s = 0;
 	}
 

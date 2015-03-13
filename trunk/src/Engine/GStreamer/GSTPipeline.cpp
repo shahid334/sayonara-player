@@ -170,15 +170,24 @@ void GSTAbstractPipeline::refresh_position() {
 void GSTAbstractPipeline::refresh_duration(){
 
 	gint64 dur;
+	bool success;
 
 #if GST_CHECK_VERSION(1, 0, 0)
-	gst_element_query_duration(GST_ELEMENT(_pipeline), GST_FORMAT_TIME, &dur);
+	success = gst_element_query_duration(GST_ELEMENT(_pipeline), GST_FORMAT_TIME, &dur);
 #else
 	GstFormat format = GST_FORMAT_TIME;
-	gst_element_query_duration(GST_ELEMENT(_pipeline), &format, &dur);
+	success = gst_element_query_duration(GST_ELEMENT(_pipeline), &format, &dur);
 #endif
 
-	_duration_ms = dur / MIO;
+	if(success){
+		_duration_ms = dur / MIO;
+		qDebug() << "New duration = " << _duration_ms;
+	}
+
+	else{
+		qDebug() << "Cannot determine duration";
+		qDebug() << "Duration stays " << _duration_ms;
+	}
 }
 
 void GSTAbstractPipeline::set_data(uchar* data, quint64 size){

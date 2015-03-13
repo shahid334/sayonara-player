@@ -58,7 +58,6 @@ public:
 	void load_old_playlist();
 
 signals:
-	void sig_play();
 
 	void sig_playlist_created(const MetaDataList&, int cur_track_idx, PlaylistType type, int playlist_idx=-1);
 	void sig_auto_next_file(const MetaData&);

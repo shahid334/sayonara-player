@@ -27,6 +27,10 @@
 
 namespace PlaylistParser {
 
+	int parse_m3u(QString file_content, MetaDataList& v_md, QString abs_path="");
+	int parse_asx(QString file_content, MetaDataList& v_md, QString abs_path="");
+	int parse_pls(QString file_content, MetaDataList& v_md, QString abs_path="");
+
 	int parse_playlist(QString playlist_file, MetaDataList& md);
     void save_playlist(QString filename, const MetaDataList& md, bool relative);
 

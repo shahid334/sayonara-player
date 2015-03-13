@@ -123,7 +123,7 @@
          <string/>
         </property>
         <property name="pixmap">
-         <pixmap>:/icons/icons/lastfm.gif</pixmap>
+         <pixmap resource="../Icons.qrc">:/icons/lastfm_logo.jpg</pixmap>
         </property>
         <property name="scaledContents">
          <bool>true</bool>
@@ -165,7 +165,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../Icons.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>btn_cancel</sender>

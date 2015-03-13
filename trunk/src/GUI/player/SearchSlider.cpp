@@ -52,6 +52,8 @@ bool SearchSlider::event(QEvent *e){
 
 		case QEvent::Wheel:
 
+			if(!this->isEnabled()) break;
+
 			we = (QWheelEvent*) e;
 			if(we->modifiers() & Qt::ShiftModifier){
 				delta_val = 10;

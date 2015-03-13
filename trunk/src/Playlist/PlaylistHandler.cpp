@@ -175,13 +175,6 @@ Playlist* PlaylistHandler::new_playlist(PlaylistType type, int playlist_idx) {
 // create a playlist, where metadata is already available
 void PlaylistHandler::create_playlist(const MetaDataList& v_md) {
 
-	if(_state == PlaylistWaiting){
-
-		if(v_md.size() == 0	){
-			_state = PlaylistStop;
-		}
-	}
-
 	get_current()->create_playlist(v_md);
 
 	emit_playlist_created();
@@ -331,6 +324,7 @@ void PlaylistHandler::psl_clear_playlist() {
 	if(_state == PlaylistWaiting){
 		psl_stop();
 	}
+
 	get_current()->clear();
 	emit_playlist_created();
 }
@@ -339,8 +333,7 @@ void PlaylistHandler::psl_clear_playlist() {
 // play a track
 void PlaylistHandler::psl_play() {
 
-	if( _state == PlaylistPause ||
-		_state == PlaylistWaiting )
+	if( _state == PlaylistPause )
 	{
 		emit sig_goon_playing();
 	}
@@ -400,7 +393,7 @@ void PlaylistHandler::psl_change_track(int idx, int playlist_idx) {
 	emit_cur_track_changed(_state != PlaylistWaiting);
 
 	if(_state == PlaylistWaiting){
-		_state = PlaylistStop;
+		_state = PlaylistPause;
 	}
 
 	else{
