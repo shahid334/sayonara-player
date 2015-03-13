@@ -97,6 +97,8 @@ public:
 	virtual bool		get_show_spectrum(){ return _show_spectrum; }
 	virtual bool		get_broadcast_active() { return _broadcast_active; }
 
+	virtual void		set_track_ready(){}
+
 
 signals:
 	void sig_md_changed(const MetaData&);

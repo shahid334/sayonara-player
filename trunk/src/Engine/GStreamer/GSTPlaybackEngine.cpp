@@ -154,12 +154,7 @@ void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
 
 void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 
-	qDebug() << "Change track " << md.title;
-
 	if( ! md.is_equal(_md ) && (_md.id >= 0) ){
-		qDebug() << md.filepath() << " not equal " << _md.filepath();
-		qDebug() << "Md id = " << _md.id;
-		qDebug() << "-->Jump play = 0";
 		_jump_play_s = 0;
 	}
 
@@ -374,25 +369,6 @@ void GSTPlaybackEngine::update_duration() {
 
 	_pipeline->refresh_duration();
 
-	qDebug() << "===========================";
-	qDebug() << Q_FUNC_INFO;
-	qDebug() << "Jump play = " << _jump_play_s;
-	qDebug() << "get duration = " << _pipeline->get_duration_ms();
-	qDebug() << "state = " << _pipeline->get_state();
-	qDebug() << "===========================";
-
-	if( _jump_play_s > 0 &&
-		(_pipeline->get_duration_ms() > 0) &&
-		( (_pipeline->get_state() == GST_STATE_PLAYING || _pipeline->get_state() == GST_STATE_PAUSED) ))
-	{
-
-		_pipeline->seek_abs(_jump_play_s * GST_SECOND);
-
-		qDebug() << "Reset jump play";
-
-		_jump_play_s = 0;
-	}
-
 	qint64 duration_ms = _pipeline->get_duration_ms();
 	quint32 duration_s = duration_ms / 1000;
 	quint32 md_duration_s = _md.length_ms / 1000;
@@ -439,6 +415,29 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 	}
 
 	emit sig_pos_changed_s( pos_sec );
+}
+
+void GSTPlaybackEngine::set_track_ready(){
+
+
+
+	if( _jump_play_s > 0 )
+	{
+
+		qDebug() << "===========================";
+		qDebug() << Q_FUNC_INFO;
+		qDebug() << "Jump play = " << _jump_play_s;
+		qDebug() << "get duration = " << _pipeline->get_duration_ms();
+		qDebug() << "===========================";
+
+
+		gint64 new_val = _pipeline->seek_abs(_jump_play_s * GST_SECOND);
+		if(new_val <= 0) return;
+
+		qDebug() << "Reset jump play";
+
+		_jump_play_s = 0;
+	}
 }
 
 

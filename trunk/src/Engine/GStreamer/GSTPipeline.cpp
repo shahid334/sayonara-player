@@ -123,13 +123,11 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 
 	sample = gst_app_sink_pull_sample(GST_APP_SINK(sink));
 	if(!sample) {
-		qDebug() << "No sample";
 		return GST_FLOW_OK;
 	}
 
 	buffer = gst_sample_get_buffer(sample);
 	if(!buffer) {
-		qDebug() << "No buffer";
 		return GST_FLOW_OK;
 	}
 
@@ -181,12 +179,6 @@ void GSTAbstractPipeline::refresh_duration(){
 
 	if(success){
 		_duration_ms = dur / MIO;
-		qDebug() << "New duration = " << _duration_ms;
-	}
-
-	else{
-		qDebug() << "Cannot determine duration";
-		qDebug() << "Duration stays " << _duration_ms;
 	}
 }
 

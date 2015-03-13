@@ -361,12 +361,7 @@ gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns) {
 
 gint64 GSTPlaybackPipeline::seek_abs(gint64 ns) {
 
-	if(ns == 0) return 0;
 	if(ns < 0) ns = 0;
-	if(ns > _duration_ms * MIO){
-		qDebug() << "Warning: Duration = " << _duration_ms << " < " << ns / MIO;
-		return -1;
-	}
 
 	g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);
 

@@ -57,6 +57,8 @@ public:
 	void		update_bitrate(quint32 bitrate);
 	void		update_duration();
 
+	void		set_track_ready();
+
 	void		set_about_to_finish(qint64 time2go);
 	void		set_cur_position_ms(qint64 pos_ms);
 
