@@ -107,6 +107,8 @@ namespace SK{
 		Broadcast_Port,
         Broadcast_Clients,
 
+		MP3enc_found,
+
 		Num_Setting_Keys
 	};
 }
@@ -198,6 +200,7 @@ namespace Set {
 namespace SetNoDB{
 
 	INST(int, Broadcast_Clients);
+	INST(bool, MP3enc_found);
 
 }
 

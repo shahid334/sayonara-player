@@ -40,12 +40,15 @@ StreamServer::StreamServer(QObject* parent) :
 	_pending_socket = NULL;
 
 	REGISTER_LISTENER(Set::BroadCast_Active, active_changed);
-	REGISTER_LISTENER_NO_CALL(Set::Broadcast_Port, port_changed);
 	REGISTER_LISTENER(Set::Broadcast_Prompt, prompt_changed);
+	REGISTER_LISTENER_NO_CALL(Set::Broadcast_Port, port_changed);
+
 
 	if( !_server->isListening() ){
 		listen_for_connection();
 	}
+
+	REGISTER_LISTENER(SetNoDB::MP3enc_found, mp3_enc_found);
 }
 
 StreamServer::~StreamServer(){
@@ -62,9 +65,7 @@ void StreamServer::server_destroyed(){
 
 void StreamServer::run(){
 
-
 	emit sig_can_listen(_server->isListening());
-
 
 	forever{
 
@@ -246,6 +247,8 @@ void StreamServer::active_changed(){
 
 void StreamServer::disconnected(StreamWriter* sw){
 
+	if(!sw) return;
+
 	qDebug() << "*** STREAM WRITER DISCONNECTED ***";
 	qDebug() << "Number of active connections: " << _n_clients - 1;
 	qDebug() << "";
@@ -261,6 +264,7 @@ void StreamServer::disconnected(StreamWriter* sw){
 
 	delete sw;
 	sw = 0;
+
 
 	if(_n_clients == 0 && !_settings->get(Set::BroadCast_Active)){
 		server_close();
@@ -305,8 +309,14 @@ void StreamServer::retry(){
 		success = listen_for_connection();
 	}
 
-
-
 	emit sig_can_listen(success);
+}
 
+void StreamServer::mp3_enc_found(){
+
+	bool active = _settings->get(SetNoDB::MP3enc_found);
+
+	if(!active){
+		stop();
+	}
 }

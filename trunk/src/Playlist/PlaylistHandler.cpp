@@ -116,8 +116,15 @@ void PlaylistHandler::load_old_playlist(){
 
 	get_current()->create_playlist(v_md);
 	emit_playlist_created();
-	if(last_track != -1){
+
+	if(last_track == -1){
 		qDebug() << "Last track = " << last_track;
+		if(v_md.size() > 0){
+			last_track = 0;
+		}
+	}
+
+	if(last_track >= 0){
 		psl_change_track(last_track);
 	}
 

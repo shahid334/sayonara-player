@@ -46,6 +46,9 @@ GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent) :
 		_audio_sink = gst_element_factory_make("filesink", "filesink");
 
 
+		_settings->set(SetNoDB::MP3enc_found, (_lame != NULL) );
+
+
 		if(!_test_and_error(_bus, "CvtEngine: Somethink went wrong with the bus")) break;
 		if(!_test_and_error(_audio_src, "CvtEngine: Source creation fail")) break;
 		if(!_test_and_error(_audio_convert, "CvtEngine: Cannot create audio convert")) break;

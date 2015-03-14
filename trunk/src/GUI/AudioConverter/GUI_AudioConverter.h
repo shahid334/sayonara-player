@@ -51,6 +51,7 @@ private slots:
 	void rb_vbr_toggled(bool b);
 	void quality_changed(int index);
 	void cb_active_toggled(bool b);
+	void mp3_enc_found();
 
 protected:
 	void closeEvent(QCloseEvent* e);
@@ -60,6 +61,7 @@ protected:
 private:
 
 	LameBitrate _bitrate;
+	bool _mp3_enc_available;
 
 	void fill_cbr();
 	void fill_vbr();

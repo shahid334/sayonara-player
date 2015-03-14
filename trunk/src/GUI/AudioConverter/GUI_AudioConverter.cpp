@@ -23,6 +23,7 @@
 #include "GUI_AudioConverter.h"
 #include "HelperStructs/Helper.h"
 #include <QFileDialog>
+#include <QMessageBox>
 
 GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
@@ -62,6 +63,10 @@ GUI_AudioConverter::GUI_AudioConverter(QString name, QWidget *parent) :
 			else cb_quality->setCurrentIndex(idx);
 			break;
 	}
+
+	_mp3_enc_available = true;
+
+	REGISTER_LISTENER(SetNoDB::MP3enc_found, mp3_enc_found);
 }
 
 void GUI_AudioConverter::language_changed(){
@@ -138,6 +143,14 @@ void GUI_AudioConverter::rb_vbr_toggled(bool b) {
 
 void GUI_AudioConverter::cb_active_toggled(bool b) {
 
+	if(!_mp3_enc_available){
+		QMessageBox::warning(this, tr("Error"), tr("Cannot find lame mp3 encoder"));
+		disconnect(cb_active, SIGNAL(toggled(bool)), this, SLOT(cb_active_toggled(bool)));
+		cb_active->setChecked(false);
+		connect(cb_active, SIGNAL(toggled(bool)), this, SLOT(cb_active_toggled(bool)));
+		return;
+	}
+
 	if(b) {
 
 		QString cvt_target_path = _settings->get(Set::Engine_CovertTargetPath);
@@ -163,5 +176,9 @@ void GUI_AudioConverter::quality_changed(int index) {
 	LameBitrate q = (LameBitrate) cb_quality->itemData(index).toInt();
 	qDebug() << "Quality: " << q;
 	_settings->set(Set::Engine_ConvertQuality, (int) q);
+}
+
+void GUI_AudioConverter::mp3_enc_found(){
+	_mp3_enc_available = _settings->get(SetNoDB::MP3enc_found);
 }
 

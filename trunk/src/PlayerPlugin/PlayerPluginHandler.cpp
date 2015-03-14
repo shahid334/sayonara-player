@@ -45,11 +45,23 @@ PlayerPlugin* PlayerPluginHandler::find_plugin(QString name) {
 
 }
 
-void PlayerPluginHandler::addPlugin(PlayerPlugin* p) {
+void PlayerPluginHandler::addPlugin(PlayerPlugin* plugin) {
 
-    _plugins.push_back(p);
-    connect(p, SIGNAL(sig_action_triggered(PlayerPlugin*,bool)), this, SLOT(plugin_action_triggered(PlayerPlugin*,bool)));
-    connect(p, SIGNAL(sig_reload(PlayerPlugin*)), this, SLOT(reload_plugin(PlayerPlugin*)));
+	_plugins.push_back(plugin);
+	connect(plugin, SIGNAL(sig_action_triggered(PlayerPlugin*,bool)), this, SLOT(plugin_action_triggered(PlayerPlugin*,bool)));
+	connect(plugin, SIGNAL(sig_reload(PlayerPlugin*)), this, SLOT(reload_plugin(PlayerPlugin*)));
+}
+
+void PlayerPluginHandler::removePlugin(PlayerPlugin* plugin){
+
+	disconnect(plugin, SIGNAL(sig_action_triggered(PlayerPlugin*,bool)), this, SLOT(plugin_action_triggered(PlayerPlugin*,bool)));
+	disconnect(plugin, SIGNAL(sig_reload(PlayerPlugin*)), this, SLOT(reload_plugin(PlayerPlugin*)));
+
+	if(plugin->isVisible()){
+		plugin_action_triggered(plugin, false);
+	}
+
+	_plugins.removeOne(plugin);
 }
 
 

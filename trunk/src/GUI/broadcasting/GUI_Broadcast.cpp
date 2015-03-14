@@ -44,6 +44,8 @@ GUI_Broadcast::GUI_Broadcast(QString name, QWidget *parent) :
 
 	set_status_label();
 
+	REGISTER_LISTENER(SetNoDB::MP3enc_found, mp3_enc_found);
+
 }
 
 
@@ -208,4 +210,17 @@ void GUI_Broadcast::option_clicked(){
 	connect(setup, SIGNAL(accepted()), setup, SLOT(deleteLater()));
 	connect(setup, SIGNAL(rejected()), setup, SLOT(deleteLater()));
 	setup->show();
+}
+
+void GUI_Broadcast::mp3_enc_found(){
+	bool active = _settings->get(SetNoDB::MP3enc_found);
+	if(!active){
+		combo_clients->hide();
+		btn_dismiss->hide();
+		btn_dismiss_all->hide();
+		btn_retry->hide();
+
+		lab_status->hide();
+		lab_error->setText(tr("Cannot find lame mp3 encoder"));
+	}
 }

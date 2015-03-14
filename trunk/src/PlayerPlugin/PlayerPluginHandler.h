@@ -55,11 +55,9 @@ private:
     PlayerPlugin*       _cur_shown_plugin;
 
 
-
-
-
 public:
-    void addPlugin(PlayerPlugin*);
+	void addPlugin(PlayerPlugin* plugin);
+	void removePlugin(PlayerPlugin* plugin);
     void showPlugin(PlayerPlugin*);
     void showPlugin(QString name);
 

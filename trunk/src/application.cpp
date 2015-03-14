@@ -47,6 +47,7 @@ Application::Application(int & argc, char ** argv) :
 	QFont font = this->font();
 	font.setPointSize(8);
 	app->setFont(font);
+	_initialized = false;
 }
 
 void Application::check_for_crash(){
@@ -249,6 +250,8 @@ void Application::init(int n_files, QTranslator *translator) {
 Application::~Application() {
 
     CDatabaseConnector::getInstance()->store_settings();
+
+	if(!_initialized) return;
 
     delete listen;
     delete ui_socket_setup;

@@ -93,6 +93,7 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void active_changed();
 		void port_changed();
 		void prompt_changed();
+		void mp3_enc_found();
 		void new_client_request();
 		void disconnected(StreamWriter* sw);
 		void new_connection(const QString& ip);

@@ -208,13 +208,13 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
 		case GST_MESSAGE_STATE_CHANGED:
 			GstState old_state, new_state, pending_state;
-			const gchar* old_state_str, *new_state_str, *pending_state_str;
+//			const gchar* old_state_str, *new_state_str, *pending_state_str;
 
 			gst_message_parse_state_changed(msg, &old_state, &new_state, &pending_state);
 
-			old_state_str = gst_element_state_get_name(old_state);
+			/*old_state_str = gst_element_state_get_name(old_state);
 			new_state_str = gst_element_state_get_name(new_state);
-			pending_state_str = gst_element_state_get_name(pending_state);
+			pending_state_str = gst_element_state_get_name(pending_state);*/
 
 			if( /*old_state == GST_STATE_PAUSED &&*/ new_state == GST_STATE_PLAYING){
 				engine->set_track_ready();

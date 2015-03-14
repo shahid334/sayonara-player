@@ -72,11 +72,18 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 		if(!create_element(&_spectrum_sink,"fakesink", "spectrum_sink")) break;
 
 		if(!create_element(&_lame_queue, "queue", "lame_queue")) break;
-		broadcast_branch = create_element(&_lame, "lamemp3enc");
+
+		if(!create_element(&_lame, "lamemp3enc")){
+			broadcast_branch = false;
+			_settings->set(SetNoDB::MP3enc_found, false);
+		}
+
 		if(!create_element(&_resampler, "audioresample", "lame_resampler")) break;
 		if(!create_element(&_lame_audio_convert, "audioconvert", "lame_audioconvert")) break;
 		if(!create_element(&_app_sink, "appsink", "lame_appsink")) break;
 		if(!create_element(&_fake_sink, "fakesink", "fakesink")) break;
+
+
 
 		gst_object_ref(_audio_src);
 
@@ -102,6 +109,8 @@ GSTPlaybackPipeline::GSTPlaybackPipeline(Engine* engine, QObject *parent) :
 
 		success = gst_element_link_many(_audio_convert, _equalizer, _tee, NULL);
 		if(!_test_and_error_bool(success, "Engine: Cannot link audio convert with tee")) break;
+
+		_settings->set(SetNoDB::MP3enc_found, broadcast_branch);
 
 		if(broadcast_branch){
 			gst_bin_add_many(GST_BIN(tmp_pipeline), _lame_queue, _lame_audio_convert, _resampler, _lame, _app_sink, NULL);

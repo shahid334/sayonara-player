@@ -631,6 +631,8 @@ void GUI_Player::_sl_sr_active_changed() {
 }
 
 
+
+
 void GUI_Player::ui_loaded() {
 
     #ifdef Q_OS_UNIX

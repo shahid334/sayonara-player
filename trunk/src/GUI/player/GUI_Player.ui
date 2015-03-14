@@ -1223,18 +1223,16 @@
     <addaction name="action_Language"/>
     <addaction name="separator"/>
     <addaction name="action_setLibPath"/>
+    <addaction name="action_livesearch"/>
+    <addaction name="separator"/>
+    <addaction name="action_startup"/>
+    <addaction name="action_notifications"/>
     <addaction name="action_lastFM"/>
     <addaction name="action_streamrecorder"/>
     <addaction name="separator"/>
-    <addaction name="action_notifications"/>
-    <addaction name="action_startup"/>
-    <addaction name="action_min2tray"/>
     <addaction name="action_only_one_instance"/>
+    <addaction name="action_min2tray"/>
     <addaction name="action_notifyNewVersion"/>
-    <addaction name="separator"/>
-    <addaction name="action_SocketConnection"/>
-    <addaction name="separator"/>
-    <addaction name="action_livesearch"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
