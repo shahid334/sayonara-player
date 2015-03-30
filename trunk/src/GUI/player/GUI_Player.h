@@ -21,6 +21,8 @@
 
 #ifndef GUI_SIMPLEPLAYER_H
 #define GUI_SIMPLEPLAYER_H
+#include "PlayManager.h"
+
 #include "GUI/ui_GUI_Player.h"
 #include "GUI/playlist/GUI_Playlist.h"
 #include "GUI/library/GUI_Library_windowed.h"
@@ -62,9 +64,8 @@ public:
 
 public slots:
 
-	void psl_update_track (const MetaData & in, bool start_play);
-	void psl_set_cur_pos (quint32 pos_sec);
-	void psl_set_play(bool);
+
+	void psl_set_cur_pos_ms(quint64 pos_ms);
 	void psl_id3_tags_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new);
 	void psl_md_changed(const MetaData&);
     void psl_reload_library_allowed(bool);
@@ -82,7 +83,6 @@ public slots:
       */
 
     void trayItemActivated (QSystemTrayIcon::ActivationReason reason);
-    void stopped();
 
     /* Plugins */
     void showPlugin(PlayerPlugin* plugin);
@@ -94,15 +94,9 @@ public slots:
 signals:
 
     /* Player*/
-    void sig_play();
-    void sig_pause();
-    void sig_stop();
-    void sig_backward();
-    void sig_forward();
+
     void sig_mute();
     void sig_rec_button_toggled(bool);
-	void sig_seek_rel(quint32 pos_percent);
-    void sig_seek_rel_ms(qint64 ms);
     void sig_correct_id3(const MetaData&);
 
     /* File */
@@ -126,11 +120,19 @@ signals:
 
 private slots:
 
-    void playClicked(bool b = true);
-    void stopClicked(bool b = true);
-    void backwardClicked(bool b = true);
-    void forwardClicked(bool b = true);
-    void sl_rec_button_toggled(bool b);
+	void play_clicked();
+	void stop_clicked();
+	void prev_clicked();
+	void next_clicked();
+
+	void playstate_changed(PlayManager::PlayState);
+	void played();
+	void stopped();
+	void paused();
+	void track_changed(const MetaData& md);
+
+
+	void sl_rec_button_toggled(bool b);
     void correct_btn_clicked(bool b=false);
     void coverClicked();
 	void seek(int);
@@ -250,6 +252,7 @@ private:
     QStringList         m_translators;
 
 	bool				m_converter_active;
+	PlayManager*		m_play_manager;
 
 
 	void set_album_label();

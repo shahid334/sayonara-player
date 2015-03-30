@@ -45,6 +45,9 @@ LastFM::LastFM() :
 	QObject(),
 	SayonaraClass()
 {
+
+	_play_manager = PlayManager::getInstance();
+
 	lfm_wa_init();
 	_class_name = QString("LastFM");
 	_logged_in = false;
@@ -52,6 +55,8 @@ LastFM::LastFM() :
     _login_thread = new LFMLoginThread();
 
 	connect(_login_thread, SIGNAL(finished()), this, SLOT(_login_thread_finished()));
+	connect(_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
+			this, SLOT(_sl_change_track(const MetaData&)));
 
 	REGISTER_LISTENER_NO_CALL(Set::LFM_Login, psl_login);
 	REGISTER_LISTENER(Set::LFM_Active, psl_login);
@@ -158,7 +163,7 @@ void LastFM::_login_thread_finished() {
 
 
 
-void LastFM::psl_track_changed(const MetaData& md, bool start_play) {
+void LastFM::_sl_change_track(const MetaData& md) {
 
 	PlaylistMode pl_mode = _settings->get(Set::PL_Mode);
 
@@ -199,7 +204,7 @@ void LastFM::psl_track_changed(const MetaData& md, bool start_play) {
 }
 
 
-void LastFM::psl_scrobble(const MetaData& metadata) {
+void LastFM::scrobble(const MetaData& metadata) {
 
 	bool lfm_active =_settings->get(Set::LFM_Active);
 
@@ -293,8 +298,6 @@ void LastFM::lfm_get_friends(QStringList& friends) {
 		if(username.size() > 0)
 			friends << username;
 	}
-
-
 }
 
 

@@ -87,7 +87,7 @@ void PlaylistChooser::load_single_playlist(int id, QString name) {
 	if(success) {
 		int idx = _playlist_handler->add_new_playlist(name);
 		_playlist_handler->change_playlist_index(idx);
-		_playlist_handler->create_playlist(pl);
+		_playlist_handler->create_playlist(pl, false);
 	}
 }
 

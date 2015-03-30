@@ -26,12 +26,17 @@
 PlayerPlugin::PlayerPlugin(QString name, QWidget *parent) :
 	SayonaraWidget(parent)
 {
+	_play_manager = PlayManager::getInstance();
+
 	_pp_action = new QAction(name, NULL);
 	_pp_action->setCheckable(true);
 	_pp_name = name.replace("&", "");
     _pp_is_shown = false;
     _pp_is_closed = true;
+
     connect(_pp_action, SIGNAL(triggered(bool)), this, SLOT(action_triggered(bool)));
+	connect(_play_manager, SIGNAL(sig_playstate_changed(PlayManager::PlayState)),
+			this, SLOT(playstate_changed(PlayManager::PlayState)));
 	hide();
 
 }
@@ -92,5 +97,38 @@ void PlayerPlugin::action_triggered(bool b) {
 
 bool PlayerPlugin::isClosed() {
     return _pp_is_closed;
+}
+
+
+void PlayerPlugin::playstate_changed(PlayManager::PlayState state){
+
+	switch(state){
+		case PlayManager::PlayState_Playing:
+			played();
+			break;
+
+		case PlayManager::PlayState_Paused:
+			paused();
+			break;
+
+		case PlayManager::PlayState_Stopped:
+			stopped();
+			break;
+
+		default:
+			return;
+	}
+}
+
+void PlayerPlugin::played(){
+
+}
+
+void PlayerPlugin::paused(){
+
+}
+
+void PlayerPlugin::stopped(){
+
 }
 

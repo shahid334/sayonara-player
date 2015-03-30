@@ -79,7 +79,7 @@
     <item row="0" column="4" rowspan="10" colspan="4">
      <widget class="QWidget" name="library_widget" native="true">
       <property name="sizePolicy">
-       <sizepolicy hsizetype="MinimumExpanding" vsizetype="Expanding">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
         <horstretch>5</horstretch>
         <verstretch>0</verstretch>
        </sizepolicy>
@@ -846,7 +846,7 @@
         <item>
          <widget class="QLabel" name="lab_title">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -923,7 +923,7 @@
         <item>
          <widget class="QLabel" name="lab_artist">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
@@ -1021,7 +1021,7 @@
         <item>
          <widget class="QLabel" name="lab_album">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>

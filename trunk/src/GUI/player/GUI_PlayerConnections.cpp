@@ -24,21 +24,23 @@ void GUI_Player::setupConnections() {
 
 	qRegisterMetaType<CoverLocation>("CoverLocation");
 
-	connect(btn_play, SIGNAL(clicked(bool)), this,
-			SLOT(playClicked(bool)));
-	connect(btn_fw, SIGNAL(clicked(bool)), this,
-			SLOT(forwardClicked(bool)));
-	connect(btn_bw, SIGNAL(clicked(bool)), this,
-			SLOT(backwardClicked(bool)));
-	connect(btn_stop, SIGNAL(clicked()), this,
-            SLOT(stopClicked()));
-	connect(btn_mute, SIGNAL(released()), this,
-			SLOT(muteButtonPressed()));
-	connect(btn_rec, SIGNAL(toggled(bool)), this,
-				SLOT(sl_rec_button_toggled(bool)));
-	connect(btn_correct, SIGNAL(clicked(bool)), this,
-			SLOT(correct_btn_clicked(bool)));
+	connect(btn_play,	SIGNAL(clicked()),	this, SLOT(play_clicked()));
+	connect(btn_fw,		SIGNAL(clicked()),	this, SLOT(next_clicked()));
+	connect(btn_bw,		SIGNAL(clicked()),	this, SLOT(prev_clicked()));
+	connect(btn_stop,	SIGNAL(clicked()),	this, SLOT(stop_clicked()));
+	connect(btn_mute,	SIGNAL(released()),	this, SLOT(muteButtonPressed()));
+	connect(btn_rec,	SIGNAL(toggled(bool)), this, SLOT(sl_rec_button_toggled(bool)));
+	connect(btn_correct,SIGNAL(clicked()), this, SLOT(correct_btn_clicked()));
 	connect(albumCover, SIGNAL(clicked()), this, SLOT(coverClicked()));
+
+	connect(m_play_manager, SIGNAL(sig_playstate_changed(PlayManager::PlayState)),
+			this,			SLOT(playstate_changed(PlayManager::PlayState)));
+
+	connect(m_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
+			this,			SLOT(track_changed(const MetaData&)));
+
+	connect(m_play_manager, SIGNAL(sig_position_changed_ms(quint64)),
+			this,			SLOT(psl_set_cur_pos_ms(quint64)));
 
 	// file
 	connect(action_OpenFile, SIGNAL(triggered(bool)), this,
@@ -48,7 +50,7 @@ void GUI_Player::setupConnections() {
 			SLOT(folderSelectedClicked(bool)));
 	connect(action_ImportFolder, SIGNAL(triggered(bool)), this,
 				SLOT(importFolderClicked()));
-		connect(action_ImportFiles, SIGNAL(triggered(bool)), this,
+	connect(action_ImportFiles, SIGNAL(triggered(bool)), this,
                         SLOT(importFilesClicked()));
 	connect(action_reloadLibrary, SIGNAL(triggered(bool)), this,
 				SLOT(reloadLibraryClicked(bool)));
@@ -130,28 +132,9 @@ void GUI_Player::setupConnections() {
 	connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(sl_libpath_clicked()));
 
     QList<QKeySequence> lst;
-    lst << QKeySequence(Qt::Key_MediaTogglePlayPause) << QKeySequence(Qt::Key_MediaPlay) << QKeySequence(Qt::Key_MediaPause) << QKeySequence(Qt::Key_Space);
+	lst << QKeySequence(Qt::Key_Space);
     QAction* play_pause_action = createAction(lst);
 	connect(play_pause_action, SIGNAL(triggered()), btn_play, SLOT(click()));
-
-    QList<QKeySequence> lst_fwd;
-    lst_fwd << QKeySequence(Qt::Key_MediaNext) << QKeySequence(Qt::ControlModifier | Qt::Key_Right);
-    QAction* fwd_action = createAction(lst_fwd);
-	connect(fwd_action, SIGNAL(triggered()), btn_fw, SLOT(click()));
-
-    QList<QKeySequence> lst_bwd;
-    lst_bwd << QKeySequence(Qt::Key_MediaPrevious) << QKeySequence(Qt::ControlModifier | Qt::Key_Left);
-    QAction* bwd_action = createAction(lst_bwd);
-	connect(bwd_action, SIGNAL(triggered()), btn_bw, SLOT(click()));
-
-    QAction* stop_action = createAction(QKeySequence(Qt::ControlModifier | Qt::Key_Space));
-	connect(stop_action, SIGNAL(triggered()), btn_stop, SLOT(click()));
-
-    QAction* louder_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Up));
-    connect(louder_action, SIGNAL(triggered()), this, SLOT(volumeHigher()));
-
-    QAction* leiser_action = createAction(QKeySequence(Qt::AltModifier | Qt::Key_Down));
-    connect(leiser_action, SIGNAL(triggered()), this, SLOT(volumeLower()));
 
     qDebug() << "connections done";
 }

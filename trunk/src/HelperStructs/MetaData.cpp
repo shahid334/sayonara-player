@@ -116,6 +116,12 @@ bool MetaData::operator==(const MetaData& md) const {
 }
 
 
+bool MetaData::operator!=(const MetaData& md) const {
+	return !(this->is_equal(md));
+}
+
+
+
 bool MetaData::is_equal(const MetaData& md) const {
 
 	QDir first_path(_filepath);

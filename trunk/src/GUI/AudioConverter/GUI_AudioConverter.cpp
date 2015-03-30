@@ -118,17 +118,10 @@ void GUI_AudioConverter::stopped(){
 }
 
 void GUI_AudioConverter::closeEvent(QCloseEvent* e){
-	stopped();
 
 	PlayerPlugin::closeEvent(e);
 }
 
-void GUI_AudioConverter::track_changed(int cur_idx){
-	if(cur_idx == -1){
-
-		stopped();
-	}
-}
 
 
 void GUI_AudioConverter::rb_cbr_toggled(bool b) {

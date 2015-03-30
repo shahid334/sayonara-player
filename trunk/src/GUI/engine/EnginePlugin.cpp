@@ -67,11 +67,6 @@ void EnginePlugin::init_buttons(){
 
 
 
-void EnginePlugin::psl_stop(){
-    _timer->start();
-    _timer_stopped = false;
-}
-
 void EnginePlugin::config_clicked(){
     emit sig_right_clicked(_cur_style_idx);
 }
@@ -182,3 +177,16 @@ void EnginePlugin::leaveEvent(QEvent* e){
     _btn_close->hide();
 }
 
+void EnginePlugin::played(){
+
+}
+
+void EnginePlugin::paused(){
+
+}
+
+void EnginePlugin::stopped(){
+
+	_timer->start();
+	_timer_stopped = false;
+}

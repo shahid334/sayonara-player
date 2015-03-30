@@ -43,7 +43,7 @@ public slots:
 	void pause();
 	void stop();
 
-	gint64 seek_rel(float percent, gint64 ref_ns);
+	gint64 seek_rel(double percent, gint64 ref_ns);
 	gint64 seek_abs(gint64 ns );
 
 	void set_eq_band(QString band_name, double val);

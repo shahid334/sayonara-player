@@ -525,7 +525,6 @@ void AbstractLibrary::psl_metadata_changed(const MetaData& md) {
 
 	if(_old_md.length_ms == md.length_ms) return;
 
-
 	if(md.id >= 0){
 		update_track(md);
 		refresh();

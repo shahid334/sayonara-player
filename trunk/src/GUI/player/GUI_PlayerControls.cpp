@@ -24,31 +24,53 @@
 #include <QFileDialog>
 
 /** PLAYER BUTTONS **/
-void GUI_Player::playClicked(bool) {
+void GUI_Player::playstate_changed(PlayManager::PlayState state){
+	switch(state){
+		case PlayManager::PlayState_Playing:
+			played();
+			break;
+		case PlayManager::PlayState_Paused:
+			paused();
+			break;
+		case PlayManager::PlayState_Stopped:
+			stopped();
+			break;
 
-	bool playing = !m_playing;
-    if(!m_metadata_available) {
-		playing = true;
-    }
-
-	if(playing){
-		emit sig_play();
+		default:
+			return;
 	}
 
-	else{
-		emit sig_pause();
-	}
-
-	psl_set_play(playing);
+	return;
 }
 
-void GUI_Player::stopClicked(bool b) {
+
+void GUI_Player::play_clicked(){
+	m_play_manager->play_pause();
+}
+
+void GUI_Player::played() {
+	m_trayIcon->setPlaying(true);
+	btn_play->setIcon(Helper::getIcon("pause"));
+}
+
+void GUI_Player::paused() {
+	m_trayIcon->setPlaying(false);
+	btn_play->setIcon(Helper::getIcon("play"));
+}
+
+
+void GUI_Player::stop_clicked(){
+	m_play_manager->stop();
+}
+
+
+void GUI_Player::stopped() {
+
+	setWindowTitle("Sayonara");
 
 	btn_play->setIcon(Helper::getIcon("play"));
     m_trayIcon->setPlaying(false);
 	m_trayIcon->stop();
-
-	psl_set_play(false);
 
 	lab_title->hide();
 	lab_sayonara->show();
@@ -68,39 +90,21 @@ void GUI_Player::stopClicked(bool b) {
 	curTime->setText("00:00");
 	maxTime->setText("00:00");
 
-
-
-	this->setWindowTitle("Sayonara");
-
+	m_metadata_available = false;
 	set_std_cover( false );
-
-	if(b) {
-        emit sig_stop();
-    }
 
 	if(btn_rec->isVisible() && btn_rec->isChecked()) {
 		btn_rec->setChecked(false);
 		emit sig_rec_button_toggled(false);
 	}
-
 }
 
-void GUI_Player::backwardClicked(bool) {
-
-   // albumCover->setFocus();
-	int cur_pos_sec = (songProgress->value() * _md.length_ms) / (songProgress->maximum() * 100);
-	if(cur_pos_sec > 3) {
-		seek(0);
-    }
-
-    else{
-        emit sig_backward();
-    }
+void GUI_Player::prev_clicked() {
+	m_play_manager->previous();
 }
 
-void GUI_Player::forwardClicked(bool) {
-	//albumCover->setFocus();
-	emit sig_forward();
+void GUI_Player::next_clicked() {
+	m_play_manager->next();
 }
 
 
@@ -142,11 +146,11 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 
 
 void GUI_Player::jump_forward_ms(){
-    emit sig_seek_rel_ms(10000);
+	//emit sig_seek_rel_ms(10000);
 }
 
 void GUI_Player::jump_backward_ms(){
-    emit sig_seek_rel_ms(-10000);
+	//emit sig_seek_rel_ms(-10000);
 }
 
 
@@ -156,7 +160,6 @@ void GUI_Player::jump_forward() {
 }
 
 void GUI_Player::jump_backward() {
-
 	songProgress->increment(-50);
 }
 
@@ -165,22 +168,20 @@ void GUI_Player::seek(int val) {
 	if(val < 0) return;
 	set_cur_pos_label(val);
 
-
-	float percent = (val * 100.0f) / songProgress->maximum();
-
-	emit sig_seek_rel( (int) (percent) );
+	double percent = (val * 1.0) / songProgress->maximum();
+	m_play_manager->seek_rel(percent);
 }
 
-void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
+void GUI_Player::psl_set_cur_pos_ms(quint64 pos_ms) {
 
 	int max = songProgress->maximum();
 	int new_val;
 
 	if ( _md.length_ms > 0 ) {
-		new_val = ( pos_sec * 1000.0 * max ) / (_md.length_ms);
+		new_val = ( pos_ms * max ) / (_md.length_ms);
 	}
 
-	else if(pos_sec > _md.length_ms / 1000) {
+	else if(pos_ms > _md.length_ms) {
 		new_val = 0;
     }
 
@@ -190,7 +191,7 @@ void GUI_Player::psl_set_cur_pos(quint32 pos_sec) {
 
 	songProgress->setValue(new_val);
 
-	QString curPosString = Helper::cvt_ms_to_string(pos_sec * 1000);
+	QString curPosString = Helper::cvt_ms_to_string(pos_ms);
 	curTime->setText(curPosString);
 
 }

@@ -66,6 +66,9 @@
 #include "RadioStation/StreamServer.h"
 #include "HelperStructs/SayonaraClass.h"
 
+#include "DBus/DBusMPRIS.h"
+#include "DBus/DBusMediaKeysInterfaceMate.h"
+
 #include <QFont>
 
 
@@ -119,6 +122,8 @@ private:
 
 	SoundPluginLoader*      engine_plugin_loader;
 	Engine*                 listen;
+	DBusMPRIS::MediaPlayer2* _dbus_mpris;
+	DBusMediaKeysInterfaceMate* _dbus_mate;
 
 	QApplication*           app;
 

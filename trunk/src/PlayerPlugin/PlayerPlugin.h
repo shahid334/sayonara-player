@@ -26,6 +26,8 @@
 #include <QAction>
 #include <QCloseEvent>
 #include "HelperStructs/SayonaraClass.h"
+#include "PlayManager.h"
+
 
 class PlayerPlugin : public SayonaraWidget
 {
@@ -40,8 +42,6 @@ signals:
     void sig_reload(PlayerPlugin*);
 
 
-public slots:
-
 private slots:
     void action_triggered(bool);
 
@@ -52,11 +52,20 @@ private:
 
 
 protected:
+
+	PlayManager* _play_manager;
+
 	virtual void language_changed()=0;
     QAction*    _pp_action;
     void setSize(QSize size);
     void closeEvent(QCloseEvent *);
 	void calc_action();
+
+protected slots:
+	virtual void playstate_changed(PlayManager::PlayState state);
+	virtual void played();
+	virtual void paused();
+	virtual void stopped();
 
 
 public:

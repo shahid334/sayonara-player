@@ -35,6 +35,7 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 	setupUi(this);
 
 	_db = CDatabaseConnector::getInstance();
+	_play_manager = PlayManager::getInstance();
 
 	_cur_time = -1;
 
@@ -43,6 +44,9 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 	connect(btn_last, SIGNAL(clicked()), this, SLOT(prev_clicked()));
 	connect(btn_next, SIGNAL(clicked()), this, SLOT(next_clicked()));
 	connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+	connect(_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
+			this, SLOT(track_changed(const MetaData&)));
+	connect(_play_manager, SIGNAL(sig_position_changed_ms(quint64)), this, SLOT(pos_changed_ms(quint64)));
 
 	disable_next();
 	disable_prev();
@@ -167,7 +171,7 @@ void GUI_Bookmarks::calc_next(quint32 time_s) {
 }
 
 
-void GUI_Bookmarks::track_changed(const MetaData& md, bool start_play) {
+void GUI_Bookmarks::track_changed(const MetaData& md) {
 
 	bool success;
 
@@ -192,7 +196,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md, bool start_play) {
 
 	foreach( quint32 bm, _bookmarks.keys() ) {
 
-		long ms = (long) (bm * 1000);
+		quint64 ms = bm * 1000;
 		QString str = Helper::cvt_ms_to_string(ms, true, false);
 
 		cb_bookmarks->addItem(str, bm);
@@ -208,37 +212,38 @@ void GUI_Bookmarks::track_changed(const MetaData& md, bool start_play) {
 }
 
 
-void GUI_Bookmarks::pos_changed_s(quint32 new_time) {
+void GUI_Bookmarks::pos_changed_ms(quint64 new_time_ms) {
 
 	if(!isVisible()) return;
 
-	_cur_time = new_time;
+	_cur_time = (quint32) (new_time_ms / 1000);
 
 	if(cb_loop->isChecked()) {
 		if(_last_idx >= 0 && _next_idx >= 0) {
 
-			if(new_time == _bookmarks.keys()[_next_idx]) {
+			if(new_time_ms == _bookmarks.keys()[_next_idx]) {
 				prev_clicked();
 				return;
 			}
 		}
 	}
 
-	calc_prev(new_time);
-	calc_next(new_time);
+	calc_prev(_cur_time);
+	calc_next(_cur_time);
 }
 
 
 void GUI_Bookmarks::combo_changed(int cur_idx) {
 
 	quint32 bm = _bookmarks.keys()[cur_idx];
+	quint64 bm_ms = bm * 1000;
 
 	btn_delete->setEnabled(true);
 
 	calc_prev(bm);
 	calc_next(bm);
 
-	emit sig_bookmark( bm );
+	_play_manager->seek_abs_ms( bm_ms );
 }
 
 
@@ -248,8 +253,10 @@ void GUI_Bookmarks::next_clicked() {
 		int cur_idx = cb_bookmarks->currentIndex();
 		cb_bookmarks->setCurrentIndex(_next_idx);
 
-		if(cur_idx == _next_idx)
-			emit sig_bookmark(_bookmarks.keys()[cur_idx]);
+		if(cur_idx == _next_idx){
+			quint64 bm = _bookmarks.keys()[cur_idx] * 1000;
+			_play_manager->seek_abs_ms(bm);
+		}
 	}
 }
 
@@ -259,8 +266,10 @@ void GUI_Bookmarks::prev_clicked() {
 		int cur_idx = cb_bookmarks->currentIndex();
 		cb_bookmarks->setCurrentIndex(_last_idx);
 
-		if(cur_idx == _last_idx)
-			emit sig_bookmark(_bookmarks.keys()[cur_idx]);
+		if(cur_idx == _last_idx){
+			quint64 bm = _bookmarks.keys()[cur_idx] * 1000;
+			_play_manager->seek_abs_ms(bm);
+		}
 	}
 }
 
@@ -282,13 +291,14 @@ void GUI_Bookmarks::new_clicked() {
 		i = 0;
 		foreach( quint32 bm, _bookmarks.keys() ) {
 
-			long ms = (long) (bm * 1000);
+			quint64 ms = bm * 1000;
 			QString str = Helper::cvt_ms_to_string(ms, true, false);
 
 			cb_bookmarks->addItem(str, bm);
 
-			if(bm == _cur_time)
+			if(bm == _cur_time){
 				cur_idx = i;
+			}
 
 			i++;
 
@@ -301,7 +311,6 @@ void GUI_Bookmarks::new_clicked() {
 		btn_delete->setEnabled(true);
 
 		connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
-
 	}
 
 }

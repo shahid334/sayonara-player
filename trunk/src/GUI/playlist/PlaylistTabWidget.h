@@ -25,6 +25,7 @@
 
 #include <QTabWidget>
 #include <QTabBar>
+#include <QLineEdit>
 
 class PlaylistTabWidget : public QTabWidget {
 

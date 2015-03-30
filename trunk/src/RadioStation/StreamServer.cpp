@@ -29,13 +29,18 @@ StreamServer::StreamServer(QObject* parent) :
 	SayonaraClass()
 {
 	_n_clients = 0;
-	_port = _settings->get(Set::Broadcast_Port);
 
 	_server = new QTcpServer();
-
 	_server->setMaxPendingConnections(10);
+
+	_play_manager = PlayManager::getInstance();
+
+	_port = _settings->get(Set::Broadcast_Port);
+
 	connect(_server, SIGNAL(newConnection()), this, SLOT(new_client_request()));
 	connect(_server, SIGNAL(destroyed()), this, SLOT(server_destroyed()));
+	connect(_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
+			this, SLOT(track_changed(const MetaData&)));
 
 	_pending_socket = NULL;
 
@@ -173,7 +178,7 @@ void StreamServer::new_data(uchar* data, quint64 size){
 	}
 }
 
-void StreamServer::update_track(const MetaData & md){
+void StreamServer::track_changed(const MetaData & md){
 	_md = md;
 	foreach(StreamWriter* sw, _lst_sw){
 		sw->change_track(md);

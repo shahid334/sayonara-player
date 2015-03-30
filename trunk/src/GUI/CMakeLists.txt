@@ -28,6 +28,8 @@ SET(HEADERS
     engine/GUI_StyleSettings.h
     equalizer/EqSlider.h
     equalizer/GUI_Equalizer.h
+    KeyConfig/GUI_KeyConfig.h
+    KeyConfig/KeyConfigLineEdit.h
     LastFM/GUI_LastFM.h
     library/GUI_AbstractLibrary.h
     library/GUI_Library_windowed.h
@@ -110,6 +112,8 @@ SET(SOURCES
     playlist/entry/GUI_PlaylistEntrySmall.cpp
     playlist_chooser/GUI_PlaylistChooser.cpp
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
+    KeyConfig/GUI_KeyConfig.cpp
+    KeyConfig/KeyConfigLineEdit.cpp
     LastFM/GUI_LastFM.cpp
     library/GUI_AbstractLibrary.cpp
     library/RatingLabel.cpp
@@ -154,9 +158,10 @@ SET(FORMS
     engine/GUI_Style.ui
     equalizer/GUI_Equalizer.ui
     InfoDialog/GUI_InfoDialog.ui
+    KeyConfig/GUI_KeyConfig.ui
     LanguageChooser/GUI_LanguageChooser.ui
     LastFM/GUI_LastFM_Dialog.ui
-	library/GUI_Library_windowed.ui
+    library/GUI_Library_windowed.ui
     library/ImportFolderDialog/GUI_ImportFolder.ui
     library/InfoBox/GUI_Library_Info_Box.ui
     library/GUI_LibraryPath.ui
@@ -166,11 +171,11 @@ SET(FORMS
     playlist/entry/GUI_PlaylistEntryBig.ui
     playlist/entry/GUI_PlaylistEntrySmall.ui
     playlist_chooser/GUI_PlaylistChooser.ui
-	playlist/view/GUI_PlaylistView.ui
+    playlist/view/GUI_PlaylistView.ui
 
     Podcasts/GUI_Podcasts.ui
     SocketConfiguration/GUI_SocketSetup.ui
-	soundcloud/GUI_SoundcloudLibrary.ui
+    soundcloud/GUI_SoundcloudLibrary.ui
     speed/GUI_Speed.ui
     startup_dialog/GUI_Startup_Dialog.ui
     stream/GUI_Stream.ui

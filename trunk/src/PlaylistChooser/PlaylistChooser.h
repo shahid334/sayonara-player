@@ -62,11 +62,11 @@ private slots:
 
 
 private:
-	QMap<int, QString> 	_mapping;
-	int					_import_state;
+	QMap<int, QString>		_mapping;
+	int						_import_state;
 
-	PlaylistHandler*	_playlist_handler;
-	CDatabaseConnector* _db;
+	PlaylistHandler*		_playlist_handler;
+	CDatabaseConnector*		_db;
 
 
 };

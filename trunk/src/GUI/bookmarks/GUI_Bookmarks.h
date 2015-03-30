@@ -28,6 +28,7 @@
 #include "HelperStructs/MetaData.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/ui_GUI_Bookmarks.h"
+#include "PlayManager.h"
 #include <QMap>
 
 class GUI_Bookmarks : public PlayerPlugin, private Ui::GUI_Bookmarks
@@ -37,13 +38,6 @@ public:
 	explicit GUI_Bookmarks(QString name, QWidget *parent = 0);
 	
 
-signals:
-	void sig_bookmark(quint32);
-	
-public slots:
-	void track_changed(const MetaData&, bool start_play);
-	void pos_changed_s(quint32);
-
 private slots:
 	void combo_changed(int new_idx);
 	void next_clicked();
@@ -51,12 +45,15 @@ private slots:
 	void new_clicked();
 	void del_clicked();
 	void del_all_clicked();
+	void track_changed(const MetaData&);
+	void pos_changed_ms(quint64 ms);
 
 
 private:
 
-	CDatabaseConnector* _db;
-	QMap<quint32, QString> _bookmarks;
+	CDatabaseConnector*		_db;
+	QMap<quint32, QString>	_bookmarks;
+	PlayManager*			_play_manager;
 
 	quint32 _cur_time;
 	MetaData _md;

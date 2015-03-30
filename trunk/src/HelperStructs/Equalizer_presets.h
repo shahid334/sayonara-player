@@ -55,8 +55,6 @@ struct EQ_Setting{
             return eq;
 		}
 
-		qDebug() << "Load EQ from string: " << str;
-
         eq.name = list.at(0);
 		list.pop_front();
 
@@ -64,8 +62,6 @@ struct EQ_Setting{
             if( i == eq.settings.size() ) break;
             eq.settings[i] = list.at(i).toDouble();
 		}
-
-		qDebug() << "Loaded equalizer: " << eq.settings;
 
         return eq;
 	}

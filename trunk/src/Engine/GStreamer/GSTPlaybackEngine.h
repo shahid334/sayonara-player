@@ -39,6 +39,14 @@
 #include <gst/gstbuffer.h>
 
 
+typedef enum {
+	Gapless_NoGapless=0,
+	Gapless_AboutToFinish,
+	Gapless_TrackFetched,
+	Gapless_Playing
+
+} GaplessState;
+
 class GSTPlaybackEngine : public Engine {
 
 	Q_OBJECT
@@ -77,11 +85,11 @@ private:
 	StreamRecorder*			_stream_recorder;
 
 	MyCaps*					_caps;
+	MetaData				_md_gapless;
 
-	bool					_wait_for_gapless_track;
-	bool					_may_start_timer;
+	GaplessState			_gapless_state;
+
 	bool					_sr_active;
-	bool					_gapless;
 	int						_jump_play_s;
 
 	// methods
@@ -93,13 +101,13 @@ public slots:
 	virtual void stop();
 	virtual void pause();
 
-	virtual void jump_abs_s(quint32 pos_s);
-	virtual void jump_abs_ms(quint64 pos_ms);
-	virtual void jump_rel(quint32 percent);
-	virtual void jump_rel_ms(qint64 pos_ms);
 
-	virtual void change_track(const MetaData&, bool start_play);
-	virtual void change_track(const QString&, bool start_play);
+	virtual void jump_abs_ms(quint64 pos_ms);
+	virtual void jump_rel(double percent);
+
+
+	virtual void change_track(const MetaData&);
+	virtual void change_track(const QString&);
 
 	virtual void eq_changed(int, int);
 

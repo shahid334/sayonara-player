@@ -46,7 +46,6 @@ public:
 
 
 signals:
-	void sig_playlist_created(const QStringList&);
 	void sig_track_mime_data_available(const MetaDataList&);
 	void sig_all_tracks_loaded (const MetaDataList&);
 	void sig_all_albums_loaded(const AlbumList&);
@@ -59,7 +58,7 @@ signals:
 
 	void sig_append_tracks_to_playlist(const MetaDataList&);
 	void sig_play_next_tracks(const MetaDataList&);
-	void sig_tracks_for_playlist_available(const MetaDataList&);
+	void sig_tracks_for_playlist_available(const MetaDataList&, bool new_tab=false);
 
 public slots:
 	virtual void psl_reload_library(bool)=0;

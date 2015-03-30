@@ -146,7 +146,15 @@ void SearchSlider::mouseReleaseEvent(QMouseEvent* e){
 }
 
 void SearchSlider::mouseMoveEvent(QMouseEvent *e){
+
 	QSlider::mouseMoveEvent(e);
+
+	if(_searching){
+		int percent = (e->pos().x() * 100) / geometry().width();
+		int new_val =  (this->maximum() * percent) / 100;
+		QSlider::setValue(new_val);
+	}
+
 	emit_new_val(this->value());
 }
 

@@ -49,13 +49,13 @@ public slots:
     virtual void psl_style_update();
 
 private:
-
     float _level[2];
 
     int** _steps;
 
     void resize_steps(int n_rects);
     void reload();
+
 };
 
 #endif // GUI_LEVELPAINTER_H

@@ -292,7 +292,6 @@ void GSTPlaybackPipeline::stop() {
 
 	_timer->stop();
 
-	qDebug() << "stop: set duration to 0";
 	_duration_ms = 0;
 	_uri = 0;
 
@@ -341,13 +340,13 @@ bool GSTPlaybackPipeline::_seek(gint64 ns){
 	return success;
 }
 
-gint64 GSTPlaybackPipeline::seek_rel(float percent, gint64 ref_ns) {
+gint64 GSTPlaybackPipeline::seek_rel(double percent, gint64 ref_ns) {
 
 	gint64 new_time_ns;
 
 	g_object_set(G_OBJECT(_volume), "mute", TRUE, NULL);
 
-	if (percent > 1.0f){
+	if (percent > 1.0){
 		new_time_ns = ref_ns;
 	}
 
@@ -509,8 +508,13 @@ bool GSTPlaybackPipeline::set_uri(gchar* uri) {
 
 void GSTPlaybackPipeline::start_timer(qint64 play_ms) {
 
-	if(play_ms > 0) _timer->start(play_ms);
-	else play();
+	if(play_ms > 0) {
+		_timer->start(play_ms);
+	}
+
+	else {
+		play();
+	}
 }
 
 

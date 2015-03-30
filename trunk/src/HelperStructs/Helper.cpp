@@ -568,6 +568,55 @@ QStringList Helper::extract_folders_of_files(const QStringList& files) {
     return folders;
 }
 
+QString Helper::elide_text(const QString& text, const QWidget* widget, int max_lines){
+
+	QFontMetrics metric = widget->fontMetrics();
+	int width = widget->width();
+
+	QStringList splitted = text.split(" ");
+	QStringList ret;
+	QString tmp;
+	QString line;
+
+	for( const QString& str : splitted){
+
+		tmp = line + str;
+
+		if(metric.boundingRect(tmp).width() > width){
+			ret << line;
+
+			if(ret.size() == max_lines){
+				line = "";
+				break;
+			}
+
+			line = str;
+		}
+
+		else{
+			line += str + " ";
+		}
+	}
+
+
+	QString final_str;
+	if(ret.isEmpty()){
+		final_str = text;
+	}
+
+	else if(line.isEmpty()){
+		final_str = ret.join("\n");
+		final_str += "...";
+	}
+
+	else {
+		final_str = ret.join("\n") + line;
+	}
+
+
+	return final_str;
+}
+
 bool Helper::checkTrack(const MetaData& md) {
 
 	QString filepath = md.filepath();

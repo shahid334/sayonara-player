@@ -11,21 +11,22 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-SET(CMAKE_BUILD_TYPE "Release")
-SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++0x")
+#SET(CMAKE_BUILD_TYPE "Release")
+#SET(CMAKE_C_FLAGS "-Wall -O2 -s")
+#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++0x")
 
-#SET(CMAKE_BUILD_TYPE "Debug")
-#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
-#SET(CMAKE_C_FLAGS "-Wall")
+SET(CMAKE_BUILD_TYPE "Debug")
+SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
+SET(CMAKE_C_FLAGS "-Wall")
 
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
 SET(QT_USE_QTNETWORK TRUE)
+SET(QT_USE_QTDBUS TRUE)
 
 SET(LANG ${CMAKE_CURRENT_SOURCE_DIR}/languages/sayonara_lang_de.ts)
 
-FIND_PACKAGE(Qt4 REQUIRED)
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtXML QtDBus REQUIRED)
 
 INCLUDE(${QT_USE_FILE})
 INCLUDE_DIRECTORIES(${GSTREAMER_INCLUDE_DIRS})
@@ -68,9 +69,11 @@ ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
 ADD_SUBDIRECTORY(Soundcloud)
 ADD_SUBDIRECTORY(languages)
+ADD_SUBDIRECTORY(DBus)
 
 SET(HEADERS
     application.h
+	PlayManager.h
     Settings/SettingNotifier.h
     Settings/SettingKey.h
     Settings/Setting.h
@@ -95,6 +98,7 @@ SET(HEADERS
 SET(SOURCES
     Main.cpp
     application.cpp
+	PlayManager.cpp
     Settings/Settings.cpp
     Settings/Setting.cpp
     Engine/SoundPluginLoader.cpp
@@ -116,6 +120,7 @@ SET(SOURCES
 
 FILE (GLOB TRANSLATIONS_FILES languages/*.ts)
 
+
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 QT4_ADD_TRANSLATION(QM_FILES ${TRANSLATIONS_FILES})
 ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
@@ -123,14 +128,15 @@ ADD_CUSTOM_TARGET(TRANSLATIONS_TARGET DEPENDS ${QM_FILES})
 ADD_EXECUTABLE(sayonara ${SOURCES} ${HEADERS_MOC} ${QM_FILES})
 
 TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES} 
-	curl 
-	sayonara_helper 
-	sayonara_db 
-        sayonara_gui
-	sayonara_playlist 
-	sayonara_library 
+    curl
+    sayonara_helper
+    sayonara_db
+    sayonara_gui
+    sayonara_playlist
+    sayonara_library
     sayonara_covers
     sayonara_soundcloud
+    sayonara_dbus
 )
 
 INSTALL(TARGETS sayonara DESTINATION bin)

@@ -42,9 +42,6 @@ signals:
 public:
 	explicit GUI_AudioConverter(QString name, QWidget *parent=0);
 	
-public slots:
-	void stopped();
-	void track_changed(int);
 
 private slots:
 	void rb_cbr_toggled(bool b);
@@ -56,6 +53,10 @@ private slots:
 protected:
 	void closeEvent(QCloseEvent* e);
 	virtual void language_changed();
+
+
+protected slots:
+	virtual void stopped();
 
 	
 private:

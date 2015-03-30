@@ -92,25 +92,20 @@ bool GSTConvertEngine::set_uri(const MetaData& md) {
 	return success;
 }
 
-void GSTConvertEngine::change_track(const MetaData& md, bool start_play) {
-
-	Q_UNUSED(start_play);
+void GSTConvertEngine::change_track(const MetaData& md) {
 
 	stop();
 	_md = md;
 
 	emit sig_md_changed(_md);
-    emit sig_pos_changed_s(0);
+	emit sig_pos_changed_s(0);
 
 	set_uri(md);
-
-	play();
-
 }
 
-void GSTConvertEngine::change_track(const QString& str, bool start_play) {
+void GSTConvertEngine::change_track(const QString& str) {
 	Q_UNUSED(str);
-	Q_UNUSED(start_play);
+
 }
 
 
@@ -148,20 +143,13 @@ void GSTConvertEngine::set_volume(int vol) {
 	Q_UNUSED(vol);
 }
 
-void GSTConvertEngine::jump_abs_s(quint32 v) {
-	Q_UNUSED(v);
-}
 
 void GSTConvertEngine::jump_abs_ms(quint64 v) {
 	Q_UNUSED(v);
 }
 
-void GSTConvertEngine::jump_rel(quint32 v) {
+void GSTConvertEngine::jump_rel(double v) {
 	Q_UNUSED(v);
-}
-
-void GSTConvertEngine::jump_rel_ms(qint64 v){
-    Q_UNUSED(v);
 }
 
 

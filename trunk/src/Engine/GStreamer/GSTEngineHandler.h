@@ -22,6 +22,7 @@
 #define ENGINEHANDLER_H_
 
 #include "Engine/Engine.h"
+#include "PlayManager.h"
 
 #include <QVector>
 
@@ -40,17 +41,12 @@ public:
 
 public slots:
 
-	void play();
-	void stop();
-	void pause();
 
-	void jump_abs_s(quint32 where);
 	void jump_abs_ms(quint64 where);
-	void jump_rel(quint32 where);
-    void jump_rel_ms(qint64 where);
+	void jump_rel(double where);
 
-	void change_track(const MetaData&, bool start_play);
-	void change_track(const QString&, bool start_play);
+	void change_track(const MetaData&);
+	void change_track(const QString&);
 
 	void eq_changed(int band, int value);
 	void record_button_toggled(bool);
@@ -77,10 +73,21 @@ private slots:
 	void sl_spectrum(QList<float>&);
 
 
+protected slots:
+
+	void playstate_changed(PlayManager::PlayState);
+
+	void play();
+	void stop();
+	void pause();
+
+
+
 private:
 
-	Engine*          _cur_engine;
-	QVector<Engine*>   _engines;
+	PlayManager*		_play_manager;
+	Engine*				_cur_engine;
+	QVector<Engine*>	_engines;
 
 	bool configure_connections(Engine* old_engine, Engine* new_engine);
 

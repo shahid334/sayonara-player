@@ -77,14 +77,16 @@ protected slots:
 	virtual void timed_out()=0;
 
 
-public slots:
+	virtual void played();
+	virtual void paused();
+	virtual void stopped();
 
+
+public slots:
 	virtual void psl_style_update()=0;
-    virtual void psl_stop();
 
 
 public:
-
     EnginePlugin(QString name, QWidget* parent=0);
     virtual ~EnginePlugin();
 

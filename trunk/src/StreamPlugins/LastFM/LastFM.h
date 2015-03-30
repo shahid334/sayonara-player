@@ -35,6 +35,7 @@
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "StreamPlugins/LastFM/LFMLoginThread.h"
+#include "PlayManager.h"
 
 #include <QMap>
 #include <QtXml>
@@ -56,8 +57,7 @@ class LastFM : public QObject, protected SayonaraClass{
 
 
 	public slots:
-		void psl_scrobble(const MetaData&);
-		void psl_track_changed(const MetaData&, bool start_play);
+		void scrobble(const MetaData&);
 		void psl_login();
 
 
@@ -65,6 +65,7 @@ class LastFM : public QObject, protected SayonaraClass{
 		void _sl_similar_artists_available(const QString&, const QList<int>&);
 		void _sl_corrected_data_available(const QString&);
         void _login_thread_finished();
+		void _sl_change_track(const MetaData&);
 
 
 
@@ -88,7 +89,6 @@ class LastFM : public QObject, protected SayonaraClass{
         bool    _parse_error_message(QString& response, bool force=false);
         void    _show_error_message(QString err_msg);
 
-
 		bool 			_logged_in;
 
 		QString			_class_name;
@@ -98,6 +98,8 @@ class LastFM : public QObject, protected SayonaraClass{
 
 		LFMTrackChangedThread* _track_changed_thread;
         LFMLoginThread* _login_thread;
+
+		PlayManager*	_play_manager;
 };
 
 #endif /* LASTFM_H_ */

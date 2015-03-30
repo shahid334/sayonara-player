@@ -91,8 +91,8 @@ class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 		virtual void		check_about_to_finish();
 		virtual void		set_data(uchar* data, quint64 size);
 
-		virtual bool set_uri(gchar* uri);
-		virtual gchar* get_uri();
+		virtual bool		set_uri(gchar* uri);
+		virtual gchar*		get_uri();
 };
 
 

@@ -61,13 +61,13 @@ public:
 		virtual void pause();
 		virtual void set_volume(int vol);
 
-		virtual void jump_abs_s(quint32);
-		virtual void jump_abs_ms(quint64);
-		virtual void jump_rel(quint32);
-        virtual void jump_rel_ms(qint64);
 
-		virtual void change_track(const MetaData&, bool start_play);
-		virtual void change_track(const QString&, bool start_play);
+		virtual void jump_abs_ms(quint64);
+		virtual void jump_rel(double);
+
+
+		virtual void change_track(const MetaData&);
+		virtual void change_track(const QString&);
 };
 
 #endif // GSTCONVERTENGINE_H

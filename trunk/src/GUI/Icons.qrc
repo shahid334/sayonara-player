@@ -68,5 +68,6 @@
         <file>icons/arrow_left_disabled.svg.png</file>
         <file>icons/arrow_right_disabled.svg.png</file>
         <file>icons/lastfm_logo.jpg</file>
+        <file>icons/border_c.png</file>
     </qresource>
 </RCC>

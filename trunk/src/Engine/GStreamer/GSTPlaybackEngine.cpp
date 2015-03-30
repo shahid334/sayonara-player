@@ -57,6 +57,11 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 {
 
 	ENGINE_DEBUG;
+
+	_pipeline = 0;
+	_other_pipeline = 0;
+
+
 	_md.id = -1;
 	_calc_log10_lut();
 
@@ -74,8 +79,7 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 
 	_stream_recorder = new StreamRecorder();
 
-	_wait_for_gapless_track = false;
-	_may_start_timer = false;
+	_gapless_state = Gapless_NoGapless;
 
 	_jump_play_s = 0;
 
@@ -93,7 +97,7 @@ GSTPlaybackEngine::GSTPlaybackEngine(QObject* parent) :
 			SLOT(sr_not_valid()));
 
 	REGISTER_LISTENER(Set::Engine_SR_Active, _change_sr_active);
-	REGISTER_LISTENER(Set::Engine_Gapless, _change_gapless);
+
 
 	init();
 }
@@ -117,6 +121,8 @@ void GSTPlaybackEngine::init() {
 	connect(_pipeline, SIGNAL(sig_about_to_finish(qint64)), this, SLOT(set_about_to_finish(qint64)));
 	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 	connect(_pipeline, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
+
+	REGISTER_LISTENER(Set::Engine_Gapless, _change_gapless);
 }
 
 
@@ -124,22 +130,15 @@ void GSTPlaybackEngine::init() {
 void GSTPlaybackEngine::change_track_gapless(const MetaData& md) {
 
 	bool success = set_uri(md);
+	_md_gapless = md;
 
     if (!success) return;
 
-	_md = md;
-
-	_caps->set_parsed(false);
-
-	_scrobble_begin_ms = 0;
-	_cur_pos_ms = 0;
-
-	_scrobbled = false;
 }
 
 
 
-void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
+void GSTPlaybackEngine::change_track(const QString& filepath) {
 
 	MetaData md;
 	md.set_filepath(filepath);
@@ -148,14 +147,19 @@ void GSTPlaybackEngine::change_track(const QString& filepath, bool start_play) {
 		return;
 	}
 
-	change_track(md, start_play);
+	change_track(md);
 }
 
 
-void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
+void GSTPlaybackEngine::change_track(const MetaData& md) {
 
 	if( ! md.is_equal(_md ) && (_md.id >= 0) ){
 		_jump_play_s = 0;
+	}
+
+	else if(_jump_play_s > 0){
+		emit sig_pos_changed_s(_jump_play_s);
+		emit sig_pos_changed_s(_jump_play_s * 1000);
 	}
 
 	bool success = false;
@@ -163,9 +167,9 @@ void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 		_settings->set(Set::Engine_CurTrackPos_s, 0);
 	}
 
-	if(_wait_for_gapless_track) {
+	if( _gapless_state == Gapless_AboutToFinish ) {
 		change_track_gapless(md);
-		_wait_for_gapless_track = false;
+		_gapless_state = Gapless_TrackFetched;
 		return;
 	}
 
@@ -185,14 +189,6 @@ void GSTPlaybackEngine::change_track(const MetaData& md, bool start_play) {
 	_scrobbled = false;
 
 	emit sig_pos_changed_s(_jump_play_s);
-
-	if(start_play){
-		play();
-	}
-
-	else{
-		pause();
-	}
 }
 
 
@@ -242,13 +238,6 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md) {
 								   md.filepath().toUtf8().size(), NULL, NULL, NULL);
 	}
 
-	if(_wait_for_gapless_track) {
-
-        if(_other_pipeline){
-            success = _other_pipeline->set_uri(uri);
-        }
-	}
-
 	if(!success) {
 		success = _pipeline->set_uri(uri);
 	}
@@ -259,8 +248,10 @@ bool GSTPlaybackEngine::set_uri(const MetaData& md) {
 
 void GSTPlaybackEngine::play() {
 
+	if(_gapless_state == Gapless_AboutToFinish) return;
+	if(_gapless_state == Gapless_TrackFetched) return;
+
 	_pipeline->play();
-	_may_start_timer = _gapless;
 }
 
 
@@ -288,14 +279,6 @@ void GSTPlaybackEngine::pause() {
 }
 
 
-void GSTPlaybackEngine::jump_abs_s(quint32 pos_s) {
-
-	gint64 new_time_ns;
-
-	new_time_ns = _pipeline->seek_abs(pos_s * MRD);
-
-	_scrobble_begin_ms = new_time_ns / MIO;
-}
 
 
 void GSTPlaybackEngine::jump_abs_ms(quint64 pos_ms) {
@@ -308,26 +291,15 @@ void GSTPlaybackEngine::jump_abs_ms(quint64 pos_ms) {
 }
 
 
-void GSTPlaybackEngine::jump_rel(quint32 where) {
+void GSTPlaybackEngine::jump_rel(double percent) {
 
 	gint64 new_time_ns;
-	float p = where / 100.0f;
 
-
-	new_time_ns = _pipeline->seek_rel(p, _md.length_ms * MIO);
+	new_time_ns = _pipeline->seek_rel(percent, _md.length_ms * MIO);
 
 	_scrobble_begin_ms = new_time_ns / MIO;
 }
 
-void GSTPlaybackEngine::jump_rel_ms(qint64 where){
-
-    qint64 cur_pos_ms;
-
-    cur_pos_ms = _pipeline->get_position_ms();
-    cur_pos_ms += where;
-
-    _pipeline->seek_abs( (gint64) (cur_pos_ms * MIO) );
-}
 
 
 void GSTPlaybackEngine::eq_changed(int band, int val) {
@@ -357,17 +329,23 @@ MyCaps* GSTPlaybackEngine::get_caps() {
 
 void GSTPlaybackEngine::update_bitrate(quint32 bitrate) {
 
+	if(_gapless_state == Gapless_AboutToFinish) return;
+	if(_gapless_state == Gapless_TrackFetched) return;
+
 	if(_md.bitrate == bitrate) return;
 
 	_md.bitrate = bitrate;
 
-	emit sig_md_changed(_md);
+	//emit sig_md_changed(_md);
 }
 
 
 void GSTPlaybackEngine::update_duration() {
 
 	_pipeline->refresh_duration();
+
+	if(_gapless_state == Gapless_AboutToFinish) return;
+	if(_gapless_state == Gapless_TrackFetched) return;
 
 	qint64 duration_ms = _pipeline->get_duration_ms();
 	quint32 duration_s = duration_ms / 1000;
@@ -384,6 +362,9 @@ void GSTPlaybackEngine::update_duration() {
 
 
 void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
+
+	if(_gapless_state == Gapless_AboutToFinish) return;
+	if(_gapless_state == Gapless_TrackFetched) return;
 
 	qint64 playtime_ms;
 	qint32 pos_sec;
@@ -419,25 +400,16 @@ void GSTPlaybackEngine::set_cur_position_ms(qint64 pos_ms) {
 
 void GSTPlaybackEngine::set_track_ready(){
 
+	if( _jump_play_s <= 0 ) return;
 
+	gint64 new_val = _pipeline->seek_abs(_jump_play_s * GST_SECOND);
 
-	if( _jump_play_s > 0 )
-	{
-
-		qDebug() << "===========================";
-		qDebug() << Q_FUNC_INFO;
-		qDebug() << "Jump play = " << _jump_play_s;
-		qDebug() << "get duration = " << _pipeline->get_duration_ms();
-		qDebug() << "===========================";
-
-
-		gint64 new_val = _pipeline->seek_abs(_jump_play_s * GST_SECOND);
-		if(new_val <= 0) return;
-
-		qDebug() << "Reset jump play";
-
-		_jump_play_s = 0;
+	if(new_val <= 0) {
+		return;
 	}
+
+	_jump_play_s = 0;
+
 }
 
 
@@ -447,33 +419,40 @@ void GSTPlaybackEngine::set_track_finished() {
 		_stream_recorder->stop(!_sr_wanna_record);
 	}
 
-	if( ! _gapless ) {
+	if( _gapless_state == Gapless_NoGapless ) {
 		emit sig_track_finished();
 	}
 
 	else{
 
-		GSTPlaybackPipeline* tmp;
-		tmp = _pipeline;
-		_pipeline = _other_pipeline;
-		_other_pipeline = tmp;
+		_gapless_state = Gapless_Playing;
 
 		_other_pipeline->stop();
-		play();
+
+		_md = _md_gapless;
+		_cur_pos_ms = 0;
+		_caps->set_parsed(false);
+
+		_scrobble_begin_ms = 0;
+		_scrobbled = false;
 	}
 }
 
 
 void GSTPlaybackEngine::set_about_to_finish(qint64 time2go) {
 
-    if(!_gapless) return;
+	if(_gapless_state == Gapless_NoGapless) return;
+	if(_gapless_state == Gapless_AboutToFinish) return;
 
-	if(_may_start_timer) {
-		_other_pipeline->start_timer(time2go);
-	}
+	GSTPlaybackPipeline* tmp;
+	tmp = _pipeline;
 
-	_may_start_timer = false;
-	_wait_for_gapless_track = true;
+	_pipeline = _other_pipeline;
+	_other_pipeline = tmp;
+
+	_gapless_state = Gapless_AboutToFinish;
+
+	_pipeline->start_timer(time2go);
 
 	emit sig_track_finished();
 }
@@ -490,9 +469,9 @@ void GSTPlaybackEngine::unmute() {
 
 void GSTPlaybackEngine::_change_gapless() {
 
-	_gapless = _settings->get(Set::Engine_Gapless);
+	bool gapless = _settings->get(Set::Engine_Gapless);
 
-	if(_gapless) {
+	if(gapless) {
 
 		if(!_other_pipeline) {
 			_other_pipeline = new GSTPlaybackPipeline(this);
@@ -501,11 +480,11 @@ void GSTPlaybackEngine::_change_gapless() {
 			connect(_other_pipeline, SIGNAL(sig_data(uchar*, quint64)), this, SLOT(new_data(uchar*, quint64)));
 		}
 
-		_may_start_timer = true;
+		_gapless_state = Gapless_Playing;
 	}
 
 	else {
-		_may_start_timer = false;
+		_gapless_state = Gapless_NoGapless;
 	}
 }
 

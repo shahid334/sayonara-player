@@ -27,11 +27,24 @@
 #include "Engine/GStreamer/GSTConvertEngine.h"
 
 
-GSTEngineHandler::GSTEngineHandler(QObject* parent) : Engine() {
+GSTEngineHandler::GSTEngineHandler(QObject* parent) : Engine(parent) {
 	_cur_engine = 0;
+	_play_manager = PlayManager::getInstance();
 
 	_engines.push_back(new GSTPlaybackEngine());
 	_engines.push_back(new GSTConvertEngine());
+
+	connect(_play_manager, SIGNAL(sig_playstate_changed(PlayManager::PlayState)),
+			this, SLOT(playstate_changed(PlayManager::PlayState)));
+
+	connect(_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
+			this, SLOT(change_track(const MetaData&)));
+
+	connect(_play_manager, SIGNAL(sig_seeked_abs_ms(quint64)),
+			this, SLOT(jump_abs_ms(quint64)));
+
+	connect(_play_manager, SIGNAL(sig_seeked_rel(double)),
+			this, SLOT(jump_rel(double)));
 
 	psl_change_engine(PLAYBACK_ENGINE);
 }
@@ -78,11 +91,34 @@ void GSTEngineHandler::fill_engines(const QVector<Engine*>& engines) {
 }
 
 
-void GSTEngineHandler::play() {
+void GSTEngineHandler::playstate_changed(PlayManager::PlayState state){
+
 	if(!_cur_engine) return;
-	_cur_engine->play();
+
+	switch(state){
+		case PlayManager::PlayState_Playing:
+			play();
+			break;
+
+		case PlayManager::PlayState_Paused:
+			pause();
+			break;
+
+		case PlayManager::PlayState_Stopped:
+			stop();
+			break;
+
+		default:
+			return;
+	}
 }
 
+
+void GSTEngineHandler::play() {
+	if(!_cur_engine) return;
+
+	_cur_engine->play();
+}
 
 void GSTEngineHandler::stop() {
 
@@ -97,34 +133,25 @@ void GSTEngineHandler::pause() {
 
 
 
-void GSTEngineHandler::jump_abs_s(quint32 where) {
-	if(!_cur_engine) return;
-	_cur_engine->jump_abs_s(where);
-}
-
 void GSTEngineHandler::jump_abs_ms(quint64 where) {
 	if(!_cur_engine) return;
 	_cur_engine->jump_abs_ms(where);
 }
 
-void GSTEngineHandler::jump_rel(quint32 where) {
+void GSTEngineHandler::jump_rel(double where) {
 	if(!_cur_engine) return;
 	_cur_engine->jump_rel(where);
 }
 
-void GSTEngineHandler::jump_rel_ms(qint64 where){
-    if(!_cur_engine) return;
-    _cur_engine->jump_rel_ms(where);
+
+void GSTEngineHandler::change_track(const MetaData& md) {
+	if(!_cur_engine) return;
+	_cur_engine->change_track(md);
 }
 
-void GSTEngineHandler::change_track(const MetaData& md, bool start_play) {
+void GSTEngineHandler::change_track(const QString& str) {
 	if(!_cur_engine) return;
-	_cur_engine->change_track(md, start_play);
-}
-
-void GSTEngineHandler::change_track(const QString& str, bool start_play) {
-	if(!_cur_engine) return;
-	_cur_engine->change_track(str, start_play);
+	_cur_engine->change_track(str);
 }
 
 void GSTEngineHandler::eq_changed(int band, int value) {
@@ -149,15 +176,16 @@ void GSTEngineHandler::sl_md_changed(const MetaData& v) {
 }
 
 void GSTEngineHandler::sl_pos_changed_ms(quint64 v) {
-	emit sig_pos_changed_ms(v);
+	_play_manager->set_position_ms( v);
 }
 
 void GSTEngineHandler::sl_pos_changed_s(quint32 v) {
-	emit sig_pos_changed_s(v);
+	_play_manager->set_position_ms( (quint64) (v * 1000) );
 }
 
+
 void GSTEngineHandler::sl_track_finished() {
-	emit sig_track_finished();
+	_play_manager->next();
 }
 
 void GSTEngineHandler::sl_scrobble(const MetaData& md) {

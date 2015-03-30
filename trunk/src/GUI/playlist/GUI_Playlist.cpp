@@ -285,6 +285,7 @@ void GUI_Playlist::playlist_mode_changed() {
 
     _playlist_mode = plm;
 	_settings->set(Set::PL_Mode, _playlist_mode);
+	_settings->set(Set::Engine_Gapless, plm.gapless);
 }
 
 // setting slot

@@ -100,7 +100,6 @@ gboolean PipelineCallbacks::show_position(gpointer data) {
 
 	ENGINE_DEBUG;
 
-	//pipeline->refresh_duration();
 	pipeline->refresh_position();
 	pipeline->check_about_to_finish();
 
@@ -189,6 +188,7 @@ void GSTAbstractPipeline::set_data(uchar* data, quint64 size){
 
 void GSTAbstractPipeline::check_about_to_finish(){
 
+
 	gint64 difference = _duration_ms - _position_ms;
 
 	if(_duration_ms >= 0){
@@ -198,10 +198,10 @@ void GSTAbstractPipeline::check_about_to_finish(){
 	if(difference < 500 && difference > 0 && !_about_to_finish) {
 
 		_about_to_finish = true;
-		emit sig_about_to_finish(difference - 50);
+		emit sig_about_to_finish(difference);
 	}
 
-	else {
+	else if(difference > 500){
 		_about_to_finish = false;
 	}
 }

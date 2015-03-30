@@ -32,26 +32,6 @@
 #include <QString>
 #include <QList>
 
-class PlaylistReport{
-
-private:
-	bool _cur_idx_changed;
-	bool _pl_changed;
-
-public:
-	PlaylistReport(bool cur_idx_changed, bool pl_changed){
-		_cur_idx_changed = cur_idx_changed;
-		_pl_changed = pl_changed;
-	}
-
-	bool has_cur_idx_changed(){
-		return _cur_idx_changed;
-	}
-
-	bool has_pl_changed(){
-		return _pl_changed;
-	}
-};
 
 class Playlist : protected SayonaraClass
 {
@@ -116,6 +96,7 @@ public:
 	void set_idx(int idx);
 	QList<int> find_tracks(int id) const;
 	QList<int> find_tracks(const QString& filepath) const;
+	int get_size();
 
 	void set_playlist_mode(const PlaylistMode& mode);
 	PlaylistMode get_playlist_mode() const;

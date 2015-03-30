@@ -295,3 +295,7 @@ QList<int> Playlist::find_tracks(int idx) const {
 QList<int> Playlist::find_tracks(const QString& filepath) const {
 	return _v_md.findTracks(filepath);
 }
+
+int Playlist::get_size(){
+	return _v_md.size();
+}

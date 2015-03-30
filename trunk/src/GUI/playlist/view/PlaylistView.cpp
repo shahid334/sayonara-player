@@ -50,7 +50,9 @@ PlaylistView::PlaylistView(QWidget* parent) :
     _last_known_drag_row = -1;
     _model = new PlaylistItemModel(this);
     _delegate = new PlaylistItemDelegate(this, true);
-    _rc_menu = 0;
+
+
+	init_rc_menu();
 
     this->setModel(_model);
     this->setAbstractModel(_model);
@@ -69,7 +71,10 @@ PlaylistView::PlaylistView(QWidget* parent) :
 
 PlaylistView::~PlaylistView() {
 
-    delete _rc_menu;
+	if(_rc_menu){
+		delete _rc_menu;
+	}
+
     delete _model;
 }
 
@@ -79,45 +84,52 @@ void PlaylistView::mousePressEvent(QMouseEvent* event) {
     QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
     QItemSelection sel, desel;
+
+	if(_model->rowCount() == 0){
+		return;
+	}
+
     switch (event->button()) {
 
-    case Qt::LeftButton:
-        if(!_drag_allowed) break;
+		case Qt::LeftButton:
+			if(!_drag_allowed) break;
 
-        _sel_changed = false;
-        SearchableListView::mousePressEvent(event);
-		if(!_sel_changed) {
-            selectionChanged(sel, desel);
-        }
+			_sel_changed = false;
+			SearchableListView::mousePressEvent(event);
+			if(!_sel_changed) {
+				selectionChanged(sel, desel);
+			}
 
-        if ((this->model()->rowCount()) * 33 > event->pos().y())
-            _drag_pos = event->pos();
+			if ((this->model()->rowCount()) * 33 > event->pos().y())
+				_drag_pos = event->pos();
 
-        else {
-            _drag_pos.setY(-10);
-            _drag = false;
-        }
+			else {
+				_drag_pos.setY(-10);
+				_drag = false;
+			}
 
-        break;
+			break;
 
-    case Qt::RightButton:
-        _drag = false;
-        _sel_changed = false;
-        SearchableListView::mousePressEvent(event);
-		if(!_sel_changed) {
-            selectionChanged(sel, desel);
-        }
+		case Qt::RightButton:
+			_drag = false;
+			_sel_changed = false;
 
-        pos.setY(pos.y());
-        pos.setX(pos.x() + 10);
+			SearchableListView::mousePressEvent(event);
 
-        _rc_menu->exec(pos);
+			if(!_sel_changed) {
+				selectionChanged(sel, desel);
+			}
 
-        break;
+			pos.setY(pos.y());
+			pos.setX(pos.x() + 10);
 
-    default:
-        _drag = false;
-        break;
+			_rc_menu->exec(pos);
+
+			break;
+
+		default:
+			_drag = false;
+			break;
     }
 }
 
@@ -255,10 +267,6 @@ void PlaylistView::init_rc_menu() {
 }
 
 void PlaylistView::set_context_menu_actions(int actions) {
-
-	if(!_rc_menu) {
-		init_rc_menu();
-	}
 
     _rc_menu->setup_entries(actions);
 }

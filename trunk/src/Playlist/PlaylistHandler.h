@@ -37,6 +37,7 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "Playlist/PlaylistLoader.h"
 #include "Playlist/Playlist.h"
+#include "PlayManager.h"
 
 
 
@@ -60,24 +61,11 @@ public:
 signals:
 
 	void sig_playlist_created(const MetaDataList&, int cur_track_idx, PlaylistType type, int playlist_idx=-1);
-	void sig_auto_next_file(const MetaData&);
-	void sig_cur_track_changed(const MetaData&, bool start_play=true);
 	void sig_cur_track_idx_changed(int track_idx, int playlist_idx);
 
-	void sig_no_track_to_play();
-	void sig_goon_playing();
-
-	void sig_mp3s_loaded_signal(int percent);
-	void sig_data_for_id3_change(const MetaDataList&);
-	void sig_cur_played_info_changed(const MetaData&);
-
-	void sig_search_similar_artists(const QString&);
 	void sig_playlist_prepared(int, const MetaDataList&);
 	void sig_playlist_prepared(QString, const MetaDataList&);
-	void sig_library_changed();
-	void sig_import_files(const MetaDataList&);
-	void sig_need_more_radio();
-	void sig_new_stream_session();
+
 	void sig_playlist_mode_changed(const PlaylistMode&);
 	void sig_selection_changed(const MetaDataList&);
 
@@ -88,13 +76,7 @@ signals:
 
 public slots:
 
-	void psl_play();
-	void psl_pause();
-	void psl_stop();
-	void psl_forward();
-	void psl_backward();
 	void psl_change_track(int idx, int playlist_idx=-1);
-	void psl_next();
 
 	void psl_selection_changed(const QList<int>&);
 	void psl_playlist_mode_changed();
@@ -115,18 +97,26 @@ public slots:
 	void psl_prepare_playlist_for_save(int id);
 	void psl_prepare_playlist_for_save(QString name);
 
-	void create_playlist(const QStringList&);
-	void create_playlist(const MetaDataList&);
-	void create_playlist(const CustomPlaylist&);
-	void create_playlist(const QString& dir);
+	void create_playlist(const QStringList&, bool new_tab=true);
+	void create_playlist(const MetaDataList&, bool new_tab=true);
+	void create_playlist(const CustomPlaylist&, bool new_tab=true);
+	void create_playlist(const QString& dir, bool new_tab=true);
 
 	void psl_audioconvert_on();
 	void psl_audioconvert_off();
 
+private slots:
+	void played();
+	void paused();
+	void stopped();
+	void previous();
+	void next();
+	void playstate_changed(PlayManager::PlayState);
 
 private:
 
 	CDatabaseConnector* _db;
+	PlayManager*		_play_manager;
 	PlaylistLoader*		_playlist_loader;
 
 	QList<Playlist*>    _playlists;
@@ -134,10 +124,6 @@ private:
 	int					_cur_playlist_idx;
 	int					_active_playlist_idx;
 
-	PlaylistState		_state;
-
-	int					_last_track;
-	bool				_first_creation;
 
 	PlaylistType determine_playlist_type(const MetaDataList& v_md);
 	Playlist* new_playlist(PlaylistType type, int idx);
@@ -146,7 +132,7 @@ private:
 	Playlist* get_current();
 
 	void emit_playlist_created(Playlist* pl=NULL);
-	void emit_cur_track_changed(bool start_play = true, Playlist* pl=NULL);
+	void emit_cur_track_changed(Playlist* pl=NULL);
 };
 
 #endif /* PLAYLISTHANDLER_H_ */

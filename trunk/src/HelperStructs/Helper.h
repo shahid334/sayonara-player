@@ -73,6 +73,8 @@ namespace Helper{
 	void split_filename(const QString& src, QString& path, QString& filename);
 	QStringList extract_folders_of_files(const QStringList& list);
 
+	QString elide_text(const QString& text, const QWidget* widget, int max_lines);
+
 
     // Everything clear
 	bool is_url(const QString& str);

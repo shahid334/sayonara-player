@@ -103,8 +103,8 @@ public:
 signals:
 	void sig_md_changed(const MetaData&);
 
-    void sig_pos_changed_ms(quint64);
-    void sig_pos_changed_s(quint32);
+	void sig_pos_changed_ms(quint64);
+	void sig_pos_changed_s(quint32);
 
 	void sig_track_finished();
 	void sig_scrobble(const MetaData&);
@@ -121,8 +121,8 @@ private slots:
 	virtual void set_about_to_finish(qint64 ms){}
     virtual void set_cur_position_ms(qint64 ms){
         _cur_pos_ms = ms;
-        emit sig_pos_changed_ms(ms);
-    }
+		emit sig_pos_changed_ms(ms);
+	}
 
 
 	virtual void _sl_show_level_changed(){
@@ -148,13 +148,11 @@ public slots:
 	virtual void stop()=0;
 	virtual void pause()=0;
 
-	virtual void jump_abs_s(quint32 where)=0;
 	virtual void jump_abs_ms(quint64 where)=0;
-	virtual void jump_rel(quint32 where)=0;
-    virtual void jump_rel_ms(qint64 where)=0;
+	virtual void jump_rel(double where)=0;
 
-	virtual void change_track(const MetaData&, bool start_play)=0;
-	virtual void change_track(const QString&, bool start_play)=0;
+	virtual void change_track(const MetaData&)=0;
+	virtual void change_track(const QString&)=0;
 
 	virtual void eq_changed(int band, int value){ Q_UNUSED(band); Q_UNUSED(value); }
 	virtual void record_button_toggled(bool b){ _sr_wanna_record = b; }

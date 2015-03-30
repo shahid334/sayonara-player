@@ -71,8 +71,10 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	initGUI();
 
     m_translator = translator;
+	m_play_manager = PlayManager::getInstance();
 
 	QString version = _settings->get(Set::Player_Version);
+
 
     m_awa_version = new AsyncWebAccess(this);
     m_awa_translators = new AsyncWebAccess(this);
@@ -167,12 +169,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	plugin_widget->resize(plugin_widget->width(), 0);
     ui_info_dialog = 0;
 
-	stopClicked(false);
-
-	bool start_playing = _settings->get(Set::PL_StartPlaying);
-	bool has_last_track = (_settings->get(Set::PL_LastTrack) >= 0);
-
-	psl_set_play( start_playing && has_last_track );
+	stopped();
 
 	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 	REGISTER_LISTENER(Set::Engine_SR_Active, _sl_sr_active_changed);
@@ -244,24 +241,10 @@ void GUI_Player::initGUI() {
 	btn_correct->setVisible(false);
 }
 
-void GUI_Player::psl_set_play(bool play){
-
-	m_playing = play;
-	m_trayIcon->setPlaying(play);
-
-	if(m_playing){
-		btn_play->setIcon(Helper::getIcon("pause"));
-	}
-
-	else{
-		btn_play->setIcon(Helper::getIcon("play"));
-	}
-}
 
 // new track
-void GUI_Player::psl_update_track(const MetaData & md, bool start_play) {
+void GUI_Player::track_changed(const MetaData & md) {
 
-	// sets _md = md;
 	_md = md;
 	m_metadata_available = true;
 
@@ -279,12 +262,10 @@ void GUI_Player::psl_update_track(const MetaData & md, bool start_play) {
 
 	set_album_label();
 
-	lab_artist->setText(_md.artist);
-	lab_title->setText(_md.title);
+	lab_artist->setText(Helper::elide_text(_md.artist, lab_artist, 1));
+	lab_title->setText(Helper::elide_text(_md.title, lab_title, 2));
 
 	total_time_changed(_md.length_ms);
-
-	psl_set_play(start_play);
 
 	QString rating_text;
 
@@ -312,17 +293,19 @@ void GUI_Player::set_album_label(){
 	QString str_year = QString::number(_md.year);
 	QString album_name = Helper::get_album_w_disc(_md);
 
-	if(	_md.year < 1000 || _md.album.contains(str_year)){
-		 lab_album->setText(album_name);
+	if(_md.year > 1000 && !_md.album.contains(str_year)){
+		album_name += " (" + str_year + ")";
 	}
 
-	 else{
-		lab_album->setText(album_name + " (" + str_year + ")");
-	}
+	lab_album->setText(Helper::elide_text(album_name,lab_album, 1));
 }
 
 
 void GUI_Player::psl_md_changed(const MetaData& md) {
+
+	if(_md != md){
+		return;
+	}
 
 	_md = md;
 	QString rating_text;
@@ -454,13 +437,13 @@ void GUI_Player::setupTrayActions() {
 	m_trayIcon = new GUI_TrayIcon(this);
 
 
-    connect(m_trayIcon, SIGNAL(sig_stop_clicked()), this, SLOT(stopClicked()));
-    connect(m_trayIcon, SIGNAL(sig_bwd_clicked()), this, SLOT(backwardClicked()));
-    connect(m_trayIcon, SIGNAL(sig_fwd_clicked()), this, SLOT(forwardClicked()));
+	connect(m_trayIcon, SIGNAL(sig_stop_clicked()), this, SLOT(stop_clicked()));
+	connect(m_trayIcon, SIGNAL(sig_bwd_clicked()), this, SLOT(prev_clicked()));
+	connect(m_trayIcon, SIGNAL(sig_fwd_clicked()), this, SLOT(next_clicked()));
     connect(m_trayIcon, SIGNAL(sig_mute_clicked()), this, SLOT(muteButtonPressed()));
     connect(m_trayIcon, SIGNAL(sig_close_clicked()), this, SLOT(really_close()));
-    connect(m_trayIcon, SIGNAL(sig_play_clicked()), this, SLOT(playClicked()));
-    connect(m_trayIcon, SIGNAL(sig_pause_clicked()), this, SLOT(playClicked()));
+	connect(m_trayIcon, SIGNAL(sig_play_clicked()), this, SLOT(play_clicked()));
+	connect(m_trayIcon, SIGNAL(sig_pause_clicked()), this, SLOT(play_clicked()));
     connect(m_trayIcon, SIGNAL(sig_show_clicked()), this, SLOT(showNormal()));
 
     connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -563,11 +546,6 @@ void GUI_Player::setPlayerPluginHandler(PlayerPluginHandler* pph) {
 
 }
 
-void GUI_Player::stopped() {
-    m_metadata_available = false;
-	stopClicked(false);
-}
-
 void GUI_Player::psl_reload_library_allowed(bool b) {
 	action_reloadLibrary->setEnabled(b);
 }
@@ -629,8 +607,6 @@ void GUI_Player::_sl_sr_active_changed() {
 
 	btn_rec->setChecked(false);
 }
-
-
 
 
 void GUI_Player::ui_loaded() {

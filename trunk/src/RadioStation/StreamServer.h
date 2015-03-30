@@ -26,6 +26,7 @@
 #include <QTcpServer>
 #include "RadioStation/StreamWriter.h"
 #include "HelperStructs/SayonaraClass.h"
+#include "PlayManager.h"
 
 
 enum AcceptState{
@@ -52,21 +53,22 @@ class StreamServer : public QThread, protected SayonaraClass {
 
 	private:
 
-		MetaData _md;
+		MetaData	_md;
 
-		bool _prompt;
-		bool _active;
-		int _port;
-		int _n_clients;
+		bool		_prompt;
+		bool		_active;
+		int			_port;
+		int			_n_clients;
 
-		QTcpServer* _server;
-		QTcpSocket* _pending_socket;
-		QList<QTcpSocket*> _sockets;
+		QTcpServer*					_server;
+		QTcpSocket*					_pending_socket;
+		QList<QTcpSocket*>			_sockets;
 
-		QMap<QString, QTcpSocket*> _queue_map;
+		QMap<QString, QTcpSocket*>	_queue_map;
 
-		QList<StreamWriter*> _lst_sw;
-		QStringList _allowed_ips;
+		QList<StreamWriter*>		_lst_sw;
+		QStringList					_allowed_ips;
+		PlayManager*				_play_manager;
 
 		bool listen_for_connection();
 
@@ -83,12 +85,13 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void disconnect(StreamWriter* sw);
 		void disconnect_all();
 
-		void update_track(const MetaData&);
 		void server_close();
 		void stop();
 		void retry();
 
+
 	private slots:
+		void track_changed(const MetaData&);
 		void server_destroyed();
 		void active_changed();
 		void port_changed();

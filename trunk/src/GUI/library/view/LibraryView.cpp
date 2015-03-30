@@ -76,6 +76,10 @@ void LibraryView::mousePressEvent(QMouseEvent* event) {
 	QPoint pos_org = event->pos();
     QPoint pos = QWidget::mapToGlobal(pos_org);
 
+	if(_model->rowCount() == 0){
+		return;
+	}
+
 
 	switch(event->button()) {
 
