@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#ifndef STREAM_SERVER_H
+#define STREAM_SERVER_H
 
 #include <QThread>
 #include <QList>
@@ -102,3 +103,5 @@ class StreamServer : public QThread, protected SayonaraClass {
 		void new_connection(const QString& ip);
 
 };
+
+#endif

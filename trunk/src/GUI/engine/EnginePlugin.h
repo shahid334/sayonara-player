@@ -24,6 +24,7 @@
 #define ENGINEPLUGIN_H
 
 #include "PlayerPlugin/PlayerPlugin.h"
+#include "GUI/engine/GUI_StyleSettings.h"
 #include "GUI/engine/EngineColorStyleChooser.h"
 
 #include <QAction>
@@ -40,17 +41,15 @@ class EnginePlugin : public PlayerPlugin {
 
 	Q_OBJECT
 
-signals:
-	void sig_show(bool);
-	void sig_right_clicked(int);
-
 protected:
+
 
 	QPushButton* _btn_config;
 	QPushButton* _btn_prev;
 	QPushButton* _btn_next;
 	QPushButton* _btn_close;
 
+	GUI_StyleSettings*			_ui_style_settings;
     EngineColorStyleChooser*    _ecsc;
     ColorStyle                  _cur_style;
     int                         _cur_style_idx;
@@ -83,7 +82,7 @@ protected slots:
 
 
 public slots:
-	virtual void psl_style_update()=0;
+	virtual void sl_update_style()=0;
 
 
 public:

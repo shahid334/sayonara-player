@@ -48,8 +48,7 @@ class PlaylistHandler : public QObject, protected SayonaraClass {
 
 public:
 
-    PlaylistHandler(QObject * parent=0);
-    virtual ~PlaylistHandler();
+	SINGLETON_QOBJECT(PlaylistHandler)
 
 	uint get_num_tracks();
 
@@ -57,6 +56,8 @@ public:
 	bool change_playlist_index(int idx);
 	void close_playlist(int idx);
 	void load_old_playlist();
+	QString request_first_playlist_name();
+	QString request_new_playlist_name();
 
 signals:
 
@@ -76,34 +77,32 @@ signals:
 
 public slots:
 
-	void psl_change_track(int idx, int playlist_idx=-1);
+	void change_track(int idx, int playlist_idx=-1);
 
-	void psl_selection_changed(const QList<int>&);
-	void psl_playlist_mode_changed();
+	void selection_changed(const QList<int>&);
+	void playlist_mode_changed();
 
-	void psl_clear_playlist();
-	void psl_insert_tracks(const MetaDataList&, int idx);
-	void psl_play_next(const MetaDataList&);
-	void psl_append_tracks(const MetaDataList&);
-	void psl_move_rows(const QList<int>&, int);
-	void psl_remove_rows(const QList<int> &);
+	void clear_playlist();
+	void insert_tracks(const MetaDataList&, int idx);
+	void play_next(const MetaDataList&);
+	void append_tracks(const MetaDataList&);
+	void move_rows(const QList<int>&, int);
+	void remove_rows(const QList<int> &);
 
-	void psl_md_changed(const MetaDataList& old_md, const MetaDataList& new_md);
-	void psl_md_changed(const MetaData&);
+	void md_changed(const MetaDataList& old_md, const MetaDataList& new_md);
+	void md_changed(const MetaData&);
 
-	void psl_similar_artists_available(const QList<int>&);
+	void similar_artists_available(const QList<int>&);
 
-	void psl_save_playlist(QString filename, bool relative);
-	void psl_prepare_playlist_for_save(int id);
-	void psl_prepare_playlist_for_save(QString name);
+	void save_playlist(QString filename, bool relative);
+	void prepare_playlist_for_save(int id);
+	void prepare_playlist_for_save(QString name);
 
-	void create_playlist(const QStringList&, bool new_tab=true);
-	void create_playlist(const MetaDataList&, bool new_tab=true);
-	void create_playlist(const CustomPlaylist&, bool new_tab=true);
-	void create_playlist(const QString& dir, bool new_tab=true);
+	void create_playlist(const QStringList&, QString name="");
+	void create_playlist(const MetaDataList&, QString name="");
+	void create_playlist(const CustomPlaylist&, QString name="");
+	void create_playlist(const QString& dir, QString name="");
 
-	void psl_audioconvert_on();
-	void psl_audioconvert_off();
 
 private slots:
 	void played();
@@ -123,16 +122,19 @@ private:
 
 	int					_cur_playlist_idx;
 	int					_active_playlist_idx;
+	int					_max_playlist_name;
 
 
 	PlaylistType determine_playlist_type(const MetaDataList& v_md);
-	Playlist* new_playlist(PlaylistType type, int idx);
+	Playlist* new_playlist(PlaylistType type, int idx, QString name="");
 
 	Playlist* get_active();
 	Playlist* get_current();
 
 	void emit_playlist_created(Playlist* pl=NULL);
 	void emit_cur_track_changed(Playlist* pl=NULL);
+
+	int exists(QString name);
 };
 
 #endif /* PLAYLISTHANDLER_H_ */

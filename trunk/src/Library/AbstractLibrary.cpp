@@ -26,6 +26,7 @@ AbstractLibrary::AbstractLibrary(QObject *parent) :
 	QObject(parent),
 	SayonaraClass()
 {
+	_playlist = PlaylistHandler::getInstance();
 	_sortorder = _settings->get(Set::Lib_Sorting);
 
 	_filter.by_searchstring = BY_FULLTEXT;
@@ -134,12 +135,14 @@ void AbstractLibrary::refresh() {
 
 
 void AbstractLibrary::psl_prepare_artist_for_playlist(int idx) {
-	emit sig_tracks_for_playlist_available(_vec_md);
+	Q_UNUSED(idx);
+	_playlist->create_playlist(_vec_md);
 }
 
 
 void AbstractLibrary::psl_prepare_album_for_playlist(int idx) {
-	emit sig_tracks_for_playlist_available(_vec_md);
+	Q_UNUSED(idx);
+	_playlist->create_playlist(_vec_md);
 }
 
 
@@ -156,12 +159,13 @@ void AbstractLibrary::psl_prepare_tracks_for_playlist(QList<int> idx_lst) {
 		v_md.push_back(_vec_md[idx]);
 	}
 
-	emit sig_tracks_for_playlist_available(v_md);
+	_playlist->create_playlist(v_md);
 }
 
 
 void AbstractLibrary::psl_play_next_all_tracks() {
-	emit sig_play_next_tracks(_vec_md);
+	_playlist->play_next(_vec_md);
+
 }
 
 void AbstractLibrary::psl_play_next_tracks(const QList<int>& idx_lst) {
@@ -170,12 +174,12 @@ void AbstractLibrary::psl_play_next_tracks(const QList<int>& idx_lst) {
 		v_md.push_back(_vec_md[idx]);
 	}
 
-	emit sig_play_next_tracks(v_md);
+	_playlist->play_next(v_md);
 }
 
 
 void AbstractLibrary::psl_append_all_tracks() {
-	emit sig_append_tracks_to_playlist(_vec_md);
+	_playlist->append_tracks(_vec_md);
 }
 
 
@@ -184,7 +188,8 @@ void AbstractLibrary::psl_append_tracks(const QList<int>& lst) {
 	foreach(int i, lst) {
 		v_md.push_back(_vec_md[i]);
 	}
-	emit sig_append_tracks_to_playlist(v_md);
+
+	_playlist->append_tracks(_vec_md);
 }
 
 

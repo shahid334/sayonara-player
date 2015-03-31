@@ -103,6 +103,7 @@ public slots:
 
 
 	virtual void jump_abs_ms(quint64 pos_ms);
+	virtual void jump_rel_ms(quint64 pos_ms);
 	virtual void jump_rel(double percent);
 
 

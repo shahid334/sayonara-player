@@ -26,50 +26,47 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QTranslator>
+#include <QFont>
+
+#include "DBus/DBusHandler.h"
 
 #include "GUI/player/GUI_Player.h"
+#include "Playlist/PlaylistHandler.h"
 #include "GUI/playlist/GUI_Playlist.h"
-
+#include "Library/LocalLibrary.h"
+#include "Library/LibraryImporter.h"
+#include "PlayerPlugin/PlayerPluginHandler.h"
 #include "GUI/LastFM/GUI_LastFM.h"
-#include "GUI/library/GUI_Library_windowed.h"
-#include "GUI/soundcloud/GUI_SoundcloudLibrary.h"
-#include "GUI/tagedit/GUI_TagEdit.h"
-#include "GUI/InfoDialog/GUI_InfoDialog.h"
-#include "GUI/equalizer/GUI_Equalizer.h"
-#include "GUI/stream/GUI_Stream.h"
-#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
-#include "GUI/StreamRecorder/GUI_StreamRecorder.h"
-#include "GUI/SocketConfiguration/GUISocketSetup.h"
-#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
+#include "GUI/AudioConverter/GUI_AudioConverter.h"
 #include "GUI/engine/GUI_LevelPainter.h"
 #include "GUI/engine/GUI_Spectrum.h"
-#include "GUI/engine/GUI_StyleSettings.h"
-#include "GUI/AudioConverter/GUI_AudioConverter.h"
+#include "GUI/stream/GUI_Stream.h"
+#include "GUI/stream/GUI_Podcasts.h"
+#include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/bookmarks/GUI_Bookmarks.h"
 #include "GUI/speed/GUI_Speed.h"
 #include "GUI/broadcasting/GUI_Broadcast.h"
 
-#include "Playlist/PlaylistHandler.h"
-#include "Engine/GStreamer/GSTEngineHandler.h"
-#include "Engine/SoundPluginLoader.h"
-
-#include "StreamPlugins/LastFM/LastFM.h"
-#include "Library/LocalLibrary.h"
 #include "Soundcloud/SoundcloudLibrary.h"
-#include "Library/LibraryImporter.h"
-#include "HelperStructs/Equalizer_presets.h"
+#include "GUI/soundcloud/GUI_SoundcloudLibrary.h"
+#include "StreamPlugins/LastFM/LastFM.h"
+#include "GUI/StreamRecorder/GUI_StreamRecorder.h"
+#include "GUI/tagedit/GUI_TagEdit.h"
+#include "GUI/InfoDialog/GUI_InfoDialog.h"
+#include "GUI/library/GUI_Library_windowed.h"
 
-#include "LyricLookup/LyricLookup.h"
-#include "PlaylistChooser/PlaylistChooser.h"
-#include "PlayerPlugin/PlayerPluginHandler.h"
+#include "Engine/SoundPluginLoader.h"
+#include "Engine/GStreamer/GSTEngineHandler.h"
+
+
+#include "GUI/SocketConfiguration/GUISocketSetup.h"
+#include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "RadioStation/StreamServer.h"
-#include "HelperStructs/SayonaraClass.h"
 
-#include "DBus/DBusMPRIS.h"
-#include "DBus/DBusMediaKeysInterfaceMate.h"
 
-#include <QFont>
+
+
 
 
 class Application : public QApplication, private SayonaraClass
@@ -88,33 +85,34 @@ public slots:
 
 private:
 	GUI_Player*             player;
-	GUI_PlaylistChooser*    ui_playlist_chooser;
-	GUI_AudioConverter*     ui_audioconverter;
-	PlaylistChooser*		playlist_chooser;
 	PlaylistHandler*        playlist_handler;
 	LocalLibrary*           library;
-	SoundcloudLibrary*		sc_library;
 	LibraryImporter*        library_importer;
-	LastFM*                 lastfm;
 
+	PlayerPluginHandler*    _pph;
+
+	LastFM*                 lastfm;
+	GUI_LastFM*             ui_lastfm;
+	GUI_PlaylistChooser*    ui_playlist_chooser;
+	GUI_AudioConverter*     ui_audioconverter;
 	GUI_LevelPainter*       ui_level;
 	GUI_Spectrum*           ui_spectrum;
-	GUI_LastFM*             ui_lastfm;
 	GUI_Stream*				ui_stream;
 	GUI_Podcasts*           ui_podcasts;
 	GUI_Equalizer*          ui_eq;
 	GUI_Bookmarks*          ui_bookmarks;
 	GUI_Speed*				ui_speed;
 	GUI_Broadcast*			ui_broadcast;
-	PlayerPluginHandler*    _pph;
 
-	GUI_StyleSettings*      ui_style_settings;
+
+	SoundcloudLibrary*		sc_library;
+	GUI_SoundCloudLibrary*  ui_sc_library;
+
 	GUI_StreamRecorder*     ui_stream_rec;
 	TagEdit*				tag_edit;
-	GUI_TagEdit*            ui_id3_editor;
 	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;
-	GUI_SoundCloudLibrary*  ui_sc_library;
+
 	GUI_Playlist*           ui_playlist;
 	GUI_SocketSetup*        ui_socket_setup;
 	StreamServer*           stream_server;
@@ -122,8 +120,10 @@ private:
 
 	SoundPluginLoader*      engine_plugin_loader;
 	Engine*                 listen;
-	DBusMPRIS::MediaPlayer2* _dbus_mpris;
-	DBusMediaKeysInterfaceMate* _dbus_mate;
+
+	DBusHandler*			_dbus;
+
+
 
 	QApplication*           app;
 

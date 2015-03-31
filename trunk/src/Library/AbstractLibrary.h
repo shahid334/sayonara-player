@@ -23,8 +23,9 @@
 #ifndef ABSTRACTLIBRARY_H
 #define ABSTRACTLIBRARY_H
 
-#include <QObject>
+
 #include "HelperStructs/SayonaraClass.h"
+#include "Playlist/PlaylistHandler.h"
 #include <QFile>
 
 class AbstractLibrary : public QObject, protected SayonaraClass
@@ -56,9 +57,6 @@ signals:
 
 	void sig_delete_answer(QString);
 
-	void sig_append_tracks_to_playlist(const MetaDataList&);
-	void sig_play_next_tracks(const MetaDataList&);
-	void sig_tracks_for_playlist_available(const MetaDataList&, bool new_tab=false);
 
 public slots:
 	virtual void psl_reload_library(bool)=0;
@@ -129,6 +127,8 @@ protected slots:
 
 
 protected:
+
+	PlaylistHandler*	_playlist;
 
 	MetaDataList        _vec_md;
 	AlbumList			_vec_albums;

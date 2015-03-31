@@ -22,12 +22,13 @@
 #include "Playlist/Playlist.h"
 #include <QDir>
 
-Playlist::Playlist(int idx) :
+Playlist::Playlist(int idx, QString name) :
 	SayonaraClass()
 {
 	_playlist_idx = idx;
 	_playlist_mode = _settings->get(Set::PL_Mode);
     _cur_play_idx = -1;
+	_name = name;
 }
 
 
@@ -298,4 +299,8 @@ QList<int> Playlist::find_tracks(const QString& filepath) const {
 
 int Playlist::get_size(){
 	return _v_md.size();
+}
+
+QString Playlist::get_name(){
+	return _name;
 }

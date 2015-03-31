@@ -61,11 +61,15 @@ protected slots:
 	
 private:
 
+	PlaylistMode _pl_mode;
 	LameBitrate _bitrate;
 	bool _mp3_enc_available;
 
 	void fill_cbr();
 	void fill_vbr();
+
+	void pl_mode_backup();
+	void pl_mode_restore();
 };
 
 #endif // GUI_AUDIOCONVERTER_H

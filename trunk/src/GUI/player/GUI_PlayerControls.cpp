@@ -146,11 +146,11 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 
 
 void GUI_Player::jump_forward_ms(){
-	//emit sig_seek_rel_ms(10000);
+	m_play_manager->seek_rel_ms(10000);
 }
 
 void GUI_Player::jump_backward_ms(){
-	//emit sig_seek_rel_ms(-10000);
+	m_play_manager->seek_rel_ms(-10000);
 }
 
 

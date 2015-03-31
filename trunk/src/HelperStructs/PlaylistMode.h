@@ -92,8 +92,6 @@ struct PlaylistMode {
 
         PlaylistMode plm;
 		QStringList list = str.split(',');
-		qDebug() << "str = " << str;
-		qDebug() << "plm = " << list;
 
         if(list.size() < 6) return plm;
 
@@ -109,7 +107,6 @@ struct PlaylistMode {
 		}
 
         return plm;
-		//gapless = list[6].toInt() == 1;
 	}
 
 	bool operator==(const PlaylistMode& pm) const {

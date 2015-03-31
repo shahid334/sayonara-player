@@ -1,6 +1,6 @@
-/* GUI_Stream.cpp */
+/* GUI_Podcasts.cpp */
 
-/* Copyright (C) 2011 - 2014  Lucio Carreras
+/* Copyright (C) 2011-2014  Lucio Carreras
  *
  * This file is part of sayonara player
  *
@@ -19,14 +19,15 @@
  */
 
 
-#include "GUI/stream/GUI_Stream.h"
 
-GUI_Stream::GUI_Stream(QString name, QWidget *parent) :
+#include "GUI/stream/GUI_Podcasts.h"
+
+GUI_Podcasts::GUI_Podcasts(QString name, QWidget *parent) :
 	AbstractStream(name, parent),
-	Ui::GUI_Stream()
+	Ui::GUI_Podcasts()
 {
-	_title_fallback_name = tr("Radio Station");
 	setup_parent(this);
+	_title_fallback_name = tr("Podcast");
 
 	QMap<QString, QString> data;
 
@@ -36,21 +37,22 @@ GUI_Stream::GUI_Stream(QString name, QWidget *parent) :
 }
 
 
-GUI_Stream::~GUI_Stream() {
+GUI_Podcasts::~GUI_Podcasts() {
 
 }
 
-void GUI_Stream::language_changed() {
+void GUI_Podcasts::language_changed() {
 	retranslateUi(this);
 }
 
-bool GUI_Stream::get_all_streams(QMap<QString, QString>& result){
-	return _db->getAllStreams(result);
+
+bool GUI_Podcasts::get_all_streams(QMap<QString, QString>& result){
+	return _db->getAllPodcasts(result);
 }
 
-bool GUI_Stream::add_stream(QString station_name, QString url){
-	return _db->addStream(station_name, url);
+bool GUI_Podcasts::add_stream(QString station_name, QString url){
+	return _db->addPodcast(station_name, url);
 }
-bool GUI_Stream::delete_stream(QString station_name){
-	return _db->deleteStream(station_name);
+bool GUI_Podcasts::delete_stream(QString station_name){
+	return _db->deletePodcast(station_name);
 }

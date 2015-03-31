@@ -148,8 +148,9 @@ public slots:
 	virtual void stop()=0;
 	virtual void pause()=0;
 
-	virtual void jump_abs_ms(quint64 where)=0;
-	virtual void jump_rel(double where)=0;
+	virtual void jump_abs_ms(quint64 ms)=0;
+	virtual void jump_rel_ms(quint64 ms)=0;
+	virtual void jump_rel(double ms)=0;
 
 	virtual void change_track(const MetaData&)=0;
 	virtual void change_track(const QString&)=0;

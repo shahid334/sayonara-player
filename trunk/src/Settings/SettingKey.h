@@ -108,6 +108,7 @@ namespace SK{
         Broadcast_Clients,
 
 		MP3enc_found,
+		Player_Quit,
 
 		Num_Setting_Keys
 	};
@@ -201,6 +202,7 @@ namespace SetNoDB{
 
 	INST(int, Broadcast_Clients);
 	INST(bool, MP3enc_found);
+	INST(bool, Player_Quit);
 
 }
 

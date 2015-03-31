@@ -122,7 +122,7 @@ void GUI_LevelPainter::timed_out() {
     update();
 }
 
-void GUI_LevelPainter::psl_style_update() {
+void GUI_LevelPainter::sl_update_style() {
 
 	_settings->set(Set::Level_Style, _cur_style_idx);
 	_ecsc->reload(width(), height());

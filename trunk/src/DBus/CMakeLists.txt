@@ -12,6 +12,7 @@ FIND_PACKAGE(Qt4 COMPONENTS QtCore QtDBus REQUIRED)
 INCLUDE(${QT_USE_FILE})
 
 SET(HEADERS
+	DBusHandler.h
 	DBusMPRIS.h
 	DBusMediaKeysInterface.h
 	DBusMediaKeysInterfaceMate.h
@@ -19,6 +20,7 @@ SET(HEADERS
 )
 
 SET(SOURCES
+	DBusHandler.cpp
 	DBusMPRIS.cpp
 	DBusMediaKeysInterface.cpp
 	DBusMediaKeysInterfaceMate.cpp

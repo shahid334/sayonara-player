@@ -290,6 +290,16 @@ void GSTPlaybackEngine::jump_abs_ms(quint64 pos_ms) {
 	_scrobble_begin_ms = new_time_ns / MIO;
 }
 
+void GSTPlaybackEngine::jump_rel_ms(quint64 ms) {
+
+	gint64 new_time_ns;
+
+	quint64 new_time_ms = _pipeline->get_position_ms() + ms;
+	new_time_ns = _pipeline->seek_abs(new_time_ms * MIO);
+
+	_scrobble_begin_ms = new_time_ns / MIO;
+}
+
 
 void GSTPlaybackEngine::jump_rel(double percent) {
 

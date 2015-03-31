@@ -27,12 +27,14 @@ EnginePlugin::EnginePlugin(QString name, QWidget* parent) :
     PlayerPlugin(name, parent)
 {
     _ecsc = new EngineColorStyleChooser(minimumWidth(), minimumHeight());
+	_ui_style_settings = new GUI_StyleSettings(this);
 
     _timer = new QTimer();
     _timer->setInterval(30);
     _timer_stopped = true;
 
     connect(_timer, SIGNAL(timeout()), this, SLOT(timed_out()));
+	connect(_ui_style_settings, SIGNAL(sig_style_update()), this, SLOT(sl_update_style()));
 }
 
 EnginePlugin::~EnginePlugin(){
@@ -45,6 +47,8 @@ EnginePlugin::~EnginePlugin(){
     delete _btn_prev;
     delete _btn_next;
     delete _btn_close;
+	delete _ui_style_settings;
+	delete _ecsc;
 }
 
 
@@ -68,14 +72,14 @@ void EnginePlugin::init_buttons(){
 
 
 void EnginePlugin::config_clicked(){
-    emit sig_right_clicked(_cur_style_idx);
+	_ui_style_settings->show(_cur_style_idx);
 }
 
 void EnginePlugin::next_clicked(){
     int n_styles = _ecsc->get_num_color_schemes();
     _cur_style_idx = (_cur_style_idx + 1) % n_styles;
 
-    psl_style_update();
+	sl_update_style();
 }
 
 
@@ -86,7 +90,7 @@ void EnginePlugin::prev_clicked(){
         _cur_style_idx = n_styles - 1;
     }
 
-    psl_style_update();
+	sl_update_style();
 }
 
 
@@ -94,19 +98,17 @@ void EnginePlugin::prev_clicked(){
 void EnginePlugin::showEvent(QShowEvent *e){
     PlayerPlugin::showEvent(e);
     update();
-    emit sig_show(true);
 }
 
 
 void EnginePlugin::closeEvent(QCloseEvent *e) {
     PlayerPlugin::closeEvent(e);
     update();
-    emit sig_show(false);
 }
 
 void EnginePlugin::resizeEvent(QResizeEvent* e){
 
-	psl_style_update();
+	sl_update_style();
 
 	QSize new_size = e->size();
 
@@ -153,7 +155,8 @@ void EnginePlugin::mousePressEvent(QMouseEvent *e) {
             close();
             break;
         case Qt::RightButton:
-            emit sig_right_clicked(_cur_style_idx);
+			_ui_style_settings->show(_cur_style_idx);
+			break;
         default:
             break;
     }

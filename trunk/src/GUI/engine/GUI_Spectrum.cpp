@@ -186,7 +186,7 @@ void GUI_Spectrum::resize_steps(int bins, int rects) {
 }
 
 
-void GUI_Spectrum::psl_style_update() {
+void GUI_Spectrum::sl_update_style() {
 
    _ecsc->reload(width(), height());
    _cur_style = _ecsc->get_color_scheme_spectrum(_cur_style_idx);

@@ -37,6 +37,7 @@ class Playlist : protected SayonaraClass
 {
 
 protected:
+	QString			_name;
     bool            _playlist_changed;
     int             _cur_play_idx;
 	int				_playlist_idx;
@@ -50,7 +51,7 @@ protected:
 
 public:
 
-	Playlist(int idx);
+	Playlist(int idx, QString name="");
 
 	virtual void play()=0;
 	virtual void pause()=0;
@@ -97,6 +98,7 @@ public:
 	QList<int> find_tracks(int id) const;
 	QList<int> find_tracks(const QString& filepath) const;
 	int get_size();
+	QString get_name();
 
 	void set_playlist_mode(const PlaylistMode& mode);
 	PlaylistMode get_playlist_mode() const;

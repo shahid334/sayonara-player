@@ -19,14 +19,27 @@
  */
 
 
+#include "DBus/DBusMPRIS.h"
+#include "DBus/DBusMediaKeysInterfaceMate.h"
+#include "DBus/DBusMediaKeysInterfaceGnome.h"
+
+#include <QObject>
 
 #ifndef DBUSHANDLER_H
 #define DBUSHANDLER_H
 
-class DBusHandler
+class DBusHandler : private QObject
 {
+
 public:
-	DBusHandler();
+	DBusHandler(QObject* parent=0);
+	virtual ~DBusHandler();
+
+
+private:
+	DBusMPRIS::MediaPlayer2* _dbus_mpris;
+	DBusMediaKeysInterfaceMate* _dbus_mate;
+	DBusMediaKeysInterfaceGnome* _dbus_gnome;
 };
 
 #endif // DBUSHANDLER_H

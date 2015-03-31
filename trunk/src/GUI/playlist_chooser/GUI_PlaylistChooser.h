@@ -65,21 +65,21 @@ public slots:
 
 
 public:
-	GUI_PlaylistChooser(QString name, PlaylistChooser* playlist_chooser, QWidget *parent = 0);
+	GUI_PlaylistChooser(QString name, QWidget *parent = 0);
 	virtual ~GUI_PlaylistChooser();
 
 private:
 
-    GUI_Target_Playlist_Dialog* _target_playlist_dialog;
-	PlaylistChooser* _playlist_chooser;
+	GUI_Target_Playlist_Dialog*		_target_playlist_dialog;
+	PlaylistChooser*				_playlist_chooser;
 
-	QMap<int, QString> _playlists;
+	QMap<int, QString>				_playlists;
 
-	int	_cur_idx;
-	bool _started;
+	int			_cur_idx;
+	bool		_started;
 
-    QString _text_before_save;
-    QString _last_dir;
+	QString		_text_before_save;
+	QString		_last_dir;
 
 
 

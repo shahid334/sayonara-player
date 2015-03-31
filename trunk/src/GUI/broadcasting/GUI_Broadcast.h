@@ -23,6 +23,7 @@
 #ifndef GUI_BROADCAST_H
 #define GUI_BROADCAST_H
 
+#include "RadioStation/StreamServer.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/ui_GUI_Broadcast.h"
 
@@ -32,15 +33,8 @@ class GUI_Broadcast : public PlayerPlugin, private Ui::GUI_Broadcast
 	Q_OBJECT
 
 public:
-	explicit GUI_Broadcast(QString name, QWidget *parent = 0);
+	explicit GUI_Broadcast(QString name, StreamServer* server, QWidget *parent = 0);
 	~GUI_Broadcast();
-
-signals:
-	void sig_dismiss(int);
-	void sig_dismiss_all();
-	void sig_accepted();
-	void sig_rejected();
-	void sig_retry();
 
 public slots:
 	void new_connection_request(const QString& ip);
@@ -63,8 +57,7 @@ private:
 protected:
 	virtual void language_changed();
 
-
-
+	StreamServer*		_server;
 };
 
 #endif // GUI_BROADCAST_H

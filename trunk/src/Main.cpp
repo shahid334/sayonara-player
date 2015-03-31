@@ -208,6 +208,7 @@ bool register_settings(){
 	REGISTER_SETTING( int, Broadcast_Port, "broadcast_port", 54054 );
     REGISTER_SETTING_NO_DB( int, Broadcast_Clients, 0 );
 	REGISTER_SETTING_NO_DB( bool, MP3enc_found, true );
+	REGISTER_SETTING_NO_DB( bool, Player_Quit, false );
 
 	return set->check_settings();
 }

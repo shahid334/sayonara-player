@@ -133,9 +133,14 @@ void GSTEngineHandler::pause() {
 
 
 
-void GSTEngineHandler::jump_abs_ms(quint64 where) {
+void GSTEngineHandler::jump_abs_ms(quint64 ms) {
 	if(!_cur_engine) return;
-	_cur_engine->jump_abs_ms(where);
+	_cur_engine->jump_abs_ms(ms);
+}
+
+void GSTEngineHandler::jump_rel_ms(quint64 ms){
+	if(!_cur_engine) return;
+	_cur_engine->jump_rel_ms(ms);
 }
 
 void GSTEngineHandler::jump_rel(double where) {

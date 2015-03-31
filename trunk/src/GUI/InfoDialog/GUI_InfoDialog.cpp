@@ -1,6 +1,6 @@
 /* GUI_InfoDialog.cpp
 
- * Copyright (C) 2012  
+ * Copyright (C) 2012
  *
  * This file is part of sayonara-player
  *
@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * created by Lucio Carreras, 
- * Jul 19, 2012 
+ * created by Lucio Carreras,
+ * Jul 19, 2012
  *
  */
 
@@ -37,21 +37,21 @@
 #include <QDateTime>
 
 
-GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
+GUI_InfoDialog::GUI_InfoDialog(TagEdit* tag_edit, QWidget* parent) :
 	SayonaraDialog(parent),
 	Ui::InfoDialog() {
 
 	setupUi(this);
 
-    _class_name = QString("InfoDialog");
+	_class_name = QString("InfoDialog");
 
-    _initialized = false;
+	_initialized = false;
 
-    ui_tag_edit = tag_edit;
+	ui_tag_edit = new GUI_TagEdit(tag_edit);
 
 	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit"), tr("Edit"));
 
-    _lfm_thread = new LFMTrackChangedThread(_class_name);
+	_lfm_thread = new LFMTrackChangedThread(_class_name);
 
 	QStringList user_pw;
 	user_pw = _settings->get(Set::LFM_Login);
@@ -60,22 +60,22 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 		_lfm_thread->setUsername(user_pw.first());
 	}
 
-    _initialized = true;
+	_initialized = true;
 
-    _lyric_thread = new LyricLookupThread();
-    _lyric_server = 0;
-    _lyrics_visible = true;
+	_lyric_thread = new LyricLookupThread();
+	_lyric_server = 0;
+	_lyrics_visible = true;
 
 	_cover_lookup = new CoverLookup(this);
-    _AlternativeCovers = new GUI_AlternativeCovers(this, _class_name );
+	_AlternativeCovers = new GUI_AlternativeCovers(this, _class_name );
 
-    _tag_edit_visible = true;
+	_tag_edit_visible = true;
 
-    QStringList server_list = _lyric_thread->getServers();
+	QStringList server_list = _lyric_thread->getServers();
 	for(const QString& server : server_list) {
 
 		combo_servers->addItem(server);
-    }
+	}
 
 	combo_servers->setCurrentIndex(0);
 
@@ -86,23 +86,23 @@ GUI_InfoDialog::GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit) :
 	connect(_AlternativeCovers,	SIGNAL(sig_cover_changed(const CoverLocation&)),
 			this,				SLOT(psl_cover_available(const CoverLocation&)));
 
-    connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
-    connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
-    connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
+	connect(_lyric_thread, SIGNAL(finished()), this, SLOT(psl_lyrics_available()));
+	connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
+	connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
 
-    connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
+	connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
 
 	connect(combo_servers, 	SIGNAL(currentIndexChanged(int)),
-            this, 					SLOT(psl_lyrics_server_changed(int)));
+			this, 					SLOT(psl_lyrics_server_changed(int)));
 
 	connect(btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
-    connect(ui_tag_edit, SIGNAL(destroyed()), this, SLOT(psl_tag_edit_deleted()));
+	connect(ui_tag_edit, SIGNAL(destroyed()), this, SLOT(psl_tag_edit_deleted()));
 
 	btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
-    tab_widget->setCurrentIndex(TAB_INFO);
+	tab_widget->setCurrentIndex(TAB_INFO);
 
-    hide();
+	hide();
 }
 
 GUI_InfoDialog::~GUI_InfoDialog() {
@@ -111,13 +111,13 @@ GUI_InfoDialog::~GUI_InfoDialog() {
 
 
 void GUI_InfoDialog::psl_tag_edit_deleted(){
-    qDebug() << "Tag edit deleted";
+	qDebug() << "Tag edit deleted";
 }
 
 
 void GUI_InfoDialog::language_changed() {
 
-    MetaDataList v_md = _v_md;
+	MetaDataList v_md = _v_md;
 
 	retranslateUi(this);
 	set_metadata(v_md);
@@ -178,15 +178,15 @@ void GUI_InfoDialog::prepare_info() {
 	MetaDataInfo* info = 0;
 
 	switch (_mode){
-		case InfoDialogMode_Artists:
-			info = new ArtistInfo(0, _v_md);
-			break;
-		case InfoDialogMode_Albums:
-			info = new AlbumInfo(0, _v_md);
-			break;
-		default:
-			info = new MetaDataInfo(0, _v_md);
-			break;
+	case InfoDialogMode_Artists:
+		info = new ArtistInfo(0, _v_md);
+		break;
+	case InfoDialogMode_Albums:
+		info = new AlbumInfo(0, _v_md);
+		break;
+	default:
+		info = new MetaDataInfo(0, _v_md);
+		break;
 	}
 
 	lab_heading->setText(info->get_header());
@@ -215,10 +215,10 @@ void GUI_InfoDialog::prepare_info() {
 
 void GUI_InfoDialog::psl_cover_available(const CoverLocation& cl) {
 
-    QIcon icon(cl.cover_path);
-    if(icon.isNull()) return;
+	QIcon icon(cl.cover_path);
+	if(icon.isNull()) return;
 
-    btn_image->setIcon(icon);
+	btn_image->setIcon(icon);
 	btn_image->update();
 
 	if(sender() == _AlternativeCovers){
@@ -241,25 +241,25 @@ void GUI_InfoDialog::psl_tab_index_changed(int tab){
 
 	ui_info_widget->hide();
 	ui_lyric_widget->hide();
-    ui_tag_edit->hide();
+	ui_tag_edit->hide();
 
 	switch(tab){
 
-		case TAB_EDIT:
-			tab_widget->setCurrentWidget(ui_tag_edit);
-			ui_tag_edit->show();
-			break;
+	case TAB_EDIT:
+		tab_widget->setCurrentWidget(ui_tag_edit);
+		ui_tag_edit->show();
+		break;
 
-        case TAB_LYRICS:
-			tab_widget->setCurrentWidget(ui_lyric_widget);
-			ui_lyric_widget->show();
-			break;
+	case TAB_LYRICS:
+		tab_widget->setCurrentWidget(ui_lyric_widget);
+		ui_lyric_widget->show();
+		break;
 
-        default:
-			tab_widget->setCurrentWidget(ui_info_widget);
-			ui_info_widget->show();
+	default:
+		tab_widget->setCurrentWidget(ui_info_widget);
+		ui_info_widget->show();
 
-			break;
+		break;
 	}
 
 	psl_cover_available(_cl);
@@ -274,15 +274,15 @@ void GUI_InfoDialog::show(int tab) {
 	tab_widget->setTabEnabled(2, _tag_edit_visible);
 
 	if(!_tag_edit_visible && tab == TAB_EDIT) {
-        tab = TAB_INFO;
-    }
+		tab = TAB_INFO;
+	}
 
 	if(!_lyrics_visible){
 		tab_widget->setTabEnabled(TAB_LYRICS, false);
 	}
 
 	tab_widget->setCurrentIndex(tab);
-    psl_tab_index_changed(tab);
+	psl_tab_index_changed(tab);
 }
 
 
@@ -319,10 +319,10 @@ void GUI_InfoDialog::init() {
 }
 
 void GUI_InfoDialog::set_tag_edit_visible(bool b) {
-    _tag_edit_visible = b;
+	_tag_edit_visible = b;
 }
 
 void GUI_InfoDialog::closeEvent(QCloseEvent* e) {
-    _tag_edit_visible = true;
-    e->accept();
+	_tag_edit_visible = true;
+	e->accept();
 }

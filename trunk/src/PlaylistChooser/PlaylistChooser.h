@@ -38,7 +38,7 @@ class PlaylistChooser : public QObject {
 	Q_OBJECT
 
 public:
-	PlaylistChooser(PlaylistHandler* _playlist_handler);
+	PlaylistChooser();
 	virtual ~PlaylistChooser();
 
 	void delete_playlist(int id);

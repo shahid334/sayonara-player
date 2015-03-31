@@ -51,6 +51,7 @@ GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog
 
 	connect(_library, SIGNAL(sig_no_library_path()), this, SLOT(lib_no_lib_path()));
 
+	library->load();
     hide();
 }
 

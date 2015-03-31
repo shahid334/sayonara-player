@@ -144,12 +144,16 @@ void GSTConvertEngine::set_volume(int vol) {
 }
 
 
-void GSTConvertEngine::jump_abs_ms(quint64 v) {
-	Q_UNUSED(v);
+void GSTConvertEngine::jump_abs_ms(quint64 pos_ms) {
+	Q_UNUSED(pos_ms);
 }
 
-void GSTConvertEngine::jump_rel(double v) {
-	Q_UNUSED(v);
+void GSTConvertEngine::jump_rel_ms(quint64 ms){
+	Q_UNUSED(ms);
+}
+
+void GSTConvertEngine::jump_rel(double percent) {
+	Q_UNUSED(percent);
 }
 
 

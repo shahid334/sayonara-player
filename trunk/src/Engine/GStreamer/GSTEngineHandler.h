@@ -42,7 +42,8 @@ public:
 public slots:
 
 
-	void jump_abs_ms(quint64 where);
+	void jump_abs_ms(quint64 ms);
+	void jump_rel_ms(quint64 ms);
 	void jump_rel(double where);
 
 	void change_track(const MetaData&);

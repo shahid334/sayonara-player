@@ -1,6 +1,6 @@
 /* GUI_InfoDialog.h
 
- * Copyright (C) 2012  
+ * Copyright (C) 2012
  *
  * This file is part of sayonara-player
  *
@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * created by Lucio Carreras, 
- * Jul 19, 2012 
+ * created by Lucio Carreras,
+ * Jul 19, 2012
  *
  */
 
@@ -54,7 +54,7 @@ enum InfoDialogMode {
 };
 
 class GUI_InfoDialog : public SayonaraDialog, private Ui::InfoDialog{
-Q_OBJECT
+	Q_OBJECT
 
 signals:
 	void sig_cover_changed(const CoverLocation&);
@@ -67,25 +67,25 @@ private slots:
 	void psl_lyrics_available();
 	void psl_lyrics_server_changed(int);
 	void psl_tab_index_changed(int);
-    void no_cover_available();
+	void no_cover_available();
 	void cover_clicked();
 	void psl_cover_available(const CoverLocation&);
 
-    void psl_tag_edit_deleted();
+	void psl_tag_edit_deleted();
 
 
 protected:
-    void closeEvent(QCloseEvent *e);
+	void closeEvent(QCloseEvent *e);
 	virtual void language_changed();
 
 public:
-    GUI_InfoDialog(QWidget* parent, GUI_TagEdit* tag_edit);
+	GUI_InfoDialog(TagEdit* tag_edit, QWidget* parent=0);
 	virtual ~GUI_InfoDialog();
 
 	void setInfoMode(InfoDialogMode mode);
 
 
-    void set_tag_edit_visible(bool b);
+	void set_tag_edit_visible(bool b);
 
 
 private:
@@ -100,13 +100,13 @@ private:
 	QString 				_class_name;
 	int						_lyric_server;
 	bool					_lyrics_visible;
-    bool                    _initialized;
-    bool                    _tag_edit_visible;
-    bool                    _dark;
-    QString                 _call_id;
+	bool                    _initialized;
+	bool                    _tag_edit_visible;
+	bool                    _dark;
+	QString                 _call_id;
 	InfoDialogMode			_mode;
 
-    QString 				_cover_artist;
+	QString 				_cover_artist;
 	QString					_cover_album;
 	CoverLocation			_cl;
 
@@ -116,7 +116,7 @@ private:
 	void prepare_lyrics();
 	void prepare_info();
 
-    void init();
+	void init();
 
 
 };

@@ -23,8 +23,8 @@
 #include "HelperStructs/CDirectoryReader.h"
 #include "HelperStructs/PlaylistParser.h"
 
-StdPlaylist::StdPlaylist(int idx) :
-	Playlist(idx)
+StdPlaylist::StdPlaylist(int idx, QString name) :
+	Playlist(idx, name)
 {
     _playlist_type = PlaylistTypeStd;
 }

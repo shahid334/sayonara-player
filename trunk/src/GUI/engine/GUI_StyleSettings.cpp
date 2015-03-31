@@ -405,26 +405,35 @@ void GUI_StyleSettings::combo_text_changed(const QString & str) {
 
 
 void GUI_StyleSettings::set_sth_changed(bool b) {
+
 	btn_undo->setEnabled(b);
     _sth_changed = b;
-    if(b) {
+
+	if(b) {
 		if(!windowTitle().endsWith("*")) {
 			setWindowTitle(windowTitle() + "*");
         }
     }
-    else
+
+	else{
 		setWindowTitle(windowTitle().remove("*"));
+	}
 }
 
 
 void GUI_StyleSettings::show(int idx) {
-	if(isVisible()) return;
+
+	if(isVisible()) {
+		return;
+	}
 
     set_sth_changed(false);
 	showNormal();
-    if(idx < _styles.size() - 1)
+	if(idx < _styles.size() - 1){
 		combo_styles->setCurrentIndex(idx + 1);
-    else
+	}
+	else{
 		combo_styles->setCurrentIndex(0);
+	}
 
 }

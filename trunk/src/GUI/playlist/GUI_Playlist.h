@@ -48,7 +48,7 @@ class GUI_Playlist : public SayonaraWidget, private Ui::Playlist_Window
 	Q_OBJECT
 
 public:
-	GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* dialog, QWidget *parent);
+	GUI_Playlist(GUI_InfoDialog* dialog, QWidget *parent);
 	~GUI_Playlist();
 
 	void dragEnterEvent(QDragEnterEvent* event);

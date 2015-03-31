@@ -60,6 +60,10 @@ LastFM::LastFM() :
 
 	REGISTER_LISTENER_NO_CALL(Set::LFM_Login, psl_login);
 	REGISTER_LISTENER(Set::LFM_Active, psl_login);
+
+	if( _settings->get(Set::LFM_Active) ) {
+		psl_login();
+	}
 }
 
 

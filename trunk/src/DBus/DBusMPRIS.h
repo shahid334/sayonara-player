@@ -119,6 +119,9 @@ class MediaPlayer2 : public DBusAdaptor, protected SayonaraClass
 		MetaData	_md;
 		qint64		_pos;
 
+		bool		_initialized;
+		void		init();
+
 
 	public:
 		Q_PROPERTY(QString		PlaybackStatus		READ	PlaybackStatus)
@@ -153,6 +156,8 @@ class MediaPlayer2 : public DBusAdaptor, protected SayonaraClass
 
 		Q_PROPERTY(qint64	Position			READ	Position)
 		qint64				Position();
+		void				SetPosition(const QDBusObjectPath& track_id, qint64 position);
+
 
 
 		Q_PROPERTY(double		MinimumRate			READ	MinimumRate)
@@ -193,8 +198,8 @@ class MediaPlayer2 : public DBusAdaptor, protected SayonaraClass
 		void					PlayPause();
 		void					Stop();
 		void					Play();
-		void					Seek(qlonglong offset);
-		void					SetPosition(const QDBusObjectPath& trackId, qlonglong offset);
+		void					Seek(qint64 offset);
+
 		void					OpenUri(const QString& uri);
 
 
@@ -208,9 +213,7 @@ class MediaPlayer2 : public DBusAdaptor, protected SayonaraClass
 		void					playstate_changed(PlayManager::PlayState);
 
 	signals:
-		void					Seeked(qlonglong position);
-
-
+		void					Seeked(qint64 position);
 
 };
 

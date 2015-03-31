@@ -23,47 +23,23 @@
 #define GUI_STREAM_H_
 
 #include "GUI/ui_GUI_Stream.h"
-#include "PlayerPlugin/PlayerPlugin.h"
-#include "HelperStructs/Helper.h"
+#include "GUI/stream/AbstractStream.h"
 
-#include <QMap>
 
-class GUI_Stream : public PlayerPlugin, private Ui::GUI_Stream {
+class GUI_Stream : public AbstractStream, public Ui::GUI_Stream {
 
 	Q_OBJECT
 
-signals:
-	void sig_create_playlist(const MetaDataList&);
-	void sig_play_track(int);
-	void sig_close_event();
-
-private slots:
-	void listen_clicked();
-	void combo_index_changed(int idx);
-	void combo_text_changed(const QString& text);
-	void url_text_changed(const QString& text);
-	void delete_clicked();
-	void save_clicked();
-
-private:
-    void play_stream(QString url, QString station_name);
+protected:
+	virtual void	language_changed();
+	virtual bool	get_all_streams(QMap<QString, QString>& result);
+	virtual bool	add_stream(QString station_name, QString url);
+	virtual bool	delete_stream(QString station_name);
 
 
 public:
 	GUI_Stream(QString name, QWidget *parent = 0);
 	virtual ~GUI_Stream();
-
-	QMap<QString, QString> _stations;
-	int _cur_station;
-	QString _cur_station_name;
-	QString _cur_station_adress;
-
-	void setup_stations(const QMap<QString, QString>&);
-
-protected:
-	virtual void  language_changed();
-
-
 };
 
 #endif /* GUI_STREAM_H_ */

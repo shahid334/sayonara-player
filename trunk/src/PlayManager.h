@@ -51,6 +51,7 @@ class PlayManager : public QObject, protected SayonaraClass
 		void sig_previous();
 		void sig_stopped();
 		void sig_seeked_rel(double);
+		void sig_seeked_rel_ms(quint64 ms);
 		void sig_seeked_abs_ms(quint64 ms);
 		void sig_position_changed_ms(quint64 ms);
 		void sig_track_changed(const MetaData& v_md);
@@ -69,6 +70,7 @@ class PlayManager : public QObject, protected SayonaraClass
 		void stop();
 		void seek_rel(double percent);
 		void seek_abs_ms(quint64 ms);
+		void seek_rel_ms(quint64 ms);
 		void set_position_ms(quint64 ms);
 		void change_track(const MetaData& md);
 		void change_track_idx(int idx);

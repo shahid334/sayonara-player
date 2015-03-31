@@ -22,8 +22,19 @@
 
 #include "DBusHandler.h"
 
-DBusHandler::DBusHandler()
+DBusHandler::DBusHandler(QObject* parent) :
+	QObject(parent)
 {
 
+	_dbus_mpris	= new DBusMPRIS::MediaPlayer2(this);
+	_dbus_mate = new DBusMediaKeysInterfaceMate(this);
+	_dbus_gnome = new DBusMediaKeysInterfaceGnome(this);
+
+}
+
+DBusHandler::~DBusHandler(){
+	delete _dbus_gnome;
+	delete _dbus_mate;
+	delete _dbus_mpris;
 
 }

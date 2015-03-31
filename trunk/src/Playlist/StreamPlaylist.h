@@ -28,7 +28,7 @@
 class StreamPlaylist : public StdPlaylist
 {
 public:
-	explicit StreamPlaylist(int idx);
+	explicit StreamPlaylist(int idx, QString name="");
 };
 
 #endif // STREAMPLAYLIST_H

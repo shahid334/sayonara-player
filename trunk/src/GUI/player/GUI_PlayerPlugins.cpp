@@ -73,6 +73,7 @@ void GUI_Player::showPlugin(PlayerPlugin* plugin) {
     pl_size.setHeight(pl_size.height() - widget_size.height() + old_h);
 
 	plugin_widget->setMinimumHeight(plugin->getSize().height());
+
 	_pph->resize(plugin_widget->size());
 
 	ui_playlist->resize(pl_size);

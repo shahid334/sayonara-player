@@ -21,8 +21,6 @@
 #include "GUI/ui_GUI_Player.h"
 #include "GUI/player/GUI_Player.h"
 #include "GUI/player/GUI_TrayIcon.h"
-#include "GUI/stream/GUI_Stream.h"
-#include "GUI/Podcasts/GUI_Podcasts.h"
 #include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 
 #include "HelperStructs/Style.h"
@@ -173,6 +171,8 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	REGISTER_LISTENER(Set::Lib_Path, _sl_libpath_changed);
 	REGISTER_LISTENER(Set::Engine_SR_Active, _sl_sr_active_changed);
+	REGISTER_LISTENER_NO_CALL(Set::Player_Fullscreen, _sl_fullscreen_toggled);
+	REGISTER_LISTENER_NO_CALL(SetNoDB::Player_Quit, really_close);
 }
 
 
@@ -544,6 +544,7 @@ void GUI_Player::setPlayerPluginHandler(PlayerPluginHandler* pph) {
 	connect(_pph, SIGNAL(sig_show_plugin(PlayerPlugin*)), this, SLOT(showPlugin(PlayerPlugin*)));
     connect(_pph, SIGNAL(sig_hide_all_plugins()), this, SLOT(hideAllPlugins()));
 
+
 }
 
 void GUI_Player::psl_reload_library_allowed(bool b) {
@@ -611,6 +612,7 @@ void GUI_Player::_sl_sr_active_changed() {
 
 void GUI_Player::ui_loaded() {
 
+
     #ifdef Q_OS_UNIX
 		obj_ref = this;
 
@@ -619,20 +621,29 @@ void GUI_Player::ui_loaded() {
 	#endif
 
 	QString lib_path = _settings->get(Set::Lib_Path);
-	if(QFile::exists(lib_path)){
-		ui_libpath->hide();
-		ui_library->show();
-	}
+	if(ui_library){
+		if(QFile::exists(lib_path)){
+			ui_libpath->hide();
+			ui_library->show();
+		}
 
-	else{
-		ui_library->hide();
-		ui_libpath->show();
+		else{
+			ui_library->hide();
+			ui_libpath->show();
+		}
 	}
 
 	bool fullscreen = _settings->get(Set::Player_Fullscreen);
 	action_Fullscreen->setChecked(fullscreen);
 
-	ui_playlist->resize(playlist_widget->size());
+	if(ui_playlist){
+		ui_playlist->resize(playlist_widget->size());
+	}
+
+	QString shown_plugin = _settings->get(Set::Player_ShownPlugin);
+	PlayerPlugin* p  = _pph->find_plugin(shown_plugin);
+	showPlugin(p);
+
 }
 
 
@@ -721,6 +732,23 @@ void GUI_Player::keyPressEvent(QKeyEvent* e) {
 	}
 }
 
+void GUI_Player::showEvent(QShowEvent *e){
+
+	Q_UNUSED(e);
+
+	bool maximized = _settings->get(Set::Player_Maximized);
+
+	if(maximized){
+		showMaximized();
+	}
+
+	else{
+		showNormal();
+	}
+
+	ui_library->resize(library_widget->size());
+	ui_playlist->resize(playlist_widget->size());
+}
 
 void GUI_Player::closeEvent(QCloseEvent* e) {
 
@@ -730,8 +758,7 @@ void GUI_Player::closeEvent(QCloseEvent* e) {
     }
 }
 
-
-void GUI_Player::really_close(bool b) {
+void GUI_Player::really_close(bool) {
 
 	m_min2tray = false;
 	this->close();

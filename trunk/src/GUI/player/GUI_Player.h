@@ -30,7 +30,7 @@
 #include "GUI/equalizer/GUI_Equalizer.h"
 #include "GUI/playlist_chooser/GUI_PlaylistChooser.h"
 #include "GUI/stream/GUI_Stream.h"
-#include "GUI/Podcasts/GUI_Podcasts.h"
+#include "GUI/stream/GUI_Podcasts.h"
 #include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
@@ -46,11 +46,10 @@
 #include "HelperStructs/SayonaraClass.h"
 
 #include <QMainWindow>
+#include <QShowEvent>
 #include <QCloseEvent>
 #include <QTranslator>
-#include <QCloseEvent>
 #include <QKeySequence>
-#include <QTranslator>
 #include <QAction>
 
 
@@ -64,14 +63,13 @@ public:
 
 public slots:
 
-
 	void psl_set_cur_pos_ms(quint64 pos_ms);
 	void psl_id3_tags_changed(const MetaDataList& v_md_old, const MetaDataList& v_md_new);
 	void psl_md_changed(const MetaData&);
     void psl_reload_library_allowed(bool);
     void psl_set_status_bar_text(QString, bool show);
 
-    void really_close(bool=false);
+	void really_close(bool b=false);
 
     /* Last FM */
     void last_fm_logged_in(bool);
@@ -159,6 +157,7 @@ private slots:
     void small_playlist_items_toggled(bool);
     void show_notification_toggled(bool);
     void show_fullscreen_toggled(bool);
+	void _sl_fullscreen_toggled();
 	void skin_toggled(bool);
 
 
@@ -206,10 +205,12 @@ public:
 
 protected:
 
+	void showEvent(QShowEvent *e);
     void closeEvent(QCloseEvent* e);
     void keyPressEvent(QKeyEvent* e);
     void resizeEvent(QResizeEvent* e);
     void moveEvent(QMoveEvent* e);
+
 
 	virtual void  language_changed();
 	virtual void skin_changed();

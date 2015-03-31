@@ -1,4 +1,4 @@
-/* GUI_Spectrum.h */
+/* GUI_Podcasts.h */
 
 /* Copyright (C) 2011-2014  Lucio Carreras
  *
@@ -20,43 +20,30 @@
 
 
 
-#ifndef GUI_SPECTRUM_H
-#define GUI_SPECTRUM_H
+#ifndef GUI_PODCASTS_H
+#define GUI_PODCASTS_H
 
-#include "GUI/engine/EnginePlugin.h"
-#include "GUI/engine/EngineColorStyleChooser.h"
-#include "GUI/ui_GUI_Spectrum.h"
 
-#include <QList>
-#include <QString>
+#include "GUI/ui_GUI_Podcasts.h"
+#include "GUI/stream/AbstractStream.h"
 
-class GUI_Spectrum : public EnginePlugin, private Ui::GUI_Spectrum
+#include <QMap>
+
+
+class GUI_Podcasts : public AbstractStream, public Ui::GUI_Podcasts
 {
     Q_OBJECT
-public:
-	explicit GUI_Spectrum(QString name, QWidget *parent=0);
 
 protected:
-    void paintEvent(QPaintEvent* e);
-	void showEvent(QShowEvent*);
-	void closeEvent(QCloseEvent*);
-	virtual void language_changed();
 
-protected slots:
-    virtual void timed_out();
+	virtual void	language_changed();
+	virtual bool	get_all_streams(QMap<QString, QString>& result);
+	virtual bool	add_stream(QString station_name, QString url);
+	virtual bool	delete_stream(QString station_name);
 
-
-public slots:
-    void set_spectrum(QList<float>&);
-	virtual void sl_update_style();
-
-private:
-
-    QList<float> _spec;
-    int** _steps;
-
-    void resize_steps(int bins, int rects);
-
+public:
+	GUI_Podcasts(QString name, QWidget *parent = 0);
+    virtual ~GUI_Podcasts();
 };
 
-#endif // GUI_SPECTRUM_H
+#endif // GUI_PODCASTS_H

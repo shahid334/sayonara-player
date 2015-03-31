@@ -50,7 +50,7 @@
 
 
 // CTOR
-GUI_Playlist::GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* info_dialog, QWidget *parent) :
+GUI_Playlist::GUI_Playlist(GUI_InfoDialog* info_dialog, QWidget *parent) :
 	SayonaraWidget(parent),
 	Ui::Playlist_Window()
 {
@@ -58,9 +58,8 @@ GUI_Playlist::GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* info_dialo
 
 	_parent = parent;
 
-	_playlist = playlist;
+	_playlist = PlaylistHandler::getInstance();
 	_info_dialog = info_dialog;
-
 
     initGUI();
 
@@ -121,9 +120,13 @@ GUI_Playlist::GUI_Playlist(PlaylistHandler* playlist, GUI_InfoDialog* info_dialo
 	_cur_playlist_idx = 0;
 
 	tw_playlists->hide_tabbar();
+	QString tab_text = _playlist->request_first_playlist_name();
+	tw_playlists->get_tabbar()->setTabText(0, tab_text);
 
 	REGISTER_LISTENER(Set::PL_SmallItems, _sl_change_small_playlist_items);
 	REGISTER_LISTENER(Set::PL_Mode, _sl_playlist_mode_changed);
+
+	_playlist->load_old_playlist();
 }
 
 
@@ -191,7 +194,7 @@ void GUI_Playlist::check_dynamic_play_button() {
 
 // Slot: comes from listview
 void GUI_Playlist::metadata_dropped(const MetaDataList& v_md, int row) {
-	_playlist->psl_insert_tracks(v_md, row);
+	_playlist->insert_tracks(v_md, row);
 }
 
 // SLOT: fill all tracks in v_metadata into playlist
@@ -220,7 +223,7 @@ void GUI_Playlist::clear_playlist_slot() {
 	_cur_playlist_view->clear();
 	_total_time[_cur_playlist_idx] = 0;
 
-	_playlist->psl_clear_playlist();
+	_playlist->clear_playlist();
 }
 
 
@@ -234,19 +237,19 @@ void GUI_Playlist::sel_changed(const MetaDataList& v_md, const QList<int>& sel_r
 
 	_info_dialog->set_tag_edit_visible( _playlist_type == PlaylistTypeStd );
 
-	_playlist->psl_selection_changed(sel_rows);
+	_playlist->selection_changed(sel_rows);
 }
 
 void GUI_Playlist::rows_moved(const QList<int> & lst, int tgt_idx) {
 
 	if(lst.size() == 0) return;
 
-	_playlist->psl_move_rows(lst, tgt_idx);
+	_playlist->move_rows(lst, tgt_idx);
 }
 
 
 void GUI_Playlist::double_clicked(int row) {
-	_playlist->psl_change_track(row, _cur_playlist_idx);
+	_playlist->change_track(row, _cur_playlist_idx);
 }
 
 void GUI_Playlist::track_changed(int row, int playlist_idx) {
@@ -426,11 +429,12 @@ void GUI_Playlist::btn_numbers_changed(bool b) {
 
 
 void GUI_Playlist::rows_removed(const QList<int>& lst) {
-	_playlist->psl_remove_rows(lst);
+	_playlist->remove_rows(lst);
 }
 
 void GUI_Playlist::add_playlist_clicked(){
-	int idx = _playlist->add_new_playlist();
+	QString name = _playlist->request_new_playlist_name();
+	int idx = _playlist->add_new_playlist(name);
 	_playlist->change_playlist_index(idx);
 }
 

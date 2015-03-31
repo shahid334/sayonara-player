@@ -62,8 +62,9 @@ public:
 		virtual void set_volume(int vol);
 
 
-		virtual void jump_abs_ms(quint64);
-		virtual void jump_rel(double);
+		virtual void jump_abs_ms(quint64 pos_ms);
+		virtual void jump_rel_ms(quint64 ms);
+		virtual void jump_rel(double percent);
 
 
 		virtual void change_track(const MetaData&);

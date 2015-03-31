@@ -67,7 +67,7 @@ ADD_SUBDIRECTORY(Library)
 ADD_SUBDIRECTORY(CoverLookup)
 ADD_SUBDIRECTORY(Engine/GStreamer)
 ADD_SUBDIRECTORY(Notification/libnotify)
-ADD_SUBDIRECTORY(Soundcloud)
+#ADD_SUBDIRECTORY(Soundcloud)
 ADD_SUBDIRECTORY(languages)
 ADD_SUBDIRECTORY(DBus)
 
@@ -135,7 +135,7 @@ TARGET_LINK_LIBRARIES(sayonara ${QT_LIBRARIES}
     sayonara_playlist
     sayonara_library
     sayonara_covers
-    sayonara_soundcloud
+#   sayonara_soundcloud
     sayonara_dbus
 )
 

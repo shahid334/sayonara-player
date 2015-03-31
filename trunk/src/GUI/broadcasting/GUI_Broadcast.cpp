@@ -27,11 +27,13 @@
 #include <QMessageBox>
 
 
-GUI_Broadcast::GUI_Broadcast(QString name, QWidget *parent) :
+GUI_Broadcast::GUI_Broadcast(QString name, StreamServer* server, QWidget *parent) :
 	PlayerPlugin(name, parent),
 	Ui::GUI_Broadcast()
 {
 	setupUi(this);
+
+	_server       = server;
 
 	btn_dismiss->setEnabled(false);
 	btn_dismiss_all->setEnabled(false);
@@ -42,10 +44,16 @@ GUI_Broadcast::GUI_Broadcast(QString name, QWidget *parent) :
 	connect(combo_clients, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 	connect(btn_retry, SIGNAL(clicked()), this, SLOT(retry()));
 
+	connect(_server, SIGNAL(sig_new_connection_request(const QString&)),this, SLOT(new_connection_request(const QString&)));
+	connect(_server, SIGNAL(sig_new_connection(const QString&)), this, SLOT(new_connection(const QString&)));
+	connect(_server, SIGNAL(sig_connection_closed(const QString&)), this, SLOT(connection_closed(const QString&)));
+	connect(_server, SIGNAL(sig_can_listen(bool)), this, SLOT(can_listen(bool)));
+
+	_server->retry();
+
 	set_status_label();
 
 	REGISTER_LISTENER(SetNoDB::MP3enc_found, mp3_enc_found);
-
 }
 
 
@@ -56,7 +64,6 @@ GUI_Broadcast::~GUI_Broadcast(){
 void GUI_Broadcast::language_changed(){
 	retranslateUi(this);
 }
-
 
 void GUI_Broadcast::set_status_label(){
 	int n_listeners = combo_clients->count();
@@ -74,7 +81,8 @@ void GUI_Broadcast::set_status_label(){
 void GUI_Broadcast::new_connection_request(const QString& ip){
 
 	if(ip.isEmpty()){
-		emit sig_rejected();
+
+		_server->reject_client();
 		return;
 	}
 
@@ -100,11 +108,11 @@ void GUI_Broadcast::new_connection_request(const QString& ip){
 								QMessageBox::StandardButton::Yes);
 
 	if(btn == QMessageBox::No){
-		emit sig_rejected();
+		_server->reject_client();
 	}
 
 	else{
-		emit sig_accepted();
+		_server->accept_client();
 	}
 }
 
@@ -156,7 +164,7 @@ void GUI_Broadcast::can_listen(bool success){
 }
 
 void GUI_Broadcast::retry(){
-	emit sig_retry();
+	_server->retry();
 }
 
 
@@ -168,7 +176,7 @@ void GUI_Broadcast::dismiss_at(int idx){
 
 	combo_clients->setItemText(idx, QString("(d) ") + ip);
 
-	emit sig_dismiss(idx);
+	_server->dismiss(idx);
 }
 
 

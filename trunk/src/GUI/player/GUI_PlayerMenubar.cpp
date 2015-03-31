@@ -169,6 +169,10 @@ void GUI_Player::showLibrary(bool b, bool resize) {
     }
 }
 
+void GUI_Player::_sl_fullscreen_toggled(){
+	show_fullscreen_toggled(_settings->get(Set::Player_Fullscreen));
+}
+
 void GUI_Player::show_fullscreen_toggled(bool b) {
 	// may happend because of F11 too
 	action_Fullscreen->setChecked(b);

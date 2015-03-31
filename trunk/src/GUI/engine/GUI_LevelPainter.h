@@ -25,7 +25,6 @@
 
 #include "GUI/engine/EnginePlugin.h"
 #include "GUI/ui_GUI_LevelPainter.h"
-#include "GUI/engine/EngineColorStyleChooser.h"
 
 #include <QString>
 
@@ -46,7 +45,7 @@ protected slots:
 
 public slots:
     void set_level(float, float);
-    virtual void psl_style_update();
+	virtual void sl_update_style();
 
 private:
     float _level[2];

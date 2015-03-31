@@ -109,6 +109,10 @@ void PlayManager::seek_rel(double percent){
 	emit sig_seeked_rel(percent);
 }
 
+void PlayManager::seek_rel_ms(quint64 ms){
+	emit sig_seeked_rel_ms(ms);
+}
+
 void PlayManager::seek_abs_ms(quint64 ms){
 	emit sig_seeked_abs_ms(ms);
 }
@@ -141,7 +145,6 @@ void PlayManager::change_track_idx(int idx){
 	}
 
 	else {
-
 		stop();
 	}
 

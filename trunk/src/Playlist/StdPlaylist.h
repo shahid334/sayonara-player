@@ -29,7 +29,7 @@ class StdPlaylist : public Playlist
 {
 
 public:
-	explicit StdPlaylist(int idx);
+	explicit StdPlaylist(int idx, QString name="");
     
     virtual void play();
     virtual void pause();

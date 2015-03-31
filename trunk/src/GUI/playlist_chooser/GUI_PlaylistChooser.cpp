@@ -34,14 +34,14 @@
 #include "GUI/ui_GUI_PlaylistChooser.h"
 
 
-GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, PlaylistChooser* playlist_chooser, QWidget *parent) :
+GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, QWidget *parent) :
 	PlayerPlugin(name, parent),
 	Ui::GUI_PlaylistChooser()
 {
 
 	setupUi(this);
 
-	_playlist_chooser = playlist_chooser;
+	_playlist_chooser = new PlaylistChooser();
 
 	_last_dir = _settings->get(Set::Lib_Path);
 
@@ -77,7 +77,7 @@ GUI_PlaylistChooser::GUI_PlaylistChooser(QString name, PlaylistChooser* playlist
 }
 
 GUI_PlaylistChooser::~GUI_PlaylistChooser() {
-
+	delete _playlist_chooser;
 }
 
 

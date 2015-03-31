@@ -18,7 +18,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#ifndef STREAM_WRITER_H
+#define STREAM_WRITER_H
 
 #include "HelperStructs/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
@@ -103,6 +104,6 @@ class StreamWriter : public QObject, protected SayonaraClass {
 	private slots:
 		void socket_disconnected();
 		void data_available();
-
-
 };
+
+#endif

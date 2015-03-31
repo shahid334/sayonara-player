@@ -134,6 +134,23 @@ void GUI_AudioConverter::rb_vbr_toggled(bool b) {
 	fill_vbr();
 }
 
+void GUI_AudioConverter::pl_mode_backup(){
+	_pl_mode = _settings->get(Set::PL_Mode);
+	PlaylistMode new_mode;
+		new_mode.append = false;
+		new_mode.rep1 = false;
+		new_mode.repAll = false;
+		new_mode.shuffle = false;
+		new_mode.gapless = false;
+		new_mode.dynamic = false;
+
+	_settings->set(Set::PL_Mode, new_mode);
+}
+
+void GUI_AudioConverter::pl_mode_restore(){
+	_settings->set(Set::PL_Mode, _pl_mode);
+}
+
 void GUI_AudioConverter::cb_active_toggled(bool b) {
 
 	if(!_mp3_enc_available){
@@ -151,6 +168,7 @@ void GUI_AudioConverter::cb_active_toggled(bool b) {
 
 		if(dir.size() > 0) {
 			_settings->set(Set::Engine_CovertTargetPath, dir);
+			pl_mode_backup();
 			emit sig_active();
 		}
 
@@ -159,10 +177,12 @@ void GUI_AudioConverter::cb_active_toggled(bool b) {
 			cb_active->setChecked(false);
 			connect(cb_active, SIGNAL(toggled(bool)), this, SLOT(cb_active_toggled(bool)));
 		}
-
 	}
 
-	else emit sig_inactive();
+	else {
+		pl_mode_restore();
+		emit sig_inactive();
+	}
 }
 
 void GUI_AudioConverter::quality_changed(int index) {

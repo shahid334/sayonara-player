@@ -14,6 +14,9 @@ ADD_SUBDIRECTORY(icons)
 SET(HEADERS
     SearchableWidget.h
     MiniSearcher.h
+	MyColumnHeader.h
+	ContextMenu.h
+
     AlternativeCovers/AlternativeCoverItemDelegate.h
     AlternativeCovers/AlternativeCoverItemModel.h
     AlternativeCovers/GUI_AlternativeCovers.h
@@ -28,8 +31,10 @@ SET(HEADERS
     engine/GUI_StyleSettings.h
     equalizer/EqSlider.h
     equalizer/GUI_Equalizer.h
+	InfoDialog/GUI_InfoDialog.h
     KeyConfig/GUI_KeyConfig.h
     KeyConfig/KeyConfigLineEdit.h
+	LanguageChooser/GUI_LanguageChooser.h
     LastFM/GUI_LastFM.h
     library/GUI_AbstractLibrary.h
     library/GUI_Library_windowed.h
@@ -47,6 +52,7 @@ SET(HEADERS
     library/ImportFolderDialog/GUIImportFolder.h
     library/DiscPopupMenu.h
     library/GUI_LibraryPath.h
+	Notifications/GUI_Notifications.h
     player/GUI_Player.h
     player/GUI_TrayIcon.h
     player/SearchSlider.h
@@ -59,91 +65,88 @@ SET(HEADERS
     playlist/entry/GUI_PlaylistEntryBig.h
     playlist/entry/GUI_PlaylistEntrySmall.h
     playlist_chooser/GUI_PlaylistChooser.h
+	SocketConfiguration/GUISocketSetup.h
     soundcloud/GUI_SoundcloudLibrary.h
+	speed/GUI_Speed.h
+	startup_dialog/GUI_Startup_Dialog.h
+	stream/AbstractStream.h
+	stream/GUI_Stream.h
+	stream/GUI_Podcasts.h
+	StreamRecorder/GUI_StreamRecorder.h
     tagedit/GUI_TagEdit.h
     tagedit/TagLineEdit.h
     TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h
-
-    Podcasts/GUI_Podcasts.h
-    MyColumnHeader.h
-    ContextMenu.h
-    InfoDialog/GUI_InfoDialog.h
-    SocketConfiguration/GUISocketSetup.h
-    stream/GUI_Stream.h
-    StreamRecorder/GUI_StreamRecorder.h
-    Notifications/GUI_Notifications.h
-    startup_dialog/GUI_Startup_Dialog.h
-    LanguageChooser/GUI_LanguageChooser.h
-    speed/GUI_Speed.h
 )
 
 SET(SOURCES
+	ContextMenu.cpp
+	SearchableWidget.cpp
+	MiniSearcher.cpp
 
-    SearchableWidget.cpp
-    MiniSearcher.cpp
+	AlternativeCovers/AlternativeCoverItemDelegate.cpp
+	AlternativeCovers/AlternativeCoverItemModel.cpp
+	AlternativeCovers/GUI_AlternativeCovers.cpp
+	AudioConverter/GUI_AudioConverter.cpp
+	bookmarks/GUI_Bookmarks.cpp
+	broadcasting/GUI_Broadcast.cpp
+	broadcasting/GUI_BroadcastSetup.cpp
+	engine/EnginePlugin.cpp
+	engine/GUI_LevelPainter.cpp
+	engine/GUI_Spectrum.cpp
+	engine/EngineColorStyleChooser.cpp
+	engine/GUI_StyleSettings.cpp
+	equalizer/GUI_Equalizer.cpp
+	equalizer/EqSlider.cpp
+	InfoDialog/GUI_InfoDialog.cpp
 
-    AlternativeCovers/AlternativeCoverItemDelegate.cpp
-    AlternativeCovers/AlternativeCoverItemModel.cpp
-    AlternativeCovers/GUI_AlternativeCovers.cpp
-    AudioConverter/GUI_AudioConverter.cpp
-    bookmarks/GUI_Bookmarks.cpp
-    broadcasting/GUI_Broadcast.cpp
-    broadcasting/GUI_BroadcastSetup.cpp
-    engine/EnginePlugin.cpp
-    engine/GUI_LevelPainter.cpp
-    engine/GUI_Spectrum.cpp
-    engine/EngineColorStyleChooser.cpp
-    engine/GUI_StyleSettings.cpp
-    equalizer/GUI_Equalizer.cpp
-    equalizer/EqSlider.cpp
-    player/GUI_Player.cpp
-    player/GUI_PlayerPlugins.cpp
-    player/GUI_PlayerMenubar.cpp
-    player/GUI_PlayerControls.cpp
-    player/GUI_PlayerCover.cpp
-    player/GUI_PlayerConnections.cpp
-    player/GUI_TrayIcon.cpp
-    player/SearchSlider.cpp
-    playlist/GUI_Playlist.cpp
-    playlist/view/PlaylistView.cpp
-    playlist/model/PlaylistItemModel.cpp
-    playlist/delegate/PlaylistItemDelegate.cpp
-    playlist/entry/GUI_PlaylistEntryBig.cpp
-    playlist/entry/GUI_PlaylistEntrySmall.cpp
-    playlist_chooser/GUI_PlaylistChooser.cpp
-    TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
-    KeyConfig/GUI_KeyConfig.cpp
-    KeyConfig/KeyConfigLineEdit.cpp
-    LastFM/GUI_LastFM.cpp
-    library/GUI_AbstractLibrary.cpp
-    library/RatingLabel.cpp
-    library/GUI_Library_windowed.cpp
-    library/view/LibraryView.cpp
-    library/view/LibraryViewHeader.cpp
-    library/view/LibraryViewAlbum.cpp
-    library/model/LibraryItemModel.cpp
-    library/model/LibraryItemModelTracks.cpp
-    library/model/LibraryItemModelAlbums.cpp
-    library/model/LibraryItemModelArtists.cpp
-    library/delegate/LibraryRatingDelegate.cpp
-    library/delegate/LibraryItemDelegateAlbums.cpp
-    library/delegate/LibraryItemDelegateArtists.cpp
-    library/delegate/LibraryItemDelegateTracks.cpp
-    library/InfoBox/GUILibraryInfoBox.cpp
-    library/ImportFolderDialog/GUIImportFolder.cpp
-    library/GUI_LibraryPath.cpp
-    soundcloud/GUI_SoundcloudLibrary.cpp
-    tagedit/GUI_TagEdit.cpp
-    Podcasts/GUI_Podcasts.cpp
-    ContextMenu.cpp
-    stream/GUI_Stream.cpp
-    StreamRecorder/GUI_StreamRecorder.cpp
-    Notifications/GUI_Notifications.cpp
-    startup_dialog/GUI_Startup_Dialog.cpp
-    InfoDialog/GUI_InfoDialog.cpp
-    SocketConfiguration/GUISocketSetup.cpp
-    LanguageChooser/GUI_LanguageChooser.cpp
-    speed/GUI_Speed.cpp
+
+	KeyConfig/GUI_KeyConfig.cpp
+	KeyConfig/KeyConfigLineEdit.cpp
+	LanguageChooser/GUI_LanguageChooser.cpp
+	LastFM/GUI_LastFM.cpp
+	library/GUI_AbstractLibrary.cpp
+	library/RatingLabel.cpp
+	library/GUI_Library_windowed.cpp
+	library/view/LibraryView.cpp
+	library/view/LibraryViewHeader.cpp
+	library/view/LibraryViewAlbum.cpp
+	library/model/LibraryItemModel.cpp
+	library/model/LibraryItemModelTracks.cpp
+	library/model/LibraryItemModelAlbums.cpp
+	library/model/LibraryItemModelArtists.cpp
+	library/delegate/LibraryRatingDelegate.cpp
+	library/delegate/LibraryItemDelegateAlbums.cpp
+	library/delegate/LibraryItemDelegateArtists.cpp
+	library/delegate/LibraryItemDelegateTracks.cpp
+	library/InfoBox/GUILibraryInfoBox.cpp
+	library/ImportFolderDialog/GUIImportFolder.cpp
+	library/GUI_LibraryPath.cpp
+	Notifications/GUI_Notifications.cpp
+	player/GUI_Player.cpp
+	player/GUI_PlayerPlugins.cpp
+	player/GUI_PlayerMenubar.cpp
+	player/GUI_PlayerControls.cpp
+	player/GUI_PlayerCover.cpp
+	player/GUI_PlayerConnections.cpp
+	player/GUI_TrayIcon.cpp
+	player/SearchSlider.cpp
+	playlist/GUI_Playlist.cpp
+	playlist/view/PlaylistView.cpp
+	playlist/model/PlaylistItemModel.cpp
+	playlist/delegate/PlaylistItemDelegate.cpp
+	playlist/entry/GUI_PlaylistEntryBig.cpp
+	playlist/entry/GUI_PlaylistEntrySmall.cpp
+	playlist_chooser/GUI_PlaylistChooser.cpp
+	SocketConfiguration/GUISocketSetup.cpp
+	soundcloud/GUI_SoundcloudLibrary.cpp
+	speed/GUI_Speed.cpp
+	startup_dialog/GUI_Startup_Dialog.cpp
+	stream/AbstractStream.cpp
+	stream/GUI_Stream.cpp
+	stream/GUI_Podcasts.cpp
+	StreamRecorder/GUI_StreamRecorder.cpp
+	tagedit/GUI_TagEdit.cpp
+	TargetPlaylistDialog/GUI_Target_Playlist_Dialog.cpp
 )
 
 
@@ -172,12 +175,11 @@ SET(FORMS
     playlist/entry/GUI_PlaylistEntrySmall.ui
     playlist_chooser/GUI_PlaylistChooser.ui
     playlist/view/GUI_PlaylistView.ui
-
-    Podcasts/GUI_Podcasts.ui
     SocketConfiguration/GUI_SocketSetup.ui
     soundcloud/GUI_SoundcloudLibrary.ui
     speed/GUI_Speed.ui
     startup_dialog/GUI_Startup_Dialog.ui
+	stream/GUI_Podcasts.ui
     stream/GUI_Stream.ui
     StreamRecorder/GUI_StreamRecorder.ui
     tagedit/GUI_TagEdit.ui

@@ -25,9 +25,10 @@
 
 #include <QMessageBox>
 
-PlaylistChooser::PlaylistChooser(PlaylistHandler* playlist_handler) {
+PlaylistChooser::PlaylistChooser() {
 
-	_playlist_handler = playlist_handler;
+	_playlist_handler = PlaylistHandler::getInstance();
+
 	_db = CDatabaseConnector::getInstance();
 
 	connect (_playlist_handler, SIGNAL(sig_playlist_prepared(int, const MetaDataList&)),
@@ -85,9 +86,7 @@ void PlaylistChooser::load_single_playlist(int id, QString name) {
     pl.is_valid = success;
 
 	if(success) {
-		int idx = _playlist_handler->add_new_playlist(name);
-		_playlist_handler->change_playlist_index(idx);
-		_playlist_handler->create_playlist(pl, false);
+		_playlist_handler->create_playlist(pl, name);
 	}
 }
 
@@ -140,22 +139,22 @@ void PlaylistChooser::delete_playlist(int id) {
 
 
 void PlaylistChooser::save_playlist(int id){
-	_playlist_handler->psl_prepare_playlist_for_save(id);
+	_playlist_handler->prepare_playlist_for_save(id);
 }
 
 
 void PlaylistChooser::save_playlist(QString playlist_name){
-	_playlist_handler->psl_prepare_playlist_for_save(playlist_name);
+	_playlist_handler->prepare_playlist_for_save(playlist_name);
 }
 
 
 void PlaylistChooser::save_playlist_file(QString filename, bool relative_paths){
-	_playlist_handler->psl_save_playlist(filename, relative_paths);
+	_playlist_handler->save_playlist(filename, relative_paths);
 }
 
 
 void PlaylistChooser::clear_playlist(){
-	_playlist_handler->psl_clear_playlist();
+	_playlist_handler->clear_playlist();
 }
 
 
