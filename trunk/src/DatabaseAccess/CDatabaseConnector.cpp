@@ -81,10 +81,13 @@ bool CDatabaseConnector::createDB () {
 	QString sayonara_path = Helper::getSayonaraPath();
 	if(!QFile::exists(sayonara_path)) {
 		success = dir.mkdir(".Sayonara");
-		qDebug() << "Could not create .Sayonara dir";
 		if(!success) {
 			qDebug() << "Could not create .Sayonara dir";
 			return false;
+		}
+
+		else{
+			qDebug() << "Successfully created .Sayonara dir";
 		}
 	}
 
