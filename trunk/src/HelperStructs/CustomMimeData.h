@@ -23,9 +23,8 @@
 #ifndef _CUSTOMMIMEDATA_H
 #define _CUSTOMMIMEDATA_H
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include <QMimeData>
-#include <QDebug>
 
 
 class CustomMimeData : public QMimeData {

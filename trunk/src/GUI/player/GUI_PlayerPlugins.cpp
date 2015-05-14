@@ -28,12 +28,6 @@ QWidget* GUI_Player::getParentOfPlugin() {
 	return plugin_widget;
 }
 
-void GUI_Player::setInfoDialog(GUI_InfoDialog* dialog) {
-    ui_info_dialog = dialog;
-	connect(ui_info_dialog, SIGNAL(sig_cover_changed(const CoverLocation&)),
-			this, SLOT(sl_alternate_cover_available(const CoverLocation&)));
-}
-
 
 void GUI_Player::hideAllPlugins() {
 

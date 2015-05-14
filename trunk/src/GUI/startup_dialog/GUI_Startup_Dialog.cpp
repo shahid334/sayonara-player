@@ -30,14 +30,17 @@ GUI_Startup_Dialog::GUI_Startup_Dialog(QWidget *parent) :
 {
 	setupUi(this);
 
-	bool load_pl_on_startup, load_last_track, remember_time, start_playing;
+	bool load_playlists, load_saved_playlists, load_last_track, remember_time, start_playing;
 
-	load_pl_on_startup = _settings->get(Set::PL_Load);
+	load_playlists = _settings->get(Set::PL_Load);
+	load_saved_playlists = _settings->get(Set::PL_LoadSavedPlaylists);
 	load_last_track = _settings->get(Set::PL_LoadLastTrack);
 	remember_time = _settings->get(Set::PL_RememberTime);
 	start_playing = _settings->get(Set::PL_StartPlaying);
 
-	cb_load_pl_on_startup->setChecked(load_pl_on_startup);
+
+	cb_load_playlists->setChecked(load_playlists);
+	cb_load_saved_playlists->setChecked(load_saved_playlists);
 	cb_load_last_track->setChecked(load_last_track);
 	cb_remember_time->setChecked(remember_time);
 	cb_start_playing->setChecked(start_playing);
@@ -45,7 +48,7 @@ GUI_Startup_Dialog::GUI_Startup_Dialog(QWidget *parent) :
 
     cb_toggled(true);
 
-	connect(cb_load_pl_on_startup, SIGNAL(toggled(bool)), this, SLOT(cb_toggled(bool)));
+	connect(cb_load_playlists, SIGNAL(toggled(bool)), this, SLOT(cb_toggled(bool)));
 	connect(cb_load_last_track, SIGNAL(toggled(bool)), this, SLOT(cb_toggled(bool)));
 	connect(cb_remember_time, SIGNAL(toggled(bool)), this, SLOT(cb_toggled(bool)));
 	connect(cb_start_playing, SIGNAL(toggled(bool)), this, SLOT(cb_toggled(bool)));
@@ -64,11 +67,12 @@ void GUI_Startup_Dialog::language_changed() {
 void GUI_Startup_Dialog::cb_toggled(bool b) {
     Q_UNUSED(b);
 
-	bool cb_load_pl_checked = cb_load_pl_on_startup->isChecked();
+	bool cb_load_checked = cb_load_playlists->isChecked();
 
-	cb_load_last_track->setEnabled(cb_load_pl_checked);
-	cb_remember_time->setEnabled(cb_load_pl_checked);
-	cb_start_playing->setEnabled(cb_load_pl_checked);
+	cb_load_saved_playlists->setEnabled(cb_load_checked);
+	cb_load_last_track->setEnabled(cb_load_checked);
+	cb_remember_time->setEnabled(cb_load_checked);
+	cb_start_playing->setEnabled(cb_load_checked);
 
 
 	bool cb_load_last_track_checked = cb_load_last_track->isChecked() && cb_load_last_track->isEnabled();
@@ -78,7 +82,8 @@ void GUI_Startup_Dialog::cb_toggled(bool b) {
 
 void GUI_Startup_Dialog::ok_clicked() {
 
-	_settings->set( Set::PL_Load, cb_load_pl_on_startup->isChecked() );
+	_settings->set( Set::PL_Load, cb_load_playlists->isChecked() );
+	_settings->set( Set::PL_LoadSavedPlaylists, cb_load_saved_playlists->isChecked() );
 	_settings->set( Set::PL_LoadLastTrack, (cb_load_last_track->isChecked() && cb_load_last_track->isEnabled()) );
 	_settings->set( Set::PL_RememberTime, (cb_remember_time->isChecked() && cb_remember_time->isEnabled()) );
 	_settings->set( Set::PL_StartPlaying, (cb_start_playing->isChecked() && cb_start_playing->isEnabled()) );

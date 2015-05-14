@@ -25,6 +25,7 @@
 
 #include "GUI/player/GUI_Player.h"
 #include "CoverLookup/CoverLookupAll.h"
+#include "GUI/StreamRecorder/GUI_StreamRecorder.h"
 
 #include <QDir>
 #include <QFileDialog>
@@ -142,12 +143,12 @@ void GUI_Player::showLibrary(bool b, bool resize) {
 	if(!b) {
 
 		QSizePolicy p = library_widget->sizePolicy();
-        m_library_stretch_factor = p.horizontalStretch();
+		_library_stretch_factor = p.horizontalStretch();
 
         p.setHorizontalStretch(0);
 		library_widget->setSizePolicy(p);
 
-        m_library_width = lib_width;
+		_ui_library_width = lib_width;
         new_width = old_width - lib_width;
 		setMinimumSize(300, 500);
 	}
@@ -155,9 +156,9 @@ void GUI_Player::showLibrary(bool b, bool resize) {
     // visible
 	else{
 		QSizePolicy p = library_widget->sizePolicy();
-		p.setHorizontalStretch(m_library_stretch_factor);
+		p.setHorizontalStretch(_library_stretch_factor);
 		library_widget->setSizePolicy(p);
-        new_width = old_width + m_library_width;
+		new_width = old_width + _ui_library_width;
 		setMinimumSize(850, 500);
     }
 
@@ -196,8 +197,7 @@ void GUI_Player::sl_show_only_tracks(bool b) {
 
 // TODO: not ok
 // -> base
-void GUI_Player::sl_libpath_clicked(bool b) {
-	Q_UNUSED(b);
+void GUI_Player::sl_libpath_clicked() {
 
 	QString start_dir = QDir::homePath();
 	QString old_dir = _settings->get(Set::Lib_Path);
@@ -287,7 +287,6 @@ void GUI_Player::show_notification_toggled(bool active) {
 // prvt slot
 void GUI_Player::min2tray_toggled(bool b) {
 	_settings->set(Set::Player_Min2Tray, b);
-	m_min2tray = b;
 }
 
 void GUI_Player::only_one_instance_toggled(bool b) {
@@ -300,28 +299,28 @@ void GUI_Player::small_playlist_items_toggled(bool b) {
 }
 
 // private slot
-void GUI_Player::sl_action_streamripper_toggled(bool b) {
+void GUI_Player::sl_streamrecorder_toggled() {
+	ui_streamrecorder->show();
+}
 
-    emit sig_show_stream_rec();
+void GUI_Player::sl_broadcasting_clicked(){
+	ui_broadcasting->show();
 }
 
 
 
 
 // prvt slot
-void GUI_Player::lastFMClicked(bool b) {
+void GUI_Player::lastFMClicked() {
 
-	Q_UNUSED(b);
 	emit sig_setup_LastFM();
-
 }
 
 void GUI_Player::sl_live_search(bool b) {
 	_settings->set(Set::Lib_LiveSearch, b);
 }
 
-void GUI_Player::sl_action_language_toggled(bool b) {
-    Q_UNUSED(b);
+void GUI_Player::sl_action_language_toggled() {
     ui_language_chooser->show();
 }
 
@@ -340,6 +339,12 @@ void GUI_Player::about(bool b) {
 	Q_UNUSED(b);
 
 	QString version = _settings->get(Set::Player_Version);
+	QString revision;
+#ifdef SAYONARA_REVISION
+	revision = SAYONARA_REVISION;
+	version += "-" + revision;
+#endif
+
 	QString link = Helper::createLink("http://sayonara.luciocarreras.de");
 
 	QMessageBox infobox(this);
@@ -352,15 +357,15 @@ void GUI_Player::about(bool b) {
     QString last_translator;
     QString translator_str = "";
 
-	if(m_translators.size() > 2) {
+	if(_translators.size() > 2) {
 
-		for (int i=0; i<m_translators.size() - 1; i++) {
+		for (int i=0; i<_translators.size() - 1; i++) {
 
-            first_translators += "<b>" + m_translators[i] + "</b>";
-            if(i < m_translators.size() - 2) first_translators += ", ";
+			first_translators += "<b>" + _translators[i] + "</b>";
+			if(i < _translators.size() - 2) first_translators += ", ";
         }
 
-        last_translator = QString("<b>") + m_translators[m_translators.size() - 1] + "</b>";
+		last_translator = QString("<b>") + _translators[_translators.size() - 1] + "</b>";
         translator_str = QString("<br /><br /><br />") +
                 tr("Special thanks to %1 and %2 for translating")
                 .arg(first_translators)
@@ -368,11 +373,11 @@ void GUI_Player::about(bool b) {
     }
 
     infobox.setWindowTitle(tr("About Sayonara"));
-    infobox.setText("<b><font size=\"+2\">Sayonara Player "+ version + "</font></b>");
+    infobox.setText("<b><font size=\"+2\">Sayonara Player " + version + "</font></b>");
     infobox.setInformativeText( QString("") +
 				tr("Written by Lucio Carreras") + "<br /><br />" +
                 tr("License") + ": GPLv3<br /><br />" +
-                "Copyright 2011-2013<br /><br />" + link + translator_str
+                "Copyright 2011-2015<br /><br />" + link + translator_str
                                 );
 
     infobox.setStandardButtons(QMessageBox::Ok);

@@ -22,8 +22,8 @@
 #include "GUI/soundcloud/GUI_SoundcloudLibrary.h"
 
 
-GUI_SoundCloudLibrary::GUI_SoundCloudLibrary(SoundcloudLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent) :
-	GUI_AbstractLibrary(library, info_dialog, parent),
+GUI_SoundCloudLibrary::GUI_SoundCloudLibrary(SoundcloudLibrary* library, QWidget *parent) :
+	GUI_AbstractLibrary(library, parent),
 	Ui::GUI_SoundcloudLibrary()
 {
 	setup_parent(this);

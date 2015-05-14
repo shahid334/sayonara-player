@@ -39,7 +39,7 @@ class GUI_ImportFolder : public SayonaraDialog, private Ui::ImportFolder {
 
 Q_OBJECT
 public:
-	GUI_ImportFolder(QWidget* parent, TagEdit* tag_edit, bool copy_enabled);
+	GUI_ImportFolder(QWidget* parent, bool copy_enabled);
 	virtual ~GUI_ImportFolder();
 
     void set_progress(int);

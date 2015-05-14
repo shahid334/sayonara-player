@@ -35,8 +35,6 @@
 #include <curl/curl.h>
 
 #include <string>
-#include <stdlib.h>
-#include <ctime>
 
 using namespace std;
 
@@ -237,6 +235,7 @@ bool lfm_wa_call_url_xml(const QString& url, QDomDocument& doc) {
 	if(lfm_webpage_bytes > 0) {
 
 		QString xmlString = QString::fromUtf8(lfm_webpage, lfm_webpage_bytes + 1);
+
 		doc.setContent(xmlString, false);
 		lfm_wa_free_webpage();
 

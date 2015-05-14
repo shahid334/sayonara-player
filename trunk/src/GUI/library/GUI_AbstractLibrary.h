@@ -57,7 +57,6 @@ class GUI_AbstractLibrary : public SayonaraWidget
 public:
 
 	explicit GUI_AbstractLibrary(AbstractLibrary* library,
-								 GUI_InfoDialog* info_dialog,
 								 QWidget *parent=0);
 
 	virtual ~GUI_AbstractLibrary();
@@ -200,7 +199,6 @@ protected:
 		_le_search = subclass->le_search;
 		_combo_search = subclass->combo_searchfilter;
 		_btn_info = subclass->btn_info;
-		_btn_refresh = subclass->btn_refresh;
 		_lab_status = subclass->lab_status;
 
 		init_finished();

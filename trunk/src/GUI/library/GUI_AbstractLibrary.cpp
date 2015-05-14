@@ -23,11 +23,11 @@
 #include "GUI/library/GUI_AbstractLibrary.h"
 #include <QMessageBox>
 
-GUI_AbstractLibrary::GUI_AbstractLibrary(AbstractLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent) :
+GUI_AbstractLibrary::GUI_AbstractLibrary(AbstractLibrary* library, QWidget *parent) :
 	SayonaraWidget(parent)
 {
 	_library = library;
-	_info_dialog = info_dialog;
+	_info_dialog = new GUI_InfoDialog(this);
 
 	_combo_libchooser = 0;
 	_lv_album = 0;
@@ -93,8 +93,6 @@ void GUI_AbstractLibrary::init_finished(){
 	connect(_lv_tracks, SIGNAL(sig_append_clicked()), this, SLOT(append_tracks()));
 
 	init_headers();
-
-	connect(_btn_refresh, SIGNAL(clicked()), this, SLOT(refresh()));
 
 	connect(_btn_clear, SIGNAL( clicked()), this, SLOT(clear_button_pressed()));
 
@@ -270,11 +268,13 @@ void GUI_AbstractLibrary::refresh(){
 }
 
 
-void GUI_AbstractLibrary::lib_fill_tracks(const MetaDataList& v_metadata) {
+void GUI_AbstractLibrary::lib_fill_tracks(const MetaDataList& v_md) {
 
-	_lv_tracks->fill<MetaDataList, MetaData>(v_metadata);
-	_lv_artist->set_mimedata(v_metadata, true, true);
-	_lv_album->set_mimedata(v_metadata, true);
+	_lv_tracks->fill<MetaDataList, MetaData>(v_md);
+	_lv_artist->set_mimedata(v_md, true, true);
+	_lv_album->set_mimedata(v_md, true);
+
+	_info_dialog->set_metadata(v_md);
 
 }
 
@@ -294,6 +294,7 @@ void GUI_AbstractLibrary::lib_fill_artists(const ArtistList& artists) {
 void GUI_AbstractLibrary::track_info_available(const MetaDataList& v_md) {
 
 	_lv_tracks->set_mimedata(v_md, false);
+	_info_dialog->set_metadata(v_md);
 }
 
 

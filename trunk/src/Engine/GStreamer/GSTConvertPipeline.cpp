@@ -19,59 +19,13 @@
  */
 
 
-
 #include "Engine/GStreamer/GSTConvertPipeline.h"
 
 
-
 GSTConvertPipeline::GSTConvertPipeline(Engine* engine, QObject *parent) :
-    GSTAbstractPipeline(parent)
+	GSTAbstractPipeline("ConvertPipeline", engine, parent)
 {
 
-	GstElement* tmp_pipeline;
-
-	bool status = false;
-
-	do{
-
-		tmp_pipeline = gst_pipeline_new("ConvertPipeline");
-		_test_and_error(tmp_pipeline, "Engine: Covert Pipeline sucks");
-		_bus = gst_pipeline_get_bus(GST_PIPELINE(tmp_pipeline));
-
-		_audio_src = gst_element_factory_make("uridecodebin", "src");
-		_audio_convert = gst_element_factory_make("audioconvert", "audio_convert");
-		_lame = gst_element_factory_make("lamemp3enc", "lame");
-		_resampler = gst_element_factory_make("audioresample", "resampler");
-		_xingheader = gst_element_factory_make("xingmux", "xingmux");
-		_audio_sink = gst_element_factory_make("filesink", "filesink");
-
-
-		_settings->set(SetNoDB::MP3enc_found, (_lame != NULL) );
-
-
-		if(!_test_and_error(_bus, "CvtEngine: Somethink went wrong with the bus")) break;
-		if(!_test_and_error(_audio_src, "CvtEngine: Source creation fail")) break;
-		if(!_test_and_error(_audio_convert, "CvtEngine: Cannot create audio convert")) break;
-		if(!_test_and_error(_lame, "CvtEngine: Lame  failed")) break;
-		if(!_test_and_error(_resampler, "CvtEngine: Cannot create resampler")) break;
-		if(!_test_and_error(_xingheader, "CvtEngine: Cannot create xingmuxer")) break;
-		if(!_test_and_error(_audio_sink, "CvtEngine: Cannot create audio sink")) break;
-
-		gst_bin_add_many(GST_BIN(tmp_pipeline), _audio_src, _audio_convert, _resampler, _lame, _xingheader, _audio_sink, NULL);
-
-		gst_element_link_many(_audio_convert, _resampler, _lame, _xingheader, _audio_sink, NULL);
-		g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
-
-        _pipeline = tmp_pipeline;
-		status = true;
-
-	} while(0);
-
-	if(status) {
-		gst_bus_add_watch(_bus, EngineCallbacks::bus_state_changed, engine);
-	}
-
-	qDebug() << "****Pipeline: constructor finished: " << status;
 }
 
 
@@ -79,6 +33,49 @@ GSTConvertPipeline::~GSTConvertPipeline() {
 
 }
 
+bool GSTConvertPipeline::init(GstState state){
+
+	if(!GSTAbstractPipeline::init(state)){
+		return false;
+	}
+
+	_settings->set(SetNoDB::MP3enc_found, (_lame != NULL) );
+	return true;
+}
+
+bool GSTConvertPipeline::create_elements(){
+
+	if(!create_element(&_audio_src, "uridecodebin", "src")) return false;
+	if(!create_element(&_audio_convert, "audioconvert", "audio_convert")) return false;
+	if(!create_element(&_lame, "lamemp3enc", "lame")) return false;
+	if(!create_element(&_resampler, "audioresample", "resampler")) return false;
+	if(!create_element(&_xingheader, "xingmux", "xingmux")) return false;
+	if(!create_element(&_audio_sink, "filesink", "filesink")) return false;
+
+	return true;
+}
+
+bool GSTConvertPipeline::add_and_link_elements(){
+	bool success;
+
+	gst_bin_add_many(GST_BIN(_pipeline),
+		_audio_src,
+		_audio_convert,
+		_resampler,
+		_lame,
+		_xingheader,
+		_audio_sink,
+		NULL
+	);
+
+	success = gst_element_link_many(_audio_convert, _resampler, _lame, _xingheader, _audio_sink, NULL);
+	return _test_and_error_bool(success, "ConvertEngine: Cannot link lame elements");
+}
+
+bool GSTConvertPipeline::configure_elements(){
+	g_signal_connect (_audio_src, "pad-added", G_CALLBACK (PipelineCallbacks::pad_added_handler), _audio_convert);
+	return true;
+}
 
 
 bool GSTConvertPipeline::set_uri(gchar* uri) {

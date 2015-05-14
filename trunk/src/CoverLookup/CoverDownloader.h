@@ -35,7 +35,7 @@
 #ifndef COVERDOWNLOADER_H_
 #define COVERDOWNLOADER_H_
 
-#include "HelperStructs/WebAccess.h"
+#include "HelperStructs/WebAccess/WebAccess.h"
 
 #include <curl/curl.h>
 

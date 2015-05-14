@@ -51,9 +51,6 @@
 #include "Soundcloud/SoundcloudLibrary.h"
 #include "GUI/soundcloud/GUI_SoundcloudLibrary.h"
 #include "StreamPlugins/LastFM/LastFM.h"
-#include "GUI/StreamRecorder/GUI_StreamRecorder.h"
-#include "GUI/tagedit/GUI_TagEdit.h"
-#include "GUI/InfoDialog/GUI_InfoDialog.h"
 #include "GUI/library/GUI_Library_windowed.h"
 
 #include "Engine/SoundPluginLoader.h"
@@ -108,9 +105,6 @@ private:
 	SoundcloudLibrary*		sc_library;
 	GUI_SoundCloudLibrary*  ui_sc_library;
 
-	GUI_StreamRecorder*     ui_stream_rec;
-	TagEdit*				tag_edit;
-	GUI_InfoDialog*         ui_info_dialog;
 	GUI_Library_windowed*   ui_library;
 
 	GUI_Playlist*           ui_playlist;

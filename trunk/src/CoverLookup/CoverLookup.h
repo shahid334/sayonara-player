@@ -29,7 +29,7 @@
 #ifndef COVERLOOKUP_H_
 #define COVERLOOKUP_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "CoverLookup/CoverLocation.h"
 #include "CoverLookup/CoverFetchThread.h"
 #include "DatabaseAccess/CDatabaseConnector.h"

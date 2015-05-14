@@ -19,7 +19,7 @@
  */
 
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include <QString>
 #include <string>
@@ -33,11 +33,7 @@
 namespace ID3{
 
     bool getMetaDataOfFile(MetaData& md);
-
 	bool setMetaDataOfFile(MetaData& md);
-
-    void checkForBrokenFiles(MetaDataList v_md, MetaDataList& v_md_broken);
-
 }
 
 

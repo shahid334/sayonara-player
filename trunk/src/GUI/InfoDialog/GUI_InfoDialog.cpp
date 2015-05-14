@@ -26,8 +26,7 @@
 #include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "LyricLookup/LyricLookup.h"
-#include "HelperStructs/Style.h"
-#include "HelperStructs/MetaDataInfo.h"
+#include "HelperStructs/MetaData/MetaDataInfo.h"
 
 #include <QPixmap>
 #include <QMessageBox>
@@ -37,21 +36,19 @@
 #include <QDateTime>
 
 
-GUI_InfoDialog::GUI_InfoDialog(TagEdit* tag_edit, QWidget* parent) :
+GUI_InfoDialog::GUI_InfoDialog(QWidget* parent) :
 	SayonaraDialog(parent),
 	Ui::InfoDialog() {
 
 	setupUi(this);
 
-	_class_name = QString("InfoDialog");
-
 	_initialized = false;
 
-	ui_tag_edit = new GUI_TagEdit(tag_edit);
+	_ui_tag_edit = new GUI_TagEdit(NULL);
 
-	tab_widget->addTab(ui_tag_edit, Helper::getIcon("edit"), tr("Edit"));
+	tab_widget->addTab(_ui_tag_edit, Helper::getIcon("edit"), tr("Edit"));
 
-	_lfm_thread = new LFMTrackChangedThread(_class_name);
+	_lfm_thread = new LFMTrackChangedThread(this);
 
 	QStringList user_pw;
 	user_pw = _settings->get(Set::LFM_Login);
@@ -67,7 +64,7 @@ GUI_InfoDialog::GUI_InfoDialog(TagEdit* tag_edit, QWidget* parent) :
 	_lyrics_visible = true;
 
 	_cover_lookup = new CoverLookup(this);
-	_AlternativeCovers = new GUI_AlternativeCovers(this, _class_name );
+	_AlternativeCovers = new GUI_AlternativeCovers(this);
 
 	_tag_edit_visible = true;
 
@@ -90,13 +87,13 @@ GUI_InfoDialog::GUI_InfoDialog(TagEdit* tag_edit, QWidget* parent) :
 	connect(_lyric_thread, SIGNAL(terminated()), this, SLOT(psl_lyrics_available()));
 	connect(tab_widget, SIGNAL(currentChanged(int)), this, SLOT(psl_tab_index_changed(int)));
 
-	connect(ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
+	connect(_ui_tag_edit, SIGNAL(sig_cancelled()), this, SLOT(close()));
 
 	connect(combo_servers, 	SIGNAL(currentIndexChanged(int)),
 			this, 					SLOT(psl_lyrics_server_changed(int)));
 
 	connect(btn_image, SIGNAL(clicked()), this, SLOT(cover_clicked()));
-	connect(ui_tag_edit, SIGNAL(destroyed()), this, SLOT(psl_tag_edit_deleted()));
+	connect(_ui_tag_edit, SIGNAL(destroyed()), this, SLOT(psl_tag_edit_deleted()));
 
 	btn_image->setStyleSheet("QPushButton:hover {background-color: transparent;}");
 
@@ -233,6 +230,7 @@ void GUI_InfoDialog::setInfoMode(InfoDialogMode mode){
 
 void GUI_InfoDialog::set_metadata(const MetaDataList& v_md) {
 	_v_md = v_md;
+	_ui_tag_edit->get_tag_edit()->set_metadata(v_md);
 	prepare_info();
 }
 
@@ -241,13 +239,13 @@ void GUI_InfoDialog::psl_tab_index_changed(int tab){
 
 	ui_info_widget->hide();
 	ui_lyric_widget->hide();
-	ui_tag_edit->hide();
+	_ui_tag_edit->hide();
 
 	switch(tab){
 
 	case TAB_EDIT:
-		tab_widget->setCurrentWidget(ui_tag_edit);
-		ui_tag_edit->show();
+		tab_widget->setCurrentWidget(_ui_tag_edit);
+		_ui_tag_edit->show();
 		break;
 
 	case TAB_LYRICS:

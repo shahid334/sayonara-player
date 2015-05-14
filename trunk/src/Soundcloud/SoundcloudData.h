@@ -23,9 +23,8 @@
 #ifndef SOUNDCLOUDDATA_H
 #define SOUNDCLOUDDATA_H
 
-#include <QObject>
-#include "HelperStructs/MetaData.h"
 
+#include "HelperStructs/MetaData/MetaData.h"
 #include "Library/Sorting.h"
 #include "Soundcloud/SoundcloudHelper.h"
 

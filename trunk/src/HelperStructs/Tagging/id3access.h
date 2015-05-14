@@ -25,7 +25,7 @@
 #define ID3_ACCESS_H_
 
 #include "HelperStructs/Tagging/ID3_Fileheader.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include <QFile>
 

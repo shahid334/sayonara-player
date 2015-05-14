@@ -26,23 +26,23 @@
  */
 
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <unistd.h>
 #include <execinfo.h>
-#include <signal.h>
-#include <stdio.h>
+#include <csignal>
+#include <cstdio>
 #include <fcntl.h>
 
 #include "application.h"
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/SmartComparison.h"
 #include "Settings/Settings.h"
 
 #include <QDir>
 #include <QFile>
 #include <QTranslator>
 #include <QFontDatabase>
+
 
 
 int check_for_another_instance_unix() {
@@ -126,6 +126,10 @@ void segfault_handler(int sig){
 
 bool register_settings(){
 
+	if(!CDatabaseConnector::getInstance()->is_initialized()){
+		return false;
+	}
+
 	Settings* set = Settings::getInstance();
 
 	QStringList lfm_login;
@@ -169,10 +173,12 @@ bool register_settings(){
 
 	REGISTER_SETTING( QStringList, PL_Playlist, "playlist", QStringList() );
 	REGISTER_SETTING( bool, PL_Load, "load_playlist", false );
+	REGISTER_SETTING( bool, PL_LoadSavedPlaylists, "load_saved_playlists", false );
 	REGISTER_SETTING( bool, PL_LoadLastTrack, "load_last_track", false );
 	REGISTER_SETTING( bool, PL_RememberTime, "remember_time", false );
 	REGISTER_SETTING( bool, PL_StartPlaying, "start_playing", false );
 	REGISTER_SETTING( int, PL_LastTrack, "last_track", -1 );
+	REGISTER_SETTING( int, PL_LastPlaylist, "last_playlist", -1 );
 	REGISTER_SETTING( PlaylistMode, PL_Mode, "playlist_mode", PlaylistMode() );
 	REGISTER_SETTING( bool, PL_ShowNumbers, "show_playlist_numbers", true );
 	REGISTER_SETTING( bool, PL_SmallItems, "small_playlist_items", true );
@@ -221,20 +227,22 @@ int main(int argc, char *argv[]) {
 
 #endif
 
+
 	if(!register_settings()){
 		return 1;
 	}
 
+
 	Application app (argc, argv);
-    Helper::set_bin_path(app.applicationDirPath());
+	Helper::set_bin_path(SAYONARA_INSTALL_PATH);
 
     Settings* settings = Settings::getInstance();
 
     bool success = CDatabaseConnector::getInstance()->load_settings();
 	
     if(!success) {
-	qDebug() << "Database Error: Could not load settings";
-	return 0;
+		qDebug() << "Database Error: Could not load settings";
+		return 0;
     }
 
 
@@ -275,8 +283,6 @@ int main(int argc, char *argv[]) {
 
     translator.load(language, Helper::getSharePath() + "translations");
     app.installTranslator(&translator);
-
-
 
     app.init(params.size(), &translator);
     if(!app.is_initialized()) return 0;

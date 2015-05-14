@@ -21,7 +21,7 @@
 #ifndef STREAM_WRITER_H
 #define STREAM_WRITER_H
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
 
 #include <QByteArray>

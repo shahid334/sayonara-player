@@ -50,18 +50,18 @@ void GUI_Player::fetch_cover() {
 	set_std_cover( (_md.radio_mode() != RadioModeOff) );
 
 	CoverLocation cover_location = CoverLocation::get_cover_location(_md);
-	m_cov_lookup->fetch_cover(cover_location);
+	_cov_lookup->fetch_cover(cover_location);
 }
 
 
 void GUI_Player::coverClicked() {
 
 	if(_md.album_id >= 0) {
-	   m_AlternativeCovers->start(_md.album_id);
+	   _ui_alternative_covers->start(_md.album_id);
     }
 
     else {
-		m_AlternativeCovers->start( _md.album, _md.artist);
+		_ui_alternative_covers->start( _md.album, _md.artist);
     }
 
     this->setFocus();
@@ -72,7 +72,7 @@ void GUI_Player::sl_alternate_cover_available(const CoverLocation& lc) {
 
 	Q_UNUSED(lc);
 
-	if(!m_metadata_available) return;
+	if(!_md_available) return;
     fetch_cover();
 }
 

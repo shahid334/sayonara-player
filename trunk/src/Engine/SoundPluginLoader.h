@@ -46,7 +46,7 @@ private:
 
 public:
 
-	SoundPluginLoader(QString);
+	SoundPluginLoader(const QString& dir, QObject* parent=0);
 	virtual ~SoundPluginLoader();
 
 	QVector<Engine*> get_engines();

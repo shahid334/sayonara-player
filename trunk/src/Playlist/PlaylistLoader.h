@@ -23,16 +23,27 @@
 #ifndef PLAYLISTLOADER_H
 #define PLAYLISTLOADER_H
 
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
+#include "Playlist/PlaylistHandler.h"
+#include "Playlist/PlaylistDBConnector.h"
+
+class PlaylistHandler;
 
 class PlaylistLoader : public QObject, protected SayonaraClass
 {
-
 	Q_OBJECT
 
+private:
+
+	PlaylistHandler*		_playlist_handler;
+	PlaylistDBConnector*	_playlist_db_connector;
+
+
 public:
-    explicit PlaylistLoader(QObject *parent = 0);
-	MetaDataList load_old_playlist();
+	explicit PlaylistLoader(QObject* parent=0);
+	int						load_old_playlists();
+
 };
 
 #endif // PLAYLISTLOADER_H

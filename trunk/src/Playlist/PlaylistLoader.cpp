@@ -21,104 +21,108 @@
 
 
 #include "Playlist/PlaylistLoader.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/Tagging/id3.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
 #include "Soundcloud/SoundcloudHelper.h"
+
 #include <QDir>
-
-
 
 PlaylistLoader::PlaylistLoader(QObject *parent) :
 	QObject(parent),
 	SayonaraClass()
 {
 
+	_playlist_handler = PlaylistHandler::getInstance();
+	_playlist_db_connector = PlaylistDBConnector::getInstance();
 }
 
 
-MetaDataList PlaylistLoader::load_old_playlist() {
+int PlaylistLoader::load_old_playlists() {
 
-		MetaDataList v_md;
+	QList<CustomPlaylist> playlists;
 
+	bool success;
+	int saved_playlist_id = _settings->get(Set::PL_LastPlaylist);
+	int saved_track_idx = _settings->get(Set::PL_LastTrack);
+	bool last_playlist_found = false;
 
-        CDatabaseConnector* db = CDatabaseConnector::getInstance();
+	int playlist_idx = -1;
+	int track_idx = -1;
 
-		bool load_playlist = _settings->get(Set::PL_Load);
-		if( !load_playlist ) return v_md;
+	bool load_saved_playlists = _settings->get(Set::PL_LoadSavedPlaylists);
 
-		bool load_last_track = _settings->get(Set::PL_LoadLastTrack);
-		int last_track_idx = _settings->get(Set::PL_LastTrack);
+	success = _playlist_db_connector->get_all_playlists(playlists);
+	if(!success){
+		return 0;
+	}
 
-		QStringList saved_playlist = _settings->get(Set::PL_Playlist);
+	int n_playlists=0;
+	for(const CustomPlaylist& pl : playlists){
 
-		if(saved_playlist.size() == 0) return v_md;
+		bool add_playlist = true;
 
-
-
-        // run over all tracks
-        for(int i=0; i<saved_playlist.size(); i++) {
-
-            // convert item into MetaData
-            QString item = saved_playlist[i];
-            if(item.size() == 0) continue;
-
-            MetaData track;
-
-            // maybe we can get a track id
-            bool ok;
-            int track_id = item.toInt(&ok);
-
-            // maybe it's an filepath
-            QString path_in_list = item;
-            QDir d(path_in_list);
-            path_in_list = d.absolutePath();
-
-
-            // we have a track id
-            if(track_id >= 0 && ok) {
-                track = db->getTrackById(track_id);
-
-                // this track id cannot be found in db
-				if( track.id < 0 ) {
-                    if(!ID3::getMetaDataOfFile(track)) continue;
-                    track.is_extern = true;
-                }
-
-                else{
-                    track.is_extern = false;
-                }
-            }
-
-            // we have an filepath
-            else{
-                if(!QFile::exists(path_in_list)) continue;
-
-                // maybe it's in the library neverthe less
-                track = db->getTrackByPath(path_in_list);
-                // we expected that.. try to get metadata
-				if( track.id < 0 ) {
-                    if(!ID3::getMetaDataOfFile(track)) continue;
-                }
-
-                track.is_extern = true;
-            }
-
-            v_md.push_back(track);
-        }
-
-		if(v_md.size() == 0)  {
-			return v_md;
+		if(!success){
+			continue;
 		}
 
-		if(last_track_idx >= v_md.size() || last_track_idx < 0){
-			return v_md;
+		if(!load_saved_playlists && !pl.is_temporary){
+			add_playlist = false;
 		}
 
-		if(load_last_track) {
-			v_md.setCurPlayTrack(last_track_idx);
-        }
+		if(pl.id == saved_playlist_id){
 
-		return v_md;
+			playlist_idx = n_playlists;
+
+			if( saved_track_idx >= 0 && saved_track_idx < pl.tracks.size()){
+				track_idx = saved_track_idx;
+				add_playlist = true;
+				last_playlist_found = true;
+			}
+		}
+
+		if(add_playlist){
+
+			n_playlists++;
+			_playlist_handler->create_playlist(pl);
+		}
+	}
+
+	if(!last_playlist_found){
+		_settings->set(Set::Engine_CurTrackPos_s, 0);
+		PlayManager::getInstance()->seek_abs_ms(0);
+	}
+
+	else{
+
+	}
+
+	if( n_playlists == 0 ){
+		// do nothing
+		;
+	}
+
+
+	else if(playlist_idx != -1){
+		_playlist_handler->change_playlist_index(playlist_idx);
+
+		// perfect
+		if(track_idx != -1){
+			_playlist_handler->change_track(track_idx, playlist_idx);
+			PlayManager::getInstance()->seek_abs_ms(_settings->get(Set::Engine_CurTrackPos_s) * 1000);
+			_settings->shout(Set::Engine_CurTrackPos_s);
+		}
+
+		// playlist, but no track...
+		else{
+			_playlist_handler->change_track(0, playlist_idx);
+		}
+	}
+
+	// playlist not found -> track not found
+	else{
+		_playlist_handler->change_playlist_index(0);
+		_playlist_handler->change_track(0, 0);
+	}
+
+	return n_playlists;
 }
-

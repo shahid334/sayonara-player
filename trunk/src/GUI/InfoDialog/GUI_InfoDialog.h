@@ -26,7 +26,7 @@
 #define GUI_INFODIALOG_H_
 
 #include "HelperStructs/SayonaraClass.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "CoverLookup/CoverLookup.h"
 #include "LyricLookup/LyricLookup.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
@@ -54,7 +54,12 @@ enum InfoDialogMode {
 };
 
 class GUI_InfoDialog : public SayonaraDialog, private Ui::InfoDialog{
+
 	Q_OBJECT
+
+public:
+	GUI_InfoDialog(QWidget* parent=0);
+	virtual ~GUI_InfoDialog();
 
 signals:
 	void sig_cover_changed(const CoverLocation&);
@@ -79,25 +84,18 @@ protected:
 	virtual void language_changed();
 
 public:
-	GUI_InfoDialog(TagEdit* tag_edit, QWidget* parent=0);
-	virtual ~GUI_InfoDialog();
-
 	void setInfoMode(InfoDialogMode mode);
-
-
 	void set_tag_edit_visible(bool b);
-
 
 private:
 
-	GUI_TagEdit*			ui_tag_edit;
+	GUI_TagEdit*			_ui_tag_edit;
 
 	GUI_AlternativeCovers*	_AlternativeCovers;
 	CoverLookup* 			_cover_lookup;
 	LFMTrackChangedThread* 	_lfm_thread;
 	LyricLookupThread*		_lyric_thread;
 
-	QString 				_class_name;
 	int						_lyric_server;
 	bool					_lyrics_visible;
 	bool                    _initialized;

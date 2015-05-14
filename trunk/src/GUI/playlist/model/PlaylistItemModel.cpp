@@ -27,7 +27,7 @@
  */
 
 #include "GUI/playlist/model/PlaylistItemModel.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include <QList>
 #include <QDebug>

@@ -35,7 +35,8 @@ public:
 	GSTPlaybackPipeline(Engine* engine, QObject *parent = 0);
 	virtual ~GSTPlaybackPipeline();
 
-	bool set_uri(gchar* uri);
+	virtual bool init(GstState state=GST_STATE_READY);
+	virtual bool set_uri(gchar* uri);
 
 public slots:
 
@@ -52,6 +53,8 @@ public slots:
 	void start_timer(qint64 ms);
 	void set_speed(float f);
 	void set_ready();
+
+    void set_sr_path(QString session_path);
 
 
 private:
@@ -71,7 +74,6 @@ private:
 	GstElement* _audio_sink;
 	GstElement* _audio_bin;
 
-	GstElement* _level_audio_convert, *_spectrum_audio_convert, *_lame_audio_convert;
 	GstElement* _level, *_spectrum;
 
 	GstElement* _level_sink, *_spectrum_sink;
@@ -84,13 +86,26 @@ private:
 	GstElement* _app_sink;
 	GstElement* _fake_sink;
 
+	GstElement* _file_queue;
+	GstElement* _file_sink;
+	GstElement* _file_resampler;
+	GstElement* _file_fake_sink;
+	GstElement* _file_lame;
+	GstElement* _file_header;
+
+	QString		_sr_path;
+
+
 	GstElement* _tee;
 
 	QTimer* _timer;
 
     bool _seek(gint64 ns);
 	bool tee_connect(GstPadTemplate* tee_src_pad_template, GstElement* queue, QString queue_name);
-	bool create_element(GstElement** elem, const gchar* elem_name, const gchar* name=NULL);
+
+	virtual bool create_elements();
+	virtual bool add_and_link_elements();
+	virtual bool configure_elements();
 
 
 protected slots:
@@ -98,6 +113,8 @@ protected slots:
 	virtual void _sl_vol_changed();
 	virtual void _sl_show_level_changed();
 	virtual void _sl_show_spectrum_changed();
+
+
 
 };
 

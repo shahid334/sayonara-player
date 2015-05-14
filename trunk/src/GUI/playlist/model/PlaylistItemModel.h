@@ -29,7 +29,7 @@
 #ifndef PLAYLISTITEMMODEL_H_
 #define PLAYLISTITEMMODEL_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "GUI/AbstractSearchModel.h"
 
 #include <QObject>

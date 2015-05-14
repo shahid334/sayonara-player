@@ -24,6 +24,7 @@
 #include "GUI/bookmarks/GUI_Bookmarks.h"
 
 #include <QMap>
+#include <QMessageBox>
 
 #define TXT_NO_BOOKMARK "--:--"
 
@@ -39,17 +40,24 @@ GUI_Bookmarks::GUI_Bookmarks(QString name, QWidget *parent) :
 
 	_cur_time = -1;
 
-	connect(btn_new, SIGNAL(clicked()), this, SLOT(new_clicked()));
-	connect(btn_delete, SIGNAL(clicked()), this, SLOT(del_clicked()));
-	connect(btn_last, SIGNAL(clicked()), this, SLOT(prev_clicked()));
-	connect(btn_next, SIGNAL(clicked()), this, SLOT(next_clicked()));
+	connect(btn_tool, SIGNAL(sig_new()), this, SLOT(new_clicked()));
+	connect(btn_tool, SIGNAL(sig_delete()), this, SLOT(del_clicked()));
+	connect(btn_bw, SIGNAL(clicked()), this, SLOT(prev_clicked()));
+	connect(btn_fw, SIGNAL(clicked()), this, SLOT(next_clicked()));
 	connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+
 	connect(_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
 			this, SLOT(track_changed(const MetaData&)));
 	connect(_play_manager, SIGNAL(sig_position_changed_ms(quint64)), this, SLOT(pos_changed_ms(quint64)));
 
+	btn_tool->show_new(true);
+	btn_tool->show_delete(true);
+
 	disable_next();
 	disable_prev();
+
+	track_changed(_play_manager->get_cur_track());
+	playstate_changed(_play_manager->get_play_state());
 }
 
 void GUI_Bookmarks::language_changed(){
@@ -59,15 +67,16 @@ void GUI_Bookmarks::language_changed(){
 
 void GUI_Bookmarks::disable_prev() {
 	_last_idx = -1;
-	btn_last->setEnabled( false );
+	btn_bw->setEnabled( false );
 	lab_last->setText( TXT_NO_BOOKMARK );
 }
 
 void GUI_Bookmarks::disable_next() {
 	_next_idx = -1;
-	btn_next->setEnabled(false);
+	btn_fw->setEnabled(false);
 	lab_next->setText( TXT_NO_BOOKMARK );
 }
+
 
 void GUI_Bookmarks::enable_prev(int idx) {
 
@@ -84,8 +93,9 @@ void GUI_Bookmarks::enable_prev(int idx) {
 	str = Helper::cvt_ms_to_string(ms, true, false);
 
 	lab_last->setText( str );
-	btn_last->setEnabled( true);
+	btn_bw->setEnabled( true);
 }
+
 
 void GUI_Bookmarks::enable_next(int idx) {
 
@@ -101,10 +111,9 @@ void GUI_Bookmarks::enable_next(int idx) {
 	str = Helper::cvt_ms_to_string(ms, true, false);
 
 	lab_next->setText(str);
-	btn_next->setEnabled(true);
-
-
+	btn_fw->setEnabled(true);
 }
+
 
 void GUI_Bookmarks::calc_prev(quint32 time_s) {
 
@@ -112,8 +121,6 @@ void GUI_Bookmarks::calc_prev(quint32 time_s) {
 
 	quint32 key = -1;
 	QString val = "";
-
-
 
 	for(i=_bookmarks.keys().size()-1; i>=0; i--) {
 		key = _bookmarks.keys()[i];
@@ -139,7 +146,6 @@ void GUI_Bookmarks::calc_prev(quint32 time_s) {
 			enable_prev(i);
 			return;
 		}
-
 	}
 
 	disable_prev();
@@ -177,7 +183,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md) {
 
 	disconnect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 
-	btn_delete->setEnabled(false);
+	btn_tool->show_delete(false);
 
 	cb_bookmarks->clear();
 	_bookmarks.clear();
@@ -206,7 +212,7 @@ void GUI_Bookmarks::track_changed(const MetaData& md) {
 	calc_prev(0);
 
 	cb_bookmarks->setCurrentIndex(0);
-	btn_delete->setEnabled(true);
+	btn_tool->show_delete(true);
 
 	connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 }
@@ -238,7 +244,7 @@ void GUI_Bookmarks::combo_changed(int cur_idx) {
 	quint32 bm = _bookmarks.keys()[cur_idx];
 	quint64 bm_ms = bm * 1000;
 
-	btn_delete->setEnabled(true);
+	btn_tool->show_delete(true);
 
 	calc_prev(bm);
 	calc_next(bm);
@@ -274,10 +280,16 @@ void GUI_Bookmarks::prev_clicked() {
 }
 
 void GUI_Bookmarks::new_clicked() {
+
 	bool success;
 	QString cur_text;
 	int cur_idx;
 	int i;
+
+	if(_md.is_extern){
+		QMessageBox::warning(this, tr("Error"), tr("Sorry, bookmarks can only be set for library tracks at the moment."));
+		return;
+	}
 
 	cur_text = cb_bookmarks->currentText();
 	success = _db->insertBookmark(_md.id, _cur_time, cur_text);
@@ -308,11 +320,10 @@ void GUI_Bookmarks::new_clicked() {
 
 		if( cur_idx != -1 ) cb_bookmarks->setCurrentIndex(cur_idx);
 
-		btn_delete->setEnabled(true);
+		btn_tool->show_delete(true);
 
 		connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 	}
-
 }
 
 
@@ -338,15 +349,12 @@ void GUI_Bookmarks::del_clicked() {
 		cb_bookmarks->setCurrentIndex(cur_idx);
 		_bookmarks.remove(bm);
 		if(_bookmarks.size() == 0) {
-			btn_delete->setEnabled(false);
+			btn_tool->show_delete(false);
 		}
 
 		calc_next(_cur_time);
 		calc_prev(_cur_time);
 	}
-
-
-
 
 	connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
 
@@ -371,11 +379,24 @@ void GUI_Bookmarks::del_all_clicked() {
 		disable_prev();
 		disable_next();
 
-		btn_delete->setEnabled(false);
+		btn_tool->show_delete(false);
 
 		calc_next(_cur_time);
 		calc_prev(_cur_time);
 	}
 
 	connect(cb_bookmarks, SIGNAL(currentIndexChanged(int)), this, SLOT(combo_changed(int)));
+}
+
+void GUI_Bookmarks::playstate_changed(PlayManager::PlayState state){
+
+	PlayerPlugin::playstate_changed(state);
+
+	bool active = (
+		state == PlayManager::PlayState_Paused ||
+		state == PlayManager::PlayState_Playing
+	);
+
+	btn_tool->setEnabled(active);
+	cb_bookmarks->setEnabled(active);
 }

@@ -35,6 +35,8 @@
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "GUI/startup_dialog/GUI_Startup_Dialog.h"
 #include "GUI/LanguageChooser/GUI_LanguageChooser.h"
+#include "GUI/StreamRecorder/GUI_StreamRecorder.h"
+#include "GUI/broadcasting/GUI_BroadcastSetup.h"
 #include "GUI/player/GUI_TrayIcon.h"
 
 #include "CoverLookup/CoverLookup.h"
@@ -42,7 +44,7 @@
 #include "PlayerPlugin/PlayerPluginHandler.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 
-#include "HelperStructs/AsyncWebAccess.h"
+#include "HelperStructs/WebAccess/AsyncWebAccess.h"
 #include "HelperStructs/SayonaraClass.h"
 
 #include <QMainWindow>
@@ -94,12 +96,12 @@ signals:
     /* Player*/
 
     void sig_mute();
-    void sig_rec_button_toggled(bool);
+
     void sig_correct_id3(const MetaData&);
 
     /* File */
-	void sig_file_selected (const QStringList & filelist);
-    void sig_basedir_selected (const QString & baseDir);
+	void sig_file_selected (const QStringList & filelist, const QString& str="", bool temporary=true);
+	void sig_basedir_selected (const QString & baseDir, const QString& str="", bool temporary=true);
     void sig_import_dir(const QString&);
     void sig_import_files(const QStringList&);
     void sig_reload_library(bool clear);
@@ -122,15 +124,15 @@ private slots:
 	void stop_clicked();
 	void prev_clicked();
 	void next_clicked();
+    void rec_clicked(bool);
 
 	void playstate_changed(PlayManager::PlayState);
 	void played();
+
 	void stopped();
 	void paused();
 	void track_changed(const MetaData& md);
 
-
-	void sl_rec_button_toggled(bool b);
     void correct_btn_clicked(bool b=false);
     void coverClicked();
 	void seek(int);
@@ -162,15 +164,17 @@ private slots:
 
 
     /* Preferences */
-    void sl_action_language_toggled(bool b=true);
-    void lastFMClicked(bool b = true);
-	void sl_libpath_clicked(bool b = true);
+	void sl_action_language_toggled();
+	void lastFMClicked();
+	void sl_libpath_clicked();
+	void sl_streamrecorder_toggled();
+	void sl_broadcasting_clicked();
 
 
     void load_pl_on_startup_toggled(bool);
     void min2tray_toggled(bool);
     void only_one_instance_toggled(bool);
-    void sl_action_streamripper_toggled(bool);
+
     void sl_action_socket_connection_triggered(bool);
     void sl_show_only_tracks(bool);
     void sl_live_search(bool);
@@ -219,41 +223,39 @@ protected:
 
 private:
 
-    GUI_Playlist*           ui_playlist;
-	GUI_AbstractLibrary*	ui_library;
-    GUI_LibraryPath*        ui_libpath;
-    GUI_InfoDialog*         ui_info_dialog;
-    GUI_Notifications*      ui_notifications;
-    GUI_Startup_Dialog*     ui_startup_dialog;
-    GUI_LanguageChooser*    ui_language_chooser;
-    CoverLookup*            m_cov_lookup;
-    PlayerPluginHandler*    _pph;
+	GUI_Playlist*				ui_playlist;
+	GUI_AbstractLibrary*		ui_library;
+	GUI_LibraryPath*			ui_libpath;
+	GUI_Notifications*			ui_notifications;
+	GUI_Startup_Dialog*			ui_startup_dialog;
+	GUI_LanguageChooser*		ui_language_chooser;
+	GUI_StreamRecorder*			ui_streamrecorder;
+	GUI_BroadcastSetup*			ui_broadcasting;
 
-    GUI_AlternativeCovers*   m_AlternativeCovers;
-    AsyncWebAccess*         m_awa_version;
-    AsyncWebAccess*         m_awa_translators;
+	CoverLookup*				_cov_lookup;
+	PlayerPluginHandler*		_pph;
 
-    QString                 m_class_name;
+	GUI_AlternativeCovers*		_ui_alternative_covers;
+	AsyncWebAccess*				_awa_version;
+	AsyncWebAccess*				_awa_translators;
 
-    bool                    m_playing;
-    bool                    m_mute;
-    GUI_TrayIcon *          m_trayIcon;
+	bool						_mute;
+	GUI_TrayIcon *				_tray_icon;
 
-    QString                 m_skinSuffix;
+	QString						_skin_suffix;
 
-	MetaData			_md;
-    MetaData			m_metadata_corrected;
-    bool                m_metadata_available;
-    bool                m_min2tray;
+	MetaData					_md;
+	MetaData					_md_corrected;
+	bool						_md_available;
 
-    int                 m_library_width;
-    int                 m_library_stretch_factor;
+	int							_ui_library_width;
+	int							_library_stretch_factor;
 
-    QTranslator*        m_translator;
-    QStringList         m_translators;
 
-	bool				m_converter_active;
-	PlayManager*		m_play_manager;
+	QTranslator*				_translator;
+	QStringList					_translators;
+
+	PlayManager*				_play_manager;
 
 
 	void set_album_label();

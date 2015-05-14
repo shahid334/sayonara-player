@@ -31,8 +31,8 @@
 #include <QFileDialog>
 
 
-GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog* info_dialog, QWidget* parent) :
-	GUI_AbstractLibrary(library, info_dialog, parent),
+GUI_Library_windowed::GUI_Library_windowed(LocalLibrary* library, QWidget* parent) :
+	GUI_AbstractLibrary(library, parent),
 	Ui::Library_windowed()
 {
 	setup_parent(this);

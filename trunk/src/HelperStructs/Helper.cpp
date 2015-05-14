@@ -34,14 +34,9 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/globals.h"
-#include "HelperStructs/WebAccess.h"
+#include "HelperStructs/WebAccess/WebAccess.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "Settings/Settings.h"
-
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <ctime>
 
 #include <QDir>
 #include <QUrl>
@@ -54,9 +49,7 @@
 
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 
-using namespace std;
-
-static QString _install_path = "";
+static QString _install_path = QString(SAYONARA_INSTALL_PATH);
 
 QString Helper::cvtQString2FirstUpper(const QString& str) {
 
@@ -209,13 +202,14 @@ QIcon Helper::getIcon(const QString& icon_name){
 	}
 
 
-
 	else if(!icon_name.endsWith(".svg.png")){
 
 		path = icon_name + ".svg.png";
 	}
 
+
 	path.prepend(":/icons/");
+
 
 	QIcon icon = QIcon(path);
 	if(icon.isNull()){
@@ -725,6 +719,7 @@ bool Helper::is_url(const QString& str) {
     return false;
 }
 
+
 bool Helper::is_www(const QString& str) {
 
     if(str.startsWith("http")) return true;
@@ -854,10 +849,8 @@ QString Helper::get_newest_version() {
 void Helper::set_bin_path(const QString& str) {
 
     QDir d(str);
-    d.cdUp();
     _install_path = d.absolutePath();
     qDebug() << "Install path in " << _install_path;
-
 }
 
 

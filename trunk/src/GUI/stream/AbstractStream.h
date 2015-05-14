@@ -1,6 +1,7 @@
 #ifndef ABSTRACTSTREAM_H
 #define ABSTRACTSTREAM_H
 
+#include "GUI/MenuTool.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "Playlist/PlaylistHandler.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
@@ -17,9 +18,10 @@ class AbstractStream : public PlayerPlugin
 private:
 	QLineEdit*				_le_url;
 	QComboBox*				_combo_stream;
-	QPushButton*			_btn_listen;
-	QPushButton*			_btn_save;
-	QPushButton*			_btn_delete;
+	QPushButton*			_btn_play;
+	MenuToolButton*			_btn_tool;
+	QLabel*					_lab_listen;
+
 
 	virtual void			init_connections();
 
@@ -72,9 +74,9 @@ public:
 		subclass->setupUi(subclass);
 		_le_url =			subclass->le_url;
 		_combo_stream =		subclass->combo_stream;
-		_btn_listen =		subclass->btn_listen;
-		_btn_save =			subclass->btn_save;
-		_btn_delete =		subclass->btn_delete;
+		_btn_play =			subclass->btn_play;
+		_btn_tool =			subclass->btn_tool;
+		_lab_listen =		subclass->lab_listen;
 
 		init_connections();
 	}

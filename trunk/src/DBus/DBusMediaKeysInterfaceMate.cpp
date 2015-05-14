@@ -36,9 +36,10 @@ DBusMediaKeysInterfaceMate::DBusMediaKeysInterfaceMate(QObject *parent) :
 
 	if (!QDBusConnection::sessionBus().interface()->isServiceRegistered("org.mate.SettingsDaemon"))
 	{
-		qDebug() << "DBus org.mate.SettingsDaemon registered";
 		return;
 	}
+
+	qDebug() << "DBus: org.mate.SettingsDaemon registered";
 
 	QDBusPendingReply<> reply = _media_key_interface->GrabMediaPlayerKeys("sayonara", 0);
 	QDBusPendingCallWatcher* watcher = new QDBusPendingCallWatcher(reply, this);

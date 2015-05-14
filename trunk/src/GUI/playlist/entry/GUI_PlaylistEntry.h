@@ -26,7 +26,7 @@
 
 #include <QFrame>
 #include <QWidget>
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
 
 class GUI_PlaylistEntry : public QFrame, protected SayonaraClass {

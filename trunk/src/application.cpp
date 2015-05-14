@@ -107,20 +107,16 @@ void Application::init(int n_files, QTranslator *translator) {
 
 	lastfm              = LastFM::getInstance();
 
-	ui_stream_rec       = new GUI_StreamRecorder(player->centralWidget());
-	tag_edit			= new TagEdit();
-
-	ui_info_dialog      = new GUI_InfoDialog(tag_edit, player->centralWidget());
 	ui_socket_setup     = new GUI_SocketSetup(player->centralWidget());
 
 	library             = new LocalLibrary();
-	ui_library          = new GUI_Library_windowed(library, ui_info_dialog, player->getParentOfLibrary());
+	ui_library          = new GUI_Library_windowed(library, player->getParentOfLibrary());
 	stream_server       = new StreamServer(this);
 
 	/*sc_library			= new SoundcloudLibrary();
-	ui_sc_library		= new GUI_SoundCloudLibrary(sc_library, ui_info_dialog, player->getParentOfLibrary());*/
+	ui_sc_library		= new GUI_SoundCloudLibrary(sc_library, player->getParentOfLibrary());*/
 
-	ui_playlist         = new GUI_Playlist(ui_info_dialog, player->getParentOfPlaylist());
+	ui_playlist         = new GUI_Playlist(player->getParentOfPlaylist());
 
 	ui_lastfm           = new GUI_LastFM(player->centralWidget());
 	ui_level            = new GUI_LevelPainter(tr("Le&vel"), player->getParentOfPlugin());
@@ -168,8 +164,8 @@ void Application::init(int n_files, QTranslator *translator) {
 	dir = this->applicationDirPath();
 #endif
 
-	SoundPluginLoader loader(dir);
-	listen = loader.get_first_engine();
+	SoundPluginLoader* loader = new SoundPluginLoader(dir, this);
+	listen = loader->get_first_engine();
 	if(!listen) {
 		qDebug() << "No Sound Engine found! You fucked up the installation. Aborting...";
 		exit(1);
@@ -187,7 +183,6 @@ void Application::init(int n_files, QTranslator *translator) {
 	player->setPlaylist(ui_playlist);
 	player->setLibrary(ui_library);
 	//player->setLibrary(ui_sc_library);
-	player->setInfoDialog(ui_info_dialog);
 	player->setPlayerPluginHandler(_pph);
 	player->show();
 	player->ui_loaded();
@@ -213,7 +208,6 @@ Application::~Application() {
 	delete ui_socket_setup;
 	delete ui_playlist;
 	delete ui_library;
-	delete ui_stream_rec;
 	delete ui_eq;
 	delete ui_stream;
 	delete ui_podcasts;
@@ -230,56 +224,40 @@ Application::~Application() {
 
 void Application::init_connections() {
 
-	CONNECT (player, sig_rec_button_toggled(bool),				listen,				record_button_toggled(bool));
-	CONNECT (player, sig_rec_button_toggled(bool),				ui_stream_rec,		record_button_toggled(bool));
 	CONNECT (player, sig_reload_library(bool),					library,            psl_reload_library(bool));
 	CONNECT (player, sig_import_dir(const QString&),			library_importer,   psl_import_dir(const QString&));
 	CONNECT (player, sig_import_files(const QStringList&),		library_importer,   psl_import_files(const QStringList&));
-	CONNECT (player, sig_file_selected(const QStringList &),	playlist_handler, 	create_playlist(const QStringList&));
-	CONNECT (player, sig_basedir_selected(const QString &),		playlist_handler,   create_playlist(const QString&));
+	CONNECT (player, sig_file_selected(const QStringList&, const QString&, bool),	playlist_handler, 	create_playlist(const QStringList&, const QString&, bool));
+	CONNECT (player, sig_basedir_selected(const QString &, const QString&, bool),	playlist_handler,   create_playlist(const QString&, const QString&, bool));
 	CONNECT (player, sig_setup_LastFM(),						ui_lastfm,			show_win()); // IND
 	CONNECT (player, sig_show_socket(),							ui_socket_setup,	show_win()); // IND
 
-
-	CONNECT (playlist_handler,		sig_selection_changed(const MetaDataList&),
-			 tag_edit,				set_metadata(const MetaDataList&));
-	CONNECT (playlist_handler,		sig_selection_changed(const MetaDataList&),
-			 ui_info_dialog,		set_metadata(const MetaDataList&));
-
-	CONNECT (listen, sig_scrobble(const MetaData&),                      lastfm,			scrobble(const MetaData&));
-	CONNECT (listen, sig_level(float, float),                            ui_level,			set_level(float,float));
-	CONNECT (listen, sig_spectrum(QList<float>&),                        ui_spectrum,		set_spectrum(QList<float>&));
+	CONNECT (listen, sig_scrobble(const MetaData&),		lastfm,				scrobble(const MetaData&));
+	CONNECT (listen, sig_level(float, float),			ui_level,			set_level(float,float));
+	CONNECT (listen, sig_spectrum(QList<float>&),		ui_spectrum,		set_spectrum(QList<float>&));
 	CONNECT (listen, sig_md_changed(const MetaData&),	player,				psl_md_changed(const MetaData&));
 	CONNECT (listen, sig_md_changed(const MetaData&),	playlist_handler,	md_changed(const MetaData&));
 	CONNECT (listen, sig_md_changed(const MetaData&),	library,			psl_metadata_changed(const MetaData&));
+	CONNECT (listen, sig_data(uchar*, quint64),		stream_server,	new_data(uchar*, quint64));
+	CONNECT (listen, destroyed(),					stream_server,	stop());
 
-	CONNECT(ui_speed, sig_speed_changed(float),		listen,					psl_set_speed(float) );
+	CONNECT(ui_speed, sig_speed_changed(float),					listen,					psl_set_speed(float) );
 
-	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&),			ui_info_dialog, set_metadata(const MetaDataList&));
-	CONNECT(library, sig_track_mime_data_available(const MetaDataList&),	ui_info_dialog, set_metadata(const MetaDataList&));
-	CONNECT(library, sig_all_tracks_loaded(const MetaDataList&),			tag_edit, set_metadata(const MetaDataList&));
-	CONNECT(library, sig_track_mime_data_available(const MetaDataList&),	tag_edit, set_metadata(const MetaDataList&));
-
-	CONNECT(library_importer, sig_lib_changes_allowed(bool),	player,         psl_reload_library_allowed(bool));
-	CONNECT(library_importer, sig_imported(),					library,		refresh());
+	CONNECT(library_importer, sig_lib_changes_allowed(bool),	player,     psl_reload_library_allowed(bool));
+	CONNECT(library_importer, sig_imported(),					library,	refresh());
 
 	CONNECT(ui_library, sig_import_files(const QStringList&),	library_importer, psl_import_files(const QStringList&));
 
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		library,			psl_metadata_changed(const MetaDataList&, const MetaDataList&));
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		playlist_handler,	md_changed(const MetaDataList&, const MetaDataList&));
-	CONNECT(tag_edit, sig_metadata_changed(const MetaDataList&, const MetaDataList&),		player,				psl_id3_tags_changed(const MetaDataList&, const MetaDataList&));
+	CONNECT(ui_audioconverter, sig_active(),	listen, start_convert());
+	CONNECT(ui_audioconverter, sig_inactive(),	listen, end_convert());
 
-	CONNECT(ui_audioconverter, sig_active(),		listen, start_convert());
-	CONNECT(ui_audioconverter, sig_inactive(),		listen, end_convert());
-
-	CONNECT(ui_eq, sig_eq_changed(int, int),		listen, eq_changed(int, int));
+	CONNECT(ui_eq, sig_eq_changed(int, int),	listen, eq_changed(int, int));
 
 	CONNECT(lastfm,	sig_similar_artists_available(const QList<int>&),		playlist_handler,	similar_artists_available(const QList<int>&));
 	CONNECT(lastfm,	sig_last_fm_logged_in(bool),							player,				last_fm_logged_in(bool));
 	CONNECT(lastfm, sig_track_info_fetched(const MetaData&, bool, bool),	player,				lfm_info_fetched(const MetaData&, bool, bool));
 
-	CONNECT (listen, sig_data(uchar*, quint64),		stream_server,	new_data(uchar*, quint64));
-	CONNECT (listen, destroyed(),					stream_server,	stop());
+
 }
 
 

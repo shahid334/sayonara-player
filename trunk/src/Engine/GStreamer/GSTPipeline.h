@@ -51,15 +51,26 @@ class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 
 	private:
 		bool		_about_to_finish;
+		bool		_initialized;
+		Engine*		_engine;
 
 	protected:
 
+		QString		_name;
+
 		GstBus*		_bus;
 		GstElement* _pipeline;
+
 		gchar*		_uri;
 
         qint64		_duration_ms;
         qint64		_position_ms;
+
+		virtual bool create_element(GstElement** elem, const gchar* elem_name, const gchar* name="");
+		virtual bool create_elements()=0;
+		virtual bool add_and_link_elements()=0;
+		virtual bool configure_elements()=0;
+
 
 
 	signals:
@@ -80,8 +91,10 @@ class GSTAbstractPipeline : public QObject, protected SayonaraClass {
 
 
 	public:
-		GSTAbstractPipeline(QObject* parent=0);
+		GSTAbstractPipeline(QString name, Engine* engine, QObject* parent=0);
+		virtual ~GSTAbstractPipeline();
 
+		virtual bool		init(GstState state=GST_STATE_READY);
 		virtual GstElement* get_pipeline();
 		virtual GstBus*		get_bus();
 		virtual GstState	get_state();

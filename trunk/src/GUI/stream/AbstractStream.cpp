@@ -1,10 +1,9 @@
 #include "GUI/stream/AbstractStream.h"
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/MetaData.h"
-#include "HelperStructs/PlaylistParser.h"
-
-#include <QDebug>
+#include "HelperStructs/MetaData/MetaData.h"
+#include "HelperStructs/Parser/PlaylistParser.h"
+#include "HelperStructs/Parser/PodcastParser.h"
 #include <QMessageBox>
 
 
@@ -24,9 +23,9 @@ AbstractStream::~AbstractStream(){
 }
 
 void AbstractStream::init_connections(){
-	connect(_btn_listen,	SIGNAL(clicked()),						this, SLOT(listen_clicked()));
-	connect(_btn_save,		SIGNAL(clicked()),						this, SLOT(save_clicked()));
-	connect(_btn_delete,	SIGNAL(clicked()),						this, SLOT(delete_clicked()));
+	connect(_btn_play,	SIGNAL(clicked()),						this, SLOT(listen_clicked()));
+	connect(_btn_tool,		SIGNAL(sig_save()),						this, SLOT(save_clicked()));
+	connect(_btn_tool,		SIGNAL(sig_delete()),					this, SLOT(delete_clicked()));
 	connect(_combo_stream,	SIGNAL(currentIndexChanged(int)),		this, SLOT(combo_idx_changed(int)));
 	connect(_combo_stream,	SIGNAL(editTextChanged(const QString&)),this, SLOT(combo_text_changed(const QString&)));
 	connect(_le_url, SIGNAL(textEdited(const QString&)),			this, SLOT(url_text_changed(const QString&)));
@@ -41,31 +40,41 @@ void AbstractStream::language_changed(){
 void AbstractStream::play(QString url, QString station_name){
 
 	qDebug() << "Play stream: " << station_name;
+	QString content;
 
 	MetaDataList v_md;
 
-	if(Helper::is_playlistfile(url)) {
-		if(PlaylistParser::parse_playlist(url, v_md) > 0) {
+	bool post_proc = false;
 
-			for(MetaData& md : v_md) {
+	if(Helper::is_podcastfile(url, &content)){
+		PodcastParser::parse_podcast_xml_file(url, v_md);
+		post_proc = true;
+	}
 
-				if(station_name.isEmpty()){
-					md.album = url;
-					if(md.title.isEmpty()){
-						md.title = _title_fallback_name;
-					}
+	else if(Helper::is_playlistfile(url)) {
+		PlaylistParser::parse_playlist(url, v_md);
+		post_proc = true;
+	}
+
+	if(post_proc){
+		for(MetaData& md : v_md) {
+
+			if(station_name.isEmpty()){
+				md.album = url;
+				if(md.title.isEmpty()){
+					md.title = _title_fallback_name;
 				}
+			}
 
-				else{
-					md.album = station_name;
-					if(md.title.isEmpty()){
-						md.title = station_name;
-					}
+			else{
+				md.album = station_name;
+				if(md.title.isEmpty()){
+					md.title = station_name;
 				}
+			}
 
-				if(md.artist.isEmpty()){
-					md.artist = url;
-				}
+			if(md.artist.isEmpty()){
+				md.artist = url;
 			}
 		}
 	}
@@ -91,7 +100,7 @@ void AbstractStream::play(QString url, QString station_name){
 		v_md.push_back(md);
 	}
 
-	_playlist->create_playlist(v_md, station_name);
+	_playlist->create_playlist(v_md, station_name, false, PlaylistTypeStream);
 }
 
 
@@ -130,9 +139,12 @@ void AbstractStream::combo_idx_changed(int idx){
 		_le_url->setText("");
 	}
 
-	_btn_delete->setEnabled(idx > 0);
-	_btn_save->setEnabled(false);
-	_btn_listen->setEnabled(_le_url->text().size() > 5);
+	_btn_tool->show_delete(idx > 0);
+	_btn_tool->show_save(false);
+
+	bool listen_enabled = (_le_url->text().size() > 5);
+	_btn_play->setEnabled(listen_enabled);
+	_lab_listen->setEnabled(listen_enabled);
 	_combo_stream->setToolTip(_cur_station_adress);
 }
 
@@ -151,9 +163,12 @@ void AbstractStream::combo_text_changed(const QString& text){
 		}
 	}
 
-	_btn_delete->setEnabled(name_there);
-	_btn_save->setEnabled(text.size() > 0);
-	_btn_listen->setEnabled(_le_url->text().size() > 5);
+	_btn_tool->show_delete(name_there);
+	_btn_tool->show_save(text.size() > 0);
+
+	bool listen_enabled = (_le_url->text().size() > 5);
+	_btn_play->setEnabled(listen_enabled);
+	_lab_listen->setEnabled(listen_enabled);
 	_combo_stream->setToolTip("");
 }
 
@@ -168,8 +183,8 @@ void AbstractStream::url_text_changed(const QString& url){
 		if(idx != -1) {
 
 			_combo_stream->setCurrentIndex(idx);
-			_btn_save->setEnabled(false);
-			_btn_delete->setEnabled(true);
+			_btn_tool->show_save(false);
+			_btn_tool->show_delete(true);
 
 			_cur_station_idx = idx;
 		}
@@ -178,15 +193,17 @@ void AbstractStream::url_text_changed(const QString& url){
 	// new adress
 	else{
 
-		_btn_delete->setEnabled(false);
+		_btn_tool->show_delete(false);
 
 		bool save_enabled =
 				_combo_stream->currentText().size() > 0 &&
 				_le_url->text().size() > 5 &&
 				_cur_station_idx == -1;
 
-		_btn_save->setEnabled(save_enabled);
-		_btn_listen->setEnabled(url.size() > 5);
+		_btn_tool->show_save(save_enabled);
+		bool listen_enabled = (_le_url->text().size() > 5);
+		_btn_play->setEnabled(listen_enabled);
+		_lab_listen->setEnabled(listen_enabled);
 
 		if(_cur_station_idx != -1) {
 			_cur_station_idx = -1;
@@ -279,8 +296,9 @@ void AbstractStream::setup_stations(const QMap<QString, QString>& stations){
 		_combo_stream->addItem(it.key(), it.value());
 	}
 
-	_btn_listen->setEnabled(false);
-	_btn_save->setEnabled(false);
-	_btn_delete->setEnabled(false);
+	_btn_play->setEnabled(false);
+	_lab_listen->setEnabled(false);
+	_btn_tool->show_save(false);
+	_btn_tool->show_delete(false);
 }
 

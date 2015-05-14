@@ -40,9 +40,13 @@ typedef QString ReplacedString;
 class GUI_TagEdit : public SayonaraWidget, private Ui::GUI_TagEdit {
 
 	Q_OBJECT
+
 public:
-	GUI_TagEdit(TagEdit* tag_edit, QWidget* parent=0);
+	GUI_TagEdit(QWidget* parent=0);
 	virtual ~GUI_TagEdit();
+
+	TagEdit* get_tag_edit();
+
 
 signals:
 	void sig_ok_clicked(const MetaDataList&);

@@ -26,7 +26,7 @@
 
 #include "HelperStructs/SayonaraClass.h"
 #include "Notification/Notification.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 
 class LN_Notification : public Notification, protected SayonaraClass {
@@ -41,6 +41,8 @@ public:
 	LN_Notification();
 	virtual ~LN_Notification();
 
+	virtual void notification_show(const QString& title, const QString& label);
+	virtual void notification_show(const QString& str);
     virtual void notification_show(const MetaData& md);
     virtual void notification_update(const MetaData& md);
     virtual void not_close();

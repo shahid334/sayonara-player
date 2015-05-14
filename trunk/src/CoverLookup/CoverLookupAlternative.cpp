@@ -128,7 +128,7 @@ void CoverLookupAlternative::start() {
             _cl->fetch_artist_cover(_artist);
             break;
 
-        default:
+		default: // will never be reached
             break;
     }
 }

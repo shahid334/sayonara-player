@@ -23,7 +23,7 @@
 #define GUI_TRAYICON_H
 
 #include "HelperStructs/SayonaraClass.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include "Notification/Notification.h"
 #include "Notification/NotificationPluginLoader.h"

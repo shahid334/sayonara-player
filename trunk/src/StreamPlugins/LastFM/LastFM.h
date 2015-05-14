@@ -31,7 +31,7 @@
 
 #include "HelperStructs/Helper.h"
 #include "HelperStructs/SayonaraClass.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "StreamPlugins/LastFM/LFMGlobals.h"
 #include "StreamPlugins/LastFM/LFMTrackChangedThread.h"
 #include "StreamPlugins/LastFM/LFMLoginThread.h"
@@ -62,8 +62,8 @@ class LastFM : public QObject, protected SayonaraClass{
 
 
 	private slots:
-		void _sl_similar_artists_available(const QString&, const QList<int>&);
-		void _sl_corrected_data_available(const QString&);
+		void _sl_similar_artists_available(const QList<int>&);
+		void _sl_corrected_data_available();
         void _login_thread_finished();
 		void _sl_change_track(const MetaData&);
 
@@ -91,7 +91,6 @@ class LastFM : public QObject, protected SayonaraClass{
 
 		bool 			_logged_in;
 
-		QString			_class_name;
 		QString			_username;
 		QString			_auth_token;
 		QString			_session_key;

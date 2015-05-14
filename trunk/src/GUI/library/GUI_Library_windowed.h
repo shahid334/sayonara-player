@@ -47,7 +47,7 @@ Q_OBJECT
 
 public:
 
-	GUI_Library_windowed(LocalLibrary* library, GUI_InfoDialog* info_dialog, QWidget* parent);
+	GUI_Library_windowed(LocalLibrary* library, QWidget* parent=0);
 	virtual ~GUI_Library_windowed();
 
 

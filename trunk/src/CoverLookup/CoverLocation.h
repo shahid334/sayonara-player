@@ -23,7 +23,7 @@
 #ifndef COVERLOCATION_H
 #define COVERLOCATION_H
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 class MetaData;
 class CoverLocation

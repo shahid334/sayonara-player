@@ -23,8 +23,8 @@
 #define LocalLibrary_H
 
 #include "Library/threads/ReloadThread.h"
-#include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/DirectoryReader/DirectoryReader.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/Filter.h"
 #include "Library/AbstractLibrary.h"
 

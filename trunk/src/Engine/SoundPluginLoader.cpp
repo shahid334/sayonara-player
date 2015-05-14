@@ -33,8 +33,10 @@ using namespace std;
 
 //Q_IMPORT_PLUGIN(sayonara_gstreamer)
 
-SoundPluginLoader::SoundPluginLoader(QString app_dir) {
-	bool success = load_plugins(app_dir);
+SoundPluginLoader::SoundPluginLoader(const QString& dir, QObject* parent) :
+	QObject(parent)
+{
+	bool success = load_plugins(dir);
 	if(!success) {
 		qDebug() << "No sound engine available";
 	}

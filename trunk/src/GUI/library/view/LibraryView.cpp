@@ -29,7 +29,7 @@
 #include "GUI/library/view/LibraryView.h"
 #include "GUI/ContextMenu.h"
 #include "HelperStructs/CustomMimeData.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 
 #include <QTableView>
@@ -45,7 +45,7 @@
 #include <QScrollBar>
 #include <QFont>
 #include <QMimeData>
-#include "HelperStructs/MetaDataInfo.h"
+#include "HelperStructs/MetaData/MetaDataInfo.h"
 
 LibraryView::LibraryView(QWidget* parent) : SearchableTableView(parent) {
 
@@ -267,12 +267,9 @@ int LibraryView::get_min_selected() {
 
 
     QList<int> selections = _model->get_selected();
-    if(selections.size() == 0) return 0;
-    int min = 10000;
-	for(const int& i : selections) {
-        if(i < min) min = i;
-    }
-    return min;
+	QList<int>::iterator it;
+	it = std::min_element(selections.begin(), selections.end());
+	return *it;
 }
 
 void LibraryView::selectionChanged ( const QItemSelection & selected, const QItemSelection & deselected ) {

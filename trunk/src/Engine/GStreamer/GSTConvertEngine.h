@@ -38,7 +38,7 @@ public:
 	// public from Gstreamer Callbacks
 		void		set_track_finished();
 
-		virtual void init();
+		virtual bool init();
 
 
 	private:

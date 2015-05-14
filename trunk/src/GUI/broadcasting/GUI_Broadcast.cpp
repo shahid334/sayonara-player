@@ -51,6 +51,7 @@ GUI_Broadcast::GUI_Broadcast(QString name, StreamServer* server, QWidget *parent
 
 	_server->retry();
 
+
 	set_status_label();
 
 	REGISTER_LISTENER(SetNoDB::MP3enc_found, mp3_enc_found);
@@ -68,6 +69,7 @@ void GUI_Broadcast::language_changed(){
 void GUI_Broadcast::set_status_label(){
 	int n_listeners = combo_clients->count();
 	QString str_listeners = QString::number(n_listeners);
+
 
 	if(n_listeners == 1){
 		lab_status->setText(str_listeners + " " + tr("listener"));
@@ -221,14 +223,18 @@ void GUI_Broadcast::option_clicked(){
 }
 
 void GUI_Broadcast::mp3_enc_found(){
+
 	bool active = _settings->get(SetNoDB::MP3enc_found);
 	if(!active){
 		combo_clients->hide();
 		btn_dismiss->hide();
 		btn_dismiss_all->hide();
-		btn_retry->hide();
-
 		lab_status->hide();
 		lab_error->setText(tr("Cannot find lame mp3 encoder"));
+	}
+
+	else{
+		lab_error->hide();
+		btn_retry->hide();
 	}
 }

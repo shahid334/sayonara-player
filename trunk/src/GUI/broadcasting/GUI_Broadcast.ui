@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>360</width>
+    <width>590</width>
     <height>134</height>
    </rect>
   </property>
@@ -172,17 +172,45 @@
      </item>
      <item>
       <widget class="QPushButton" name="btn_close">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>17</width>
+         <height>17</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
-         <width>18</width>
-         <height>18</height>
+         <width>17</width>
+         <height>17</height>
         </size>
        </property>
        <property name="focusPolicy">
         <enum>Qt::ClickFocus</enum>
        </property>
        <property name="text">
-        <string>x</string>
+        <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../Icons.qrc">
+         <normaloff>:/icons/close.svg.png</normaloff>:/icons/close.svg.png</iconset>
+       </property>
+       <property name="iconSize">
+        <size>
+         <width>9</width>
+         <height>9</height>
+        </size>
+       </property>
+       <property name="shortcut">
+        <string>Esc</string>
+       </property>
+       <property name="flat">
+        <bool>true</bool>
        </property>
       </widget>
      </item>

@@ -23,7 +23,7 @@
 #include "GUI/Notifications/GUI_Notifications.h"
 #include "Notification/Notification.h"
 #include "Notification/NotificationPluginLoader.h"
-#include "HelperStructs/Style.h"
+
 
 GUI_Notifications::GUI_Notifications(QWidget *parent) :
 	SayonaraDialog(parent),

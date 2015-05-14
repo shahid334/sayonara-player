@@ -26,7 +26,7 @@
  *      Author: luke
  */
 #include "HelperStructs/CustomMimeData.h"
-#include "HelperStructs/CDirectoryReader.h"
+#include "HelperStructs/DirectoryReader/DirectoryReader.h"
 #include "HelperStructs/Helper.h"
 
 #include "GUI/ContextMenu.h"
@@ -172,20 +172,20 @@ void PlaylistView::mouseReleaseEvent(QMouseEvent* event) {
 int PlaylistView::get_min_selected() {
 
     QModelIndexList lst = this->selectionModel()->selectedRows();
-    int min_row = 5000000;
 
     if(lst.size() == 0) {
         return 0;
     }
 
-	for(const QModelIndex& i : lst) {
+	auto lambda_compare = [](const QModelIndex& idx1, const QModelIndex& idx2)
+	{
+		return idx1.row() < idx2.row();
+	};
 
-		if(i.row() < min_row) {
-            min_row = i.row();
-        }
-    }
+	QModelIndexList::iterator it = std::min_element( lst.begin(), lst.end(), lambda_compare );
 
-    return min_row;
+	return it->row();
+
 }
 
 // mark row as currently pressed
@@ -349,7 +349,7 @@ void PlaylistView::clear() {
 
 #define IGNORE_SELECTION_CHANGES(b) _ignore_selection_changes = b
 
-void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
+void PlaylistView::fill(const MetaDataList &v_md) {
 
     this->set_delegate_max_width(v_md.size());
     _cur_selected_rows.clear();
@@ -371,8 +371,6 @@ void PlaylistView::fill(const MetaDataList &v_md, int cur_play_idx) {
 		
         MetaData md = v_md[i];
         QModelIndex model_idx = _model->index(i, 0);
-
-        md.pl_playing = (cur_play_idx == i);
         
 		if(md.pl_playing) {
 			idx_cur_playing = model_idx;
@@ -639,7 +637,7 @@ void PlaylistView::handle_drop(QDropEvent* event, bool from_outside) {
 
         } // end foreach
 
-        CDirectoryReader reader;
+        DirectoryReader reader;
 		reader.set_filter(Helper::get_soundfile_extensions());
 
 		v_md = reader.get_md_from_filelist(filelist);
@@ -711,4 +709,13 @@ void PlaylistView::set_delegate_max_width(int n_items) {
         max_width -= verticalScrollBar()->width();
 
     _delegate->setMaxWidth(max_width);
+}
+
+
+void PlaylistView::set_playlist_type(PlaylistType type){
+	_playlist_type = type;
+}
+
+PlaylistType PlaylistView::get_playlist_type(){
+	return _playlist_type;
 }

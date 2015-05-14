@@ -27,6 +27,8 @@
 #include <QColor>
 #include <QDebug>
 
+#include <random>
+#include <ratio>
 
 const int Offset = 3;
 
@@ -92,10 +94,13 @@ void Rating::paint(QPainter *painter, const QRect &rect,
 RatingLabel::RatingLabel(QWidget *parent, bool enabled) :
     QLabel(parent)
 {
+	std::default_random_engine engine;
+	std::uniform_int_distribution<int> distr(0, 1000000);
+
 	_enabled = enabled;
 	_parent = parent;
     _rating = Rating(0);
-    _id = rand();
+	_id = distr(engine);
 
     QSizePolicy p(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
 

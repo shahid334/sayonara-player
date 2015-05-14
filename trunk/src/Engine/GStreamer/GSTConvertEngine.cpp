@@ -27,6 +27,7 @@
 #include <qplugin.h>
 
 
+
 GSTConvertEngine::GSTConvertEngine(QObject *parent) :
 	Engine(parent)
 {
@@ -37,7 +38,9 @@ GSTConvertEngine::GSTConvertEngine(QObject *parent) :
 	connect(_pipeline, SIGNAL(sig_pos_changed_ms(qint64)), this, SLOT(set_cur_position_ms(qint64)));
 }
 
-void GSTConvertEngine::init() {}
+bool GSTConvertEngine::init() {
+	return _pipeline->init();
+}
 
 
 // methods

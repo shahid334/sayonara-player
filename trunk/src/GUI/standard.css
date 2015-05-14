@@ -11,7 +11,7 @@ QListView:focus, QTableView:focus{
 
 
 QPushButton[flat=true]{
-    color: white;
+/*    color: white;*/
      border-radius: 7;
      padding: 1px;
      padding-left: 1px;

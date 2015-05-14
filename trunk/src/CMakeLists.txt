@@ -11,22 +11,39 @@ PKG_CHECK_MODULES(CURL REQUIRED libcurl)
 
 SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-#SET(CMAKE_BUILD_TYPE "Release")
-#SET(CMAKE_C_FLAGS "-Wall -O2 -s")
-#SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -O2 -s -std=c++0x")
+IF( NOT CMAKE_BUILD_TYPE ) 
+	SET(CMAKE_BUILD_TYPE "Release")
+ENDIF()
 
-SET(CMAKE_BUILD_TYPE "Debug")
-SET(CMAKE_CXX_FLAGS "-Woverloaded-virtual -Wall -std=c++11 -Wunreachable-code")
-SET(CMAKE_C_FLAGS "-Wall")
+CHECK_CXX_COMPILER_FLAG("-std=c++11" CXX_CAN_11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" CXX_CAN_0X)
+
+IF( ${CXX_CAN_11} )
+	MESSAGE("Your Compiler supports C++11")
+	SET(COMMON_FLAGS "-std=c++11")
+ELSEIF( ${CXX_CAN_0X} )
+	MESSAGE("Your Compiler supports C++0x")
+	SET(COMMON_FLAGS "-std=c++0x")
+ELSE()
+	FATAL_ERROR("Your Compiler is not C++11 ready!")
+ENDIF()
+
+
+MESSAGE("Build type = ${CMAKE_BUILD_TYPE}")
+SET(COMMON_FLAGS "${COMMON_FLAGS} -Woverloaded-virtual -Wall -Wunreachable-code")
+SET(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${COMMON_FLAGS}")
+SET(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${COMMON_FLAGS} -O2 -s")
 
 SET(QT_USE_QTSQL TRUE)
 SET(QT_USE_QTXML TRUE)
+SET(QT_USE_QTSVG TRUE)
 SET(QT_USE_QTNETWORK TRUE)
 SET(QT_USE_QTDBUS TRUE)
 
 SET(LANG ${CMAKE_CURRENT_SOURCE_DIR}/languages/sayonara_lang_de.ts)
 
-FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtXML QtDBus REQUIRED)
+FIND_PACKAGE(Qt4 COMPONENTS QtCore QtGui QtXML QtDBus QtSvg REQUIRED)
+
 
 INCLUDE(${QT_USE_FILE})
 INCLUDE_DIRECTORIES(${GSTREAMER_INCLUDE_DIRS})
@@ -38,19 +55,8 @@ INCLUDE_DIRECTORIES(${CURL_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
-CHECK_CXX_COMPILER_FLAG("-std=c++11" CXX_CAN_11)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" CXX_CAN_0X)
 
-IF( ${CXX_CAN_11} )
-	MESSAGE("Your Compiler supports C++11")
-ELSEIF( ${CXX_CAN_0X} )
-	MESSAGE("Your Compiler supports C++0x")
-ELSE()
-	FATAL_ERROR("Your Compiler is not C++11 ready!")
-ENDIF()
-
-
-ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
+ADD_DEFINITIONS(${QT_DEFINITIONS})
 ADD_DEFINITIONS(-DLIB_INSTALL_DIR="${CMAKE_INSTALL_PREFIX}/lib/sayonara")
 
 LINK_DIRECTORIES(${TAGLIB_LIBRARY_DIRS})
@@ -71,9 +77,10 @@ ADD_SUBDIRECTORY(Notification/libnotify)
 ADD_SUBDIRECTORY(languages)
 ADD_SUBDIRECTORY(DBus)
 
+
 SET(HEADERS
     application.h
-	PlayManager.h
+    PlayManager.h
     Settings/SettingNotifier.h
     Settings/SettingKey.h
     Settings/Setting.h
@@ -93,12 +100,13 @@ SET(HEADERS
     StreamPlugins/LastFM/LFMLoginThread.h
     TagEdit/TagEdit.h
     TagEdit/TagExpression.h
+    TagEdit/MetaDataChangeNotifier.h
 )
 
 SET(SOURCES
     Main.cpp
     application.cpp
-	PlayManager.cpp
+    PlayManager.cpp
     Settings/Settings.cpp
     Settings/Setting.cpp
     Engine/SoundPluginLoader.cpp
@@ -111,11 +119,11 @@ SET(SOURCES
     StreamPlugins/LastFM/LFMTrackChangedThread.cpp
     StreamPlugins/LastFM/LFMWebAccess.cpp
     StreamPlugins/LastFM/LFMLoginThread.cpp
-    HelperStructs/SmartComparison.cpp
     RadioStation/StreamWriter.cpp
     RadioStation/StreamServer.cpp
     TagEdit/TagEdit.cpp
     TagEdit/TagExpression.cpp
+    TagEdit/MetaDataChangeNotifier.cpp
 )
 
 FILE (GLOB TRANSLATIONS_FILES languages/*.ts)

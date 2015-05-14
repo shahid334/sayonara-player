@@ -28,11 +28,19 @@
 
 
 GSTEngineHandler::GSTEngineHandler(QObject* parent) : Engine(parent) {
-	_cur_engine = 0;
+	_cur_engine = NULL;
 	_play_manager = PlayManager::getInstance();
 
-	_engines.push_back(new GSTPlaybackEngine());
-	_engines.push_back(new GSTConvertEngine());
+	GSTPlaybackEngine* pb_engine = new GSTPlaybackEngine();
+	GSTConvertEngine* cvt_engine = new GSTConvertEngine();
+
+	if(pb_engine->init()){
+		_engines.push_back(pb_engine);
+	}
+
+	if(cvt_engine->init()){
+		_engines.push_back(cvt_engine);
+	}
 
 	connect(_play_manager, SIGNAL(sig_playstate_changed(PlayManager::PlayState)),
 			this, SLOT(playstate_changed(PlayManager::PlayState)));
@@ -46,6 +54,9 @@ GSTEngineHandler::GSTEngineHandler(QObject* parent) : Engine(parent) {
 	connect(_play_manager, SIGNAL(sig_seeked_rel(double)),
 			this, SLOT(jump_rel(double)));
 
+    connect(_play_manager, SIGNAL(sig_record(bool)),
+            this, SLOT(record_button_toggled(bool)));
+
 	psl_change_engine(PLAYBACK_ENGINE);
 }
 
@@ -54,8 +65,9 @@ GSTEngineHandler::~GSTEngineHandler() {
 	
 }
 
-void GSTEngineHandler::init() {
+bool GSTEngineHandler::init() {
 
+	return true;
 }
 
 

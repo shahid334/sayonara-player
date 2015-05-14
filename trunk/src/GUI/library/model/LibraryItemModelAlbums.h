@@ -29,7 +29,7 @@
 #ifndef LIBRARYITEMMODELALBUMS_H_
 #define LIBRARYITEMMODELALBUMS_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "GUI/library/model/LibraryItemModel.h"
 #include "GUI/MyColumnHeader.h"
 

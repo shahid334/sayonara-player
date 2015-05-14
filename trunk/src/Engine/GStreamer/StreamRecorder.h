@@ -24,79 +24,38 @@
 #define STREAMRECORDER_H
 
 #include "HelperStructs/SayonaraClass.h"
-#include "HelperStructs/MetaData.h"
-#include "Engine/GStreamer/StreamRipperBufferThread.h"
-
-#include <gst/gst.h>
-#include <gst/gsturi.h>
-#include <gst/app/gstappsrc.h>
+#include "HelperStructs/MetaData/MetaData.h"
 
 class StreamRecorder : public QObject, protected SayonaraClass
 {
     Q_OBJECT
+
 public:
     StreamRecorder(QObject *parent = 0);
     virtual ~StreamRecorder();
-    
-signals:
-    void sig_initialized(bool);
-    void sig_stream_ended();
-    void sig_stream_not_valid();
 
-    
-public slots:
+    void changeTrack(const MetaData& md);
+    void activate(bool b);
+    QString get_dst_file();
 
-private slots:
-    void thread_finished();
-
-public:
-    void init();
-    bool start();
-
-    bool stop(bool delete_track = false);
-
-    QString changeTrack(const MetaData& md, int max_tries);
-    void set_new_stream_session();
-
-
-
-    void endOfStream();
-    bool getFinished();
 
 private:
-    static gboolean bus_state_changed(GstBus *bus, GstMessage *msg, void *user_data);
 
-    MetaData    _md;
-    qint64      _buffer_size;
-    bool        _initialized;
-    bool        _stream_ended;
+    QString			_sr_recording_dst;
+    QString			_pl_file_path;
+    QString			_session_path;
+    QString			_session_playlist_name;
+    MetaDataList	_session_collector;
+    MetaData		_md;
 
-    QString    _sr_recording_dst;
-
-    StreamRipperBufferThread* _sr_thread;
-
-    GstElement* _rec_src;
-    GstElement* _rec_dst;
-    GstElement* _rec_pipeline;
-
-    GstBus*     _bus;
-
-    int        _try;
-    int        _max_tries;
-    bool       _thread_is_running;
-
-
-    QString     _pl_file_path;
-    QString     _session_path;
-    QString		_session_playlist_name;
-    MetaDataList _session_collector;
-
+    bool            _record_on;
+	int				_idx;
 
     QString check_session_path(QString sr_path);
-    bool save_file();
-    bool init_thread(QString filename);
-    bool terminate_thread_if_running();
-    
+    bool save();
+    void new_session();
+
+
 };
 
 #endif // STREAMRECORDER_H

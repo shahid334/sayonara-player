@@ -25,7 +25,7 @@
 
 
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "GUI/ui_GUI_Bookmarks.h"
 #include "PlayManager.h"
@@ -71,6 +71,9 @@ private:
 
 protected:
 	virtual void language_changed();
+
+protected slots:
+	virtual void playstate_changed(PlayManager::PlayState state);
 
 };
 

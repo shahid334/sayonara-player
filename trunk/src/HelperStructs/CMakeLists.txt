@@ -5,36 +5,37 @@ SET(QT_USE_QTXML TRUE)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/HelperStructs)
-FIND_PACKAGE(Qt4 REQUIRED)
 
 INCLUDE(${QT_USE_FILE})
-#ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
 
 SET(HEADERS
     Tagging/ID3_Fileheader.h
-    AsyncWebAccess.h
-    MetaDataInfo.h
-	SayonaraClass.h
+    MetaData/MetaDataInfo.h
+    Shutdown/Shutdown.h
+    WebAccess/AsyncWebAccess.h
+    SayonaraClass.h
 )
 
 SET(SOURCES
-    MetaDataInfo.cpp
-    ArtistInfo.cpp
-    AlbumInfo.cpp
-    MetaData.cpp
-    Artist.cpp
-    Album.cpp
-    Helper.cpp
-    Style.cpp
-    CDirectoryReader.cpp
-    PlaylistParser.cpp
-    WebAccess.cpp
-    AsyncWebAccess.cpp
-    SmartComparison.cpp
-    PodcastParser/PodcastParser.cpp
+    DirectoryReader/DirectoryReader.cpp
+    MetaData/MetaDataInfo.cpp
+    MetaData/ArtistInfo.cpp
+    MetaData/AlbumInfo.cpp
+    MetaData/MetaData.cpp
+    MetaData/Artist.cpp
+    MetaData/Album.cpp
+    Parser/PlaylistParser.cpp
+    Parser/PodcastParser.cpp
+    Shutdown/Shutdown.cpp
+    SmartCompare/SmartCompare.cpp
+    Style/Style.cpp
     Tagging/id3.cpp
     Tagging/id3access.cpp
     Tagging/ID3_Fileheader.cpp
+    WebAccess/WebAccess.cpp
+    WebAccess/AsyncWebAccess.cpp
+
+    Helper.cpp
 )
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})

@@ -22,7 +22,7 @@
 #ifndef GUIPLAYLISTCHOOSER_H_
 #define GUIPLAYLISTCHOOSER_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include "PlayerPlugin/PlayerPlugin.h"
 
@@ -60,8 +60,7 @@ private slots:
 
 
 public slots:
-    void playlist_changed(const MetaDataList&, int, PlaylistType);
-	void all_playlists_fetched(const QMap<int, QString>&);
+	void all_playlists_fetched(const QList<CustomPlaylistSkeleton>&);
 
 
 public:

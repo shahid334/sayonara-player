@@ -21,7 +21,7 @@
 
 #include "PlaylistChooser/PlaylistChooser.h"
 #include "HelperStructs/Tagging/id3.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include <QMessageBox>
 
@@ -29,16 +29,10 @@ PlaylistChooser::PlaylistChooser() {
 
 	_playlist_handler = PlaylistHandler::getInstance();
 
-	_db = CDatabaseConnector::getInstance();
+	_playlist_db_connector = PlaylistDBConnector::getInstance();
 
-	connect (_playlist_handler, SIGNAL(sig_playlist_prepared(int, const MetaDataList&)),
-			 this,	SLOT(save_playlist_as_custom(int, const MetaDataList&)));
-
-	connect (_playlist_handler, SIGNAL(sig_playlist_prepared(QString, const MetaDataList&)),
-			 this,	SLOT(save_playlist_as_custom(QString, const MetaDataList&)));
-
-	connect(_playlist_handler, SIGNAL(sig_playlist_created(const MetaDataList&, int, PlaylistType)),
-			this, SLOT(playlist_created(const MetaDataList&, int, PlaylistType)));
+	connect(_playlist_handler, SIGNAL(sig_playlists_changed()),
+			this, SLOT(load_all_playlists()));
 }
 
 PlaylistChooser::~PlaylistChooser() {
@@ -47,106 +41,54 @@ PlaylistChooser::~PlaylistChooser() {
 
 void PlaylistChooser::load_all_playlists() {
 
-	_mapping.clear();
-	bool success = _db->getAllPlaylistChooser(_mapping);
+	bool success;
+	_skeletons.clear();
+	success = _playlist_db_connector->get_non_temporary_skeletons(_skeletons, Sort::NameAsc);
 
 	if(success) {
-		emit sig_all_playlists_loaded(_mapping);
+		emit sig_all_playlists_loaded(_skeletons);
 	}
 }
 
-void PlaylistChooser::load_single_playlist(int id, QString name) {
+CustomPlaylist PlaylistChooser::find_custom_playlist(int id){
 
-	CustomPlaylist pl;
+	CustomPlaylist pl = _playlist_db_connector->get_playlist_by_id(id);
+	return pl;
 
-    // empty loaded (load old playlist)
-    if(id <= 0) {
-        pl.is_valid = false;
-        return;
-    }
-
-	bool success = _db->getPlaylistById(id, pl);
-
-    MetaDataList v_md;
-    pl.length = 0;
-    pl.num_tracks = 0;
-    foreach(MetaData md, pl.tracks) {
-        if(md.is_extern) {
-            if(!ID3::getMetaDataOfFile(md)) {
-                continue;
-            }
-        }
-
-        pl.length += md.length_ms / 1000;
-        pl.num_tracks ++;
-        v_md.push_back(md);
-    }
-
-    pl.tracks = v_md;
-    pl.is_valid = success;
-
-	if(success) {
-		_playlist_handler->create_playlist(pl, name);
-	}
 }
 
+void PlaylistChooser::load_single_playlist(int id) {
 
-
-void PlaylistChooser::save_playlist_as_custom(int id, const MetaDataList& vec_md) {
-
-	bool success = _db->storePlaylist(vec_md, id);
-	if(success) {
-
-		_mapping.clear();
-		_db->getAllPlaylistChooser(_mapping);
-		emit sig_all_playlists_loaded(_mapping);
+	if(id < 0) {
+		return;
 	}
 
-	else{
-		qDebug() << "Could not save playlist " << id;
+	CustomPlaylist pl = find_custom_playlist(id);
+	if(!pl.is_valid) {
+		return;
 	}
+
+	_playlist_handler->create_playlist(pl);
 }
 
-
-
-void PlaylistChooser::save_playlist_as_custom(QString name, const MetaDataList& vec_md) {
-
-	bool success = _db->storePlaylist(vec_md, name);
-	if(success) {
-		_mapping.clear();
-		_db->getAllPlaylistChooser(_mapping);
-		emit sig_all_playlists_loaded(_mapping);
-	}
-
-	else{
-		qDebug() << "Could not save playlist " << name;
-	}
-}
 
 void PlaylistChooser::delete_playlist(int id) {
 
-	QString playlist_name = _db->getPlaylistNameById(id);
-	bool success = _db->deletePlaylist(id);
+	bool success;
+
+	success = _playlist_db_connector->delete_playlist(id);
 
 	if(!success) {
-		qDebug() << "playlist " << playlist_name << " could not be deleted";
+		qDebug() << "playlist " << id << " could not be deleted";
 	}
 
-	_mapping.clear();
-	_db->getAllPlaylistChooser(_mapping);
-	emit sig_all_playlists_loaded(_mapping);
+	load_all_playlists();
 }
 
 
-void PlaylistChooser::save_playlist(int id){
-	_playlist_handler->prepare_playlist_for_save(id);
+void PlaylistChooser::save_playlist(QString name){
+	_playlist_handler->save_cur_playlist_as(name, true);
 }
-
-
-void PlaylistChooser::save_playlist(QString playlist_name){
-	_playlist_handler->prepare_playlist_for_save(playlist_name);
-}
-
 
 void PlaylistChooser::save_playlist_file(QString filename, bool relative_paths){
 	_playlist_handler->save_playlist(filename, relative_paths);
@@ -159,10 +101,6 @@ void PlaylistChooser::clear_playlist(){
 
 
 void PlaylistChooser::playlist_files_selected(const QStringList& lst){
-	_playlist_handler->create_playlist(lst);
+	_playlist_handler->create_playlist(lst, "", false);
 }
 
-
-void PlaylistChooser::playlist_created(const MetaDataList& v_md, int cur_idx, PlaylistType type){
-	emit sig_playlist_created(v_md, cur_idx, type);
-}

@@ -22,7 +22,6 @@
 
 #include "GUI/ui_GUI_Target_Playlist_Dialog.h"
 #include "GUI/TargetPlaylistDialog/GUI_Target_Playlist_Dialog.h"
-#include "HelperStructs/Style.h"
 #include <QFileDialog>
 
 GUI_Target_Playlist_Dialog::GUI_Target_Playlist_Dialog(QWidget *parent) :

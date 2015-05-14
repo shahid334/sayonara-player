@@ -485,7 +485,7 @@ bool CDatabaseConnector::deleteTrack(int id){
 		return false;
 	}
 
-	deleteFromAllPlaylistChooser(id);
+	deleteTrackFromPlaylists(id);
 
 	return true;
 }
@@ -523,6 +523,8 @@ bool CDatabaseConnector::deleteTracks(const MetaDataList& v_md) {
 		}
 
 	_database->commit();
+
+	qDebug() << "Deleted " << success << " of " << v_md.size() << " tracks";
 
 	return (success == v_md.size());
 }

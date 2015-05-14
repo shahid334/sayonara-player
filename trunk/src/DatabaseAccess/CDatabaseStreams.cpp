@@ -28,11 +28,7 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QFile>
-#include <QDebug>
 #include <QSqlQuery>
-#include <stdlib.h>
-#include <QVariant>
-#include <QObject>
 #include <QSqlError>
 
 using namespace std;

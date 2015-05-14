@@ -29,7 +29,7 @@
 #ifndef LIBRARYITEMMODELARTISTS_H_
 #define LIBRARYITEMMODELARTISTS_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "GUI/library/model/LibraryItemModel.h"
 
 #include <QStringList>

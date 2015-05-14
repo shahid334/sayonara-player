@@ -20,8 +20,8 @@
 
 #include "Notification/NotificationPluginLoader.h"
 #include "HelperStructs/Helper.h"
+#include "HelperStructs/Style/Style.h"
 #include "GUI/player/GUI_TrayIcon.h"
-#include "HelperStructs/Style.h"
 
 #include <QAction>
 #include <QMenu>

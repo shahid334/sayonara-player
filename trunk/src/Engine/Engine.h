@@ -23,14 +23,11 @@
 #ifndef ENGINE_H_
 #define ENGINE_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
-#include <QObject>
-#include <QStringList>
 
 #define PLAYBACK_ENGINE "playback_engine"
 #define CONVERT_ENGINE "convert_engine"
-
 
 enum EngineState {
 	StatePlay=0,
@@ -67,6 +64,7 @@ protected:
 	bool		_show_level;
 	bool		_show_spectrum;
 	bool		_broadcast_active;
+	bool		_is_first_track;
 
 
 public:
@@ -75,20 +73,22 @@ public:
 		QObject(parent),
 		SayonaraClass()
 	{
+		_is_first_track = true;
+
 		REGISTER_LISTENER(Set::Engine_ShowLevel, _sl_show_level_changed);
 		REGISTER_LISTENER(Set::Engine_ShowSpectrum, _sl_show_spectrum_changed);
 		REGISTER_LISTENER(Set::BroadCast_Active, _sl_broadcast_active_changed);
 	}
 
     virtual QString	getName(){return _name;}
-	virtual void	init()=0;
+	virtual bool	init()=0;
 
 	virtual void		set_track_finished(){}
 	virtual void        set_level(float right, float left){ emit sig_level(right, left); }
 	virtual void        set_spectrum(QList<float>& lst ){ emit sig_spectrum(lst); }
 
 	virtual void		async_done(){}
-	virtual void		update_bitrate(quint32 bitrate){}
+	virtual void		update_md(const MetaData&){}
 	virtual void		update_duration(){}
 	virtual void		update_time(qint32 time){}
 
@@ -98,6 +98,7 @@ public:
 	virtual bool		get_broadcast_active() { return _broadcast_active; }
 
 	virtual void		set_track_ready(){}
+	virtual bool		is_first_track(){ return _is_first_track; }
 
 
 signals:
@@ -116,7 +117,6 @@ signals:
 
 private slots:
 	virtual void sr_initialized(bool b){ if(b) play(); }
-	virtual void sr_ended(){}
 	virtual void sr_not_valid(){ emit sig_track_finished(); }
 	virtual void set_about_to_finish(qint64 ms){}
     virtual void set_cur_position_ms(qint64 ms){

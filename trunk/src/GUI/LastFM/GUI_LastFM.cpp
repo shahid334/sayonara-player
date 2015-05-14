@@ -29,7 +29,6 @@
 #include "GUI/LastFM/GUI_LastFM.h"
 #include "GUI/ui_GUI_LastFM_Dialog.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/Style.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 
 #include <QMessageBox>

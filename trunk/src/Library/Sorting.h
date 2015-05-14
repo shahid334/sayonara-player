@@ -63,6 +63,13 @@ namespace Sort {
         TrackRatingDesc
     };
 
+	enum SortOrderPlaylists{
+		IDAsc=0,
+		IDDesc,
+		NameAsc,
+		NameDesc
+	};
+
 }
 
 

@@ -29,7 +29,7 @@
 #ifndef PLAYLISTVIEW_H_
 #define PLAYLISTVIEW_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/CustomMimeData.h"
 #include "GUI/playlist/model/PlaylistItemModel.h"
 #include "GUI/playlist/delegate/PlaylistItemDelegate.h"
@@ -77,11 +77,14 @@ class PlaylistView : public SearchableListView, private Ui::GUI_PlaylistView{
         PlaylistView(QWidget* parent=0);
         virtual ~PlaylistView();
 
+
+		void set_playlist_type(PlaylistType type);
+		PlaylistType get_playlist_type();
         void set_context_menu_actions(int actions);
         void set_drag_enabled(bool b);
         void set_mimedata(MetaDataList& v_md, QString text);
         void clear();
-        void fill(const MetaDataList& v_metadata, int cur_play_idx);
+		void fill(const MetaDataList& v_metadata);
         void scrollUp();
         void scrollDown();
         void dropEventFromOutside(QDropEvent* event);
@@ -132,7 +135,9 @@ class PlaylistView : public SearchableListView, private Ui::GUI_PlaylistView{
 
 
 	private:
+
         QWidget*        _parent;
+		PlaylistType	_playlist_type;
 
         bool            _drag;
         bool            _drag_allowed;

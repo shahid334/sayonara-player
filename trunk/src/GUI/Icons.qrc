@@ -69,5 +69,31 @@
         <file>icons/arrow_right_disabled.svg.png</file>
         <file>icons/lastfm_logo.jpg</file>
         <file>icons/border_c.png</file>
+        <file>icons/tool_blue.svg</file>
+        <file>icons/tool_blue.svg.png</file>
+        <file>icons/tool_dark_grey.svg</file>
+        <file>icons/tool_dark_grey.svg.png</file>
+        <file>icons/tool_grey.svg</file>
+        <file>icons/tool_grey.svg.png</file>
+        <file>icons/tool_orange.svg</file>
+        <file>icons/tool_orange.svg.png</file>
+        <file>icons/tool_disabled.svg.png</file>
+        <file>icons/append_active.svg.png</file>
+        <file>icons/dynamic_active.svg.png</file>
+        <file>icons/gapless_active.svg.png</file>
+        <file>icons/rep_all_active.svg.png</file>
+        <file>icons/rep_1_active.svg.png</file>
+        <file>icons/shuffle_active.svg.png</file>
+        <file>icons/dark_bg.svg.png</file>
+        <file>icons/tool_grey_std.svg.png</file>
+        <file>icons/new.svg.png</file>
+        <file>icons/play_bordered.svg.png</file>
+        <file>icons/sampler.svg.png</file>
+        <file>icons/open.svg.png</file>
+    </qresource>
+    <qresource prefix="/icons_new">
+        <file>icons/new_save_as.svg.png</file>
+        <file>icons/new_save.svg.png</file>
+        <file>icons/new_undo.svg.png</file>
     </qresource>
 </RCC>

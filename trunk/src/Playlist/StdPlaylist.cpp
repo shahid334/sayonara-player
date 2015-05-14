@@ -20,8 +20,10 @@
 
 #include "StdPlaylist.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/CDirectoryReader.h"
-#include "HelperStructs/PlaylistParser.h"
+#include "HelperStructs/DirectoryReader/DirectoryReader.h"
+#include "HelperStructs/Parser/PlaylistParser.h"
+
+#include <random>
 
 StdPlaylist::StdPlaylist(int idx, QString name) :
 	Playlist(idx, name)
@@ -32,12 +34,10 @@ StdPlaylist::StdPlaylist(int idx, QString name) :
 
 bool StdPlaylist::change_track(int idx) {
 
+	_v_md.setCurPlayTrack(idx);
+
 	// ERROR: invalid idx
     if( idx >= _v_md.size() || idx < 0) {
-
-        _cur_play_idx = -1;
-        _v_md.setCurPlayTrack(_cur_play_idx);
-
         stop();
 		return false;
     }
@@ -50,24 +50,15 @@ bool StdPlaylist::change_track(int idx) {
 		return change_track(idx + 1);
     }
 
-	// OK: update track
-    else{
-        _cur_play_idx = idx;
-        _v_md.setCurPlayTrack(_cur_play_idx);
-    }
-
 	return true;
 }
 
 int StdPlaylist::create_playlist(const MetaDataList& v_md) {
 
     CDatabaseConnector* db = CDatabaseConnector::getInstance();
-
-	_cur_play_idx = -1;
+	_v_md.setCurPlayTrack(-1);
 
     if(!_playlist_mode.append) {
-        _cur_play_idx = -1;
-
         clear();
     }
 
@@ -83,12 +74,9 @@ int StdPlaylist::create_playlist(const MetaDataList& v_md) {
 
 		md.is_extern = ( md_tmp.id < 0 );
         md.is_disabled = (! Helper::checkTrack(md) );
+		md.pl_playing = false;
 
         _v_md.push_back(md);
-    }
-
-    if(!_playlist_mode.append){
-        _cur_play_idx = -1;
     }
 
 	return _v_md.size();
@@ -97,14 +85,12 @@ int StdPlaylist::create_playlist(const MetaDataList& v_md) {
 void StdPlaylist::play() {
 
 	if( _v_md.isEmpty() ) {
-        _cur_play_idx = -1;
         stop();
         return;
     }
 
-    if(_cur_play_idx == -1) {
-        _cur_play_idx = 0;
-        _v_md.setCurPlayTrack(_cur_play_idx);
+	if(_v_md.getCurPlayTrack() == -1) {
+		_v_md.setCurPlayTrack(0);
     }
 }
 
@@ -113,11 +99,7 @@ void StdPlaylist::pause() {
 }
 
 void StdPlaylist::stop() {
-
-    _cur_play_idx = -1;
-    for(int i=0; i<(int) _v_md.size(); i++) {
-        _v_md[i].pl_playing = false;
-    }
+	_v_md.setCurPlayTrack(-1);
 }
 
 void StdPlaylist::fwd() {
@@ -133,34 +115,48 @@ void StdPlaylist::fwd() {
 
 void StdPlaylist::bwd() {
 
-	change_track( _cur_play_idx - 1 );
+	int cur_idx = _v_md.getCurPlayTrack();
+	change_track( cur_idx - 1 );
 }
 
 
 void StdPlaylist::next() {
 
-    int track_num = -1;
+	int cur_track = _v_md.getCurPlayTrack();
+	int track_num = -1;
 
-    if(_v_md.size() == 0) {
+	// no track
+	if(_v_md.size() == 0 ) {
 		stop();
         return;
     }
 
-	if(_playlist_mode.rep1){
-		track_num = _cur_play_idx;
+	std::mt19937 rnd_engine;
+	std::uniform_int_distribution<int> distr(0, _v_md.size() - 1);
+
+	// stopped
+	if(track_num == -1){
+		track_num = 0;
 	}
 
     // shuffle mode
-	else if(_playlist_mode.shuffle) {
-        track_num = rand() % _v_md.size();
-        if(track_num == _cur_play_idx) {
-            track_num = (_cur_play_idx + 1) % _v_md.size();
-        }
+	if(_playlist_mode.shuffle) {
+
+		if(_v_md.size() > 1){
+			int rnd = distr(rnd_engine) + 1;
+			track_num = (cur_track + rnd) % _v_md.size();
+		}
+
+		else{
+			track_num = (cur_track + 1) % _v_md.size();
+		}
     }
 
+	// normal track
     else {
 
-		if(_cur_play_idx >= (int) _v_md.size() -1) {
+		// last track
+		if(cur_track == _v_md.size() - 1){
 
 			if(_playlist_mode.repAll){
 				track_num = 0;
@@ -173,11 +169,7 @@ void StdPlaylist::next() {
         }
 
         else{
-            track_num = _cur_play_idx + 1;
-            if(track_num == _cur_play_idx) {
-                stop();
-                return;
-            }
+			track_num = cur_track + 1;
         }
     }
 
@@ -201,9 +193,4 @@ void StdPlaylist::metadata_changed(const MetaDataList& v_md_old, const MetaDataL
 			}
         }
     }
-}
-
-
-void StdPlaylist::save_to_m3u_file(QString filepath, bool relative) {
-    PlaylistParser::save_playlist(filepath, _v_md, relative);
 }

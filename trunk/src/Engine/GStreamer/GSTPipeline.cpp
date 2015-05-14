@@ -96,7 +96,10 @@ gboolean PipelineCallbacks::show_position(gpointer data) {
 
 	if( state != GST_STATE_PLAYING &&
 		state != GST_STATE_PAUSED &&
-		state != GST_STATE_READY) return false;
+		state != GST_STATE_READY)
+	{
+		return false;
+	}
 
 	ENGINE_DEBUG;
 
@@ -140,15 +143,68 @@ GstFlowReturn PipelineCallbacks::new_buffer(GstElement *sink, gpointer p){
 }
 
 
-GSTAbstractPipeline::GSTAbstractPipeline(QObject* parent) :
+
+
+GSTAbstractPipeline::GSTAbstractPipeline(QString name, Engine* engine, QObject* parent) :
 	QObject(parent),
 	SayonaraClass()
 {
+
+	_initialized = false;
+	_engine = engine;
+	_name = name;
     _position_ms = 0;
     _duration_ms = 0;
     _bus = 0;
     _pipeline = 0;
     _uri = NULL;
+}
+
+GSTAbstractPipeline::~GSTAbstractPipeline(){
+	if (_bus){
+		gst_object_unref (_bus);
+	}
+
+	if (_pipeline) {
+		gst_element_set_state(GST_ELEMENT(_pipeline), GST_STATE_NULL);
+		gst_object_unref (GST_OBJECT(_pipeline));
+	}
+}
+
+
+bool GSTAbstractPipeline::init(GstState state){
+
+	bool success = false;
+	if(_initialized) {
+		return true;
+	}
+
+	// create equalizer element
+	_pipeline = gst_pipeline_new(_name.toStdString().c_str());
+	if(!_test_and_error(_pipeline, "Engine: Pipeline sucks")){
+		return false;
+	}
+
+	_bus = gst_pipeline_get_bus(GST_PIPELINE(_pipeline));
+
+	success = create_elements();
+	if(!success) {
+		return false;
+	}
+
+	success = add_and_link_elements();
+	if(!success) {
+		return false;
+	}
+
+	configure_elements();
+
+
+	gst_element_set_state(_pipeline, state);
+	gst_bus_add_watch(_bus, EngineCallbacks::bus_state_changed, _engine);
+
+	_initialized = true;
+	return true;
 }
 
 void GSTAbstractPipeline::refresh_position() {
@@ -188,20 +244,19 @@ void GSTAbstractPipeline::set_data(uchar* data, quint64 size){
 
 void GSTAbstractPipeline::check_about_to_finish(){
 
-
 	gint64 difference = _duration_ms - _position_ms;
 
 	if(_duration_ms >= 0){
 		emit sig_pos_changed_ms((qint64) (_position_ms));
 	}
 
-	if(difference < 500 && difference > 0 && !_about_to_finish) {
+	if(difference < 1000 && difference > 0 && !_about_to_finish) {
 
 		_about_to_finish = true;
 		emit sig_about_to_finish(difference);
 	}
 
-	else if(difference > 500){
+	else if(difference > 2000){
 		_about_to_finish = false;
 	}
 }
@@ -232,7 +287,7 @@ GstBus* GSTAbstractPipeline::get_bus() {
 
 GstState GSTAbstractPipeline::get_state() {
 	GstState state;
-	gst_element_get_state(_pipeline, &state, NULL, GST_CLOCK_TIME_NONE);
+	gst_element_get_state(_pipeline, &state, NULL, 10000000);
 	return state;
 }
 
@@ -251,3 +306,18 @@ gchar* GSTAbstractPipeline::get_uri() {
 }
 
 
+bool GSTAbstractPipeline::create_element(GstElement** elem, const gchar* elem_name, const gchar* name){
+
+	QString error_msg;
+	if(strlen(name) > 0){
+		*elem = gst_element_factory_make(elem_name, name);
+		error_msg = QString("Engine: ") + name + " creation failed";
+	}
+
+	else{
+		*elem = gst_element_factory_make(elem_name, elem_name);
+		error_msg = QString("Engine: ") + elem_name + " creation failed";
+	}
+
+	return _test_and_error(*elem, error_msg);
+}

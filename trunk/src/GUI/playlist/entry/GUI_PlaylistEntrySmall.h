@@ -24,7 +24,7 @@
 
 #include "GUI/ui_GUI_PlaylistEntrySmall.h"
 #include "GUI/playlist/entry/GUI_PlaylistEntry.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 
 class GUI_PlaylistEntrySmall : public GUI_PlaylistEntry, private Ui::PlaylistEntrySmall {

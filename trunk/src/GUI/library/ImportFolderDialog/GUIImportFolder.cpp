@@ -21,7 +21,6 @@
 #include "GUI/library/ImportFolderDialog/GUIImportFolder.h"
 
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/Style.h"
 
 #include <QPixmap>
 #include <QScrollBar>
@@ -29,13 +28,13 @@
 #include <QMessageBox>
 
 
-GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, TagEdit* tag_edit, bool copy_enabled) :
+GUI_ImportFolder::GUI_ImportFolder(QWidget* parent, bool copy_enabled) :
 	SayonaraDialog(parent),
 	Ui::ImportFolder()
 {
 	setupUi(this);
 
-	_ui_tag_edit = new GUI_TagEdit(tag_edit, this);
+	_ui_tag_edit = new GUI_TagEdit(this);
 
 	tw_tabs->addTab(_ui_tag_edit, tr("Edit"));
 

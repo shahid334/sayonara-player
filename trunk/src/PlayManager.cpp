@@ -28,6 +28,17 @@ PlayManager::PlayManager(QObject* parent) :
 	SayonaraClass()
 {
 
+
+	bool load_playlist = _settings->get(Set::PL_Load);
+	bool load_last_track = _settings->get(Set::PL_LoadLastTrack);
+
+	if(load_playlist && load_last_track){
+		_position = _settings->get(Set::Engine_CurTrackPos_s);
+	}
+
+	else{
+		_position = 0;
+	}
 }
 
 PlayManager::~PlayManager(){
@@ -37,10 +48,23 @@ PlayManager::PlayState PlayManager::get_play_state(){
 	return _playstate;
 }
 
+quint64 PlayManager::get_cur_position_ms(){
+	return _position;
+}
+
+quint64 PlayManager::get_duration_ms(){
+	return _duration;
+}
+
+MetaData PlayManager::get_cur_track(){
+	return _md;
+}
+
+
 
 void PlayManager::play(){
 
-	if(playlist_dead()) return;
+	//if(playlist_dead()) return;
 
 	if(_playstate == PlayManager::PlayState_Stopped && _cur_idx == -1){
 		_playstate = PlayManager::PlayState_Playing;
@@ -55,7 +79,7 @@ void PlayManager::play(){
 
 void PlayManager::play_pause(){
 
-	if(playlist_dead()) return;
+	//if(playlist_dead()) return;
 
 	if(_playstate == PlayManager::PlayState_Playing){
 		pause();
@@ -68,7 +92,7 @@ void PlayManager::play_pause(){
 
 void PlayManager::pause(){
 
-	if(playlist_dead()) return;
+	//if(playlist_dead()) return;
 
 	if(_playstate == PlayManager::PlayState_Stopped){
 		_playstate = PlayManager::PlayState_Paused;
@@ -82,25 +106,30 @@ void PlayManager::pause(){
 }
 
 void PlayManager::previous(){
-	if(playlist_dead()) return;
+	//if(playlist_dead()) return;
 	emit sig_previous();
 }
 
 void PlayManager::next(){
-	if(playlist_dead()) return;
+	//if(playlist_dead()) return;
 	emit sig_next();
 }
 
 void PlayManager::stop(){
 
+	_md = MetaData();
 	_cur_idx = -1;
 	_playstate = PlayManager::PlayState_Stopped;
 	emit sig_playstate_changed(_playstate);
 }
 
+void PlayManager::record(bool b){
+    emit sig_record(b);
+}
+
 void PlayManager::wait(){
 
-	if(playlist_dead()) return;
+	//if(playlist_dead()) return;
 	_playstate = PlayManager::PlayState_Wait;
 	emit sig_playstate_changed(PlayManager::PlayState_Paused);
 }
@@ -118,11 +147,19 @@ void PlayManager::seek_abs_ms(quint64 ms){
 }
 
 void PlayManager::set_position_ms(quint64 ms){
+	_position = ms;
 	emit sig_position_changed_ms(ms);
+}
+
+void PlayManager::duration_changed(quint64 duration_ms){
+	_duration = duration_ms;
+	emit sig_duration_changed(_duration);
 }
 
 
 void PlayManager::change_track(const MetaData& md){
+	_md = md;
+	_duration = md.length_ms;
 	emit sig_track_changed(md);
 }
 
@@ -131,7 +168,7 @@ void PlayManager::change_track_idx(int idx){
 	_cur_idx = idx;
 	_settings->set(Set::PL_LastTrack, _cur_idx);
 
-	if( _cur_idx >= 0 && _cur_idx < _playlist_len){
+	if(_cur_idx >= 0){
 
 		switch(_playstate){
 
@@ -145,6 +182,8 @@ void PlayManager::change_track_idx(int idx){
 	}
 
 	else {
+		qDebug() << "Playlist finished";
+		emit sig_playlist_finished();
 		stop();
 	}
 
@@ -152,32 +191,9 @@ void PlayManager::change_track_idx(int idx){
 }
 
 
-void PlayManager::playlist_changed(const MetaDataList& v_md){
-
-	int playlist_len = v_md.size();
-
-	if( playlist_dead() &&
-		playlist_len > 0)
-	{
-		change_track_idx(0);
-		change_track(v_md[0]);
-
-		play();
-	}
-
-	_playlist_len = playlist_len;
-
-	emit sig_playlist_changed(playlist_len);
-}
-
 
 bool PlayManager::playlist_dead(){
 
-	if( _playstate == PlayManager::PlayState_Stopped &&
-		_playlist_len == 0 )
-	{
-		return true;
-	}
-
-	return false;
+	return (_playstate == PlayManager::PlayState_Stopped);
 }
+

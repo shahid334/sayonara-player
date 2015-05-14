@@ -29,19 +29,10 @@
 #include <QString>
 #include <QFile>
 #include <QDebug>
-#ifdef Q_OS_LINUX
-	#include <sys/mman.h>
-	#include <sys/stat.h>
-	#include <fcntl.h>
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <unistd.h>
-#endif
+
 
 void stretch_file(QFile* f, long offset, int n_bytes);
 
-
-const int N_Tags = 75;
 
 static QHash<QByteArray, QString> taglist;
 static void create_taglist() {

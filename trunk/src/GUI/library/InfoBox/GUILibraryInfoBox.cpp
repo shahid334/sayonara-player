@@ -28,7 +28,6 @@
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "StreamPlugins/LastFM/LastFM.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/Style.h"
 
 #include <QMap>
 #include <QPixmap>

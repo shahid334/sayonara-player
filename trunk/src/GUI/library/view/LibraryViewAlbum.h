@@ -25,7 +25,7 @@
 
 #include <QTimer>
 
-#include "HelperStructs/Album.h"
+#include "HelperStructs/MetaData/Album.h"
 #include "GUI/library/view/LibraryView.h"
 #include "GUI/library/DiscPopupMenu.h"
 

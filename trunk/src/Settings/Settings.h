@@ -28,9 +28,9 @@
 #include <QSize>
 #include <QPoint>
 
-#include <HelperStructs/Equalizer_presets.h>
-#include <HelperStructs/PlaylistMode.h>
-#include <HelperStructs/MetaData.h>
+#include "HelperStructs/Equalizer_presets.h"
+#include "HelperStructs/PlaylistMode.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include "Settings/Setting.h"
 
@@ -81,6 +81,14 @@ public:
 			SettingNotifier< SettingKey<T, S> >* sn = SettingNotifier< SettingKey<T, S> >::getInstance();
 			sn->val_changed();
 		}
+	}
+
+	/* get a setting, defined by a unique, REGISTERED key */
+	template<typename T, SK::SettingKey S>
+	void shout(const SettingKey<T,S> k){
+		Q_UNUSED(k);
+		SettingNotifier< SettingKey<T, S> >* sn = SettingNotifier< SettingKey<T, S> >::getInstance();
+		sn->val_changed();
 	}
 };
 

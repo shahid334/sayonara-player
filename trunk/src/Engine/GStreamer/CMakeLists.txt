@@ -51,29 +51,21 @@ SET(HEADERS
         GSTConvertEngine.h
         GSTConvertPipeline.h
         GSTConvertEngine.h
-
         GSTPlaybackPipeline.h
         GSTPlaybackEngine.h
         GSTEngineHandler.h
         GSTEngineHelper.h
-
-        StreamRipperBufferThread.h
         StreamRecorder.h
 )
 
 SET(SOURCES
         GSTPipeline.cpp
-
         GSTConvertPipeline.cpp
         GSTConvertEngine.cpp
-
         GSTPlaybackPipeline.cpp
         GSTPlaybackEngine.cpp
         GSTEngineHandler.cpp
-
         GSTEngineCallbacks.cpp
-
-        StreamRipperBufferThread.cpp
         StreamRecorder.cpp
 )
 
@@ -83,15 +75,13 @@ QT4_WRAP_CPP(HEADERS_MOC
 )
 
 INCLUDE(${QT_USE_FILE})
-#ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
 
 ADD_LIBRARY(sayonara_gstreamer SHARED ${SOURCES} ${HEADERS_MOC})
-#TARGET_LINK_LIBRARIES(sayonara_gstreamer ${QT_LIBRARIES} gstreamer-1.0 gstbase-1.0 gstapp-1.0)
-
 TARGET_LINK_LIBRARIES(sayonara_gstreamer 
 	${GSTREAMER_LIBRARIES}
 	${GSTREAMER_BASE_LIBRARIES}
-    ${GSTREAMER_BASE_APP_LIBRARIES}
+	${GSTREAMER_BASE_APP_LIBRARIES}
+	${QXT_}
 )
 
 INSTALL(TARGETS sayonara_gstreamer DESTINATION lib${LIB_SUFFIX}/sayonara)

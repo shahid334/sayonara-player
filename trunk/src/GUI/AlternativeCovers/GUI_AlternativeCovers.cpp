@@ -25,13 +25,13 @@
  *  Created on: Jul 1, 2011
  *      Author: luke
  */
-#include "HelperStructs/Style.h"
+
 #include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 #include "GUI/AlternativeCovers/AlternativeCoverItemDelegate.h"
 #include "GUI/AlternativeCovers/AlternativeCoverItemModel.h"
 #include "GUI/ui_GUI_AlternativeCovers.h"
 #include "CoverLookup/CoverLookup.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 
 #include <QPixmap>
@@ -44,7 +44,7 @@
 
 
 
-GUI_AlternativeCovers::GUI_AlternativeCovers(QWidget* parent, QString calling_class) :
+GUI_AlternativeCovers::GUI_AlternativeCovers(QWidget* parent) :
 	SayonaraDialog(parent),
 	Ui::AlternativeCovers()
 {

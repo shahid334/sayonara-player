@@ -29,7 +29,7 @@
 #define N_FILES_TO_STORE 500
 
 #include "Library/threads/ReloadThread.h"
-#include "HelperStructs/CDirectoryReader.h"
+#include "HelperStructs/DirectoryReader/DirectoryReader.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
 
@@ -78,8 +78,22 @@ void ReloadThread::get_files_recursive(QDir base_dir, MetaDataList& v_md, int* n
 
 	for(const QString& dir : sub_dirs) {
 
-		base_dir.cd(dir);
-			get_files_recursive(base_dir, v_md, n_files);
+		QFileInfo info(base_dir.absoluteFilePath(dir));
+		if(!info.exists()){
+			qDebug() << "Error: File " << dir << " does not exist. Skipping...";
+			continue;
+		}
+
+		if(!info.isDir()){
+			qDebug() << "Error: File " << dir << " is not a directory. Skipping...";
+			continue;
+		}
+
+		bool success = base_dir.cd(dir);
+
+		if(!success) continue;
+
+		get_files_recursive(base_dir, v_md, n_files);
 		base_dir.cdUp();
     }
 
@@ -87,10 +101,24 @@ void ReloadThread::get_files_recursive(QDir base_dir, MetaDataList& v_md, int* n
 
 	sub_files = base_dir.entryList(soundfile_exts, QDir::Files);
 
+
 	for(const QString& f : sub_files) {
 
-    	MetaData md;
-		md.set_filepath( base_dir.absoluteFilePath(f) );
+		MetaData md;
+		QString abs_path = base_dir.absoluteFilePath(f);
+		QFileInfo info(abs_path);
+
+		if(!info.exists()){
+			qDebug() << "Error: File " << abs_path << " does not exist. Skipping...";
+			continue;
+		}
+
+		if(!info.isFile()){
+			qDebug() << "Error: File " << abs_path << " is not a file. Skipping...";
+			continue;
+		}
+
+		md.set_filepath( abs_path );
 
 		if( ID3::getMetaDataOfFile(md) ) {
 			v_md.push_back(md);
@@ -144,7 +172,6 @@ void ReloadThread::run() {
     emit sig_reloading_library(reload_status_str);
 
 	_db->getTracksFromDatabase(v_metadata);
-	qDebug() << "Had " << v_metadata.size() << " tracks";
 	v_metadata.clear();
 
 	_db->deleteInvalidTracks();

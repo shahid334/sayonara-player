@@ -29,13 +29,15 @@
 #ifndef _HELPER_H
 #define _HELPER_H
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include <QWidget>
 #include <QImage>
 #include <QPixmap>
 #include <QIcon>
 #include <QThread>
+
+#include <random>
 
 namespace Helper{
 
@@ -90,12 +92,14 @@ namespace Helper{
     QString get_album_w_disc(const MetaData& md);
 
 	template <typename T> QList<T> randomize_list(const QList<T>& list) {
-		srand ( time(NULL) );
+		std::mt19937 rnd_engine;
+		std::uniform_int_distribution<int> distr(0, list.size() - 1);
+
 
 		QList<T> list_copy = list;
 		for(int i=0; i<list.size(); i++) {
 
-			list_copy.swap(i, rand() % list.size());
+			list_copy.swap(i, distr(rnd_engine));
 		}
 
 		return list_copy;

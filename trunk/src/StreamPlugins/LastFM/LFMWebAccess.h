@@ -35,7 +35,6 @@
 #include <qdom.h>
 #include <curl/curl.h>
 #include <string>
-#include <stdlib.h>
 #include <QDebug>
 
 using namespace std;

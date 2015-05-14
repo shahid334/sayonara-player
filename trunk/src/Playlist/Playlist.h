@@ -24,6 +24,7 @@
 #define PLAYLIST_H
 
 #include "HelperStructs/Helper.h"
+#include "Playlist/PlaylistDBInterface.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/SayonaraClass.h"
 #include "HelperStructs/globals.h"
@@ -33,14 +34,16 @@
 #include <QList>
 
 
-class Playlist : protected SayonaraClass
+
+
+class Playlist : public PlaylistDBInterface, protected SayonaraClass
 {
 
 protected:
-	QString			_name;
     bool            _playlist_changed;
-    int             _cur_play_idx;
+	int             _cur_play_idx;
 	int				_playlist_idx;
+
     MetaDataList    _v_md;
 	MetaDataList	_selected_tracks;
     PlaylistMode	_playlist_mode;
@@ -79,7 +82,6 @@ public:
     virtual void append_tracks(const MetaDataList& lst);
 
     virtual void replace_track(int idx, const MetaData& md);
-    virtual void save_to_m3u_file(QString filepath, bool relative)=0;
 	virtual const MetaDataList& get_playlist() const {return _v_md;}
 
     virtual void selection_changed(const QList<int>&);
@@ -88,20 +90,21 @@ public:
 	virtual PlaylistMode playlist_mode_backup();
 	virtual PlaylistMode playlist_mode_restore();
 
-	bool is_empty() const;
-	PlaylistType get_type() const;
-	int get_cur_track_idx() const;
-	bool get_cur_track(MetaData& md) const;
-	QStringList toStringList() const;
-	int get_idx() const;
-	void set_idx(int idx);
-	QList<int> find_tracks(int id) const;
-	QList<int> find_tracks(const QString& filepath) const;
-	int get_size();
-	QString get_name();
+	QStringList		toStringList() const;
 
-	void set_playlist_mode(const PlaylistMode& mode);
-	PlaylistMode get_playlist_mode() const;
+	QList<int>		find_tracks(int id) const;
+	QList<int>		find_tracks(const QString& filepath) const;
+
+	bool			is_empty() const;
+	int				get_size();
+
+	PlaylistType	get_type() const;
+	int				get_cur_track_idx() const;
+	bool			get_cur_track(MetaData& md) const;
+	int				get_idx() const;
+	void			set_idx(int idx);	
+	PlaylistMode	get_playlist_mode() const;
+	void			set_playlist_mode(const PlaylistMode& mode);	
 };
 
 

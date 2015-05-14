@@ -29,7 +29,6 @@
 
 #include "HelperStructs/Equalizer_presets.h"
 #include "HelperStructs/Helper.h"
-#include "HelperStructs/Style.h"
 #include "PlayerPlugin/PlayerPlugin.h"
 #include "DatabaseAccess/CDatabaseConnector.h"
 #include "GUI/equalizer/GUI_Equalizer.h"
@@ -87,9 +86,9 @@ GUI_Equalizer::GUI_Equalizer(QString name, QWidget *parent) :
 		connect(s, SIGNAL(sig_slider_lost_focus(int)), this, SLOT(sli_released(int)));
 	}
 
-	connect(btn_save, SIGNAL(clicked()), this, SLOT(btn_save_clicked()));
-	connect(btn_delete, SIGNAL(clicked()), this, SLOT(btn_delete_clicked()));
-	connect(btn_reset, SIGNAL(clicked()), this, SLOT(btn_reset_clicked()));
+	connect(btn_tool, SIGNAL(sig_save()), this, SLOT(btn_save_clicked()));
+	connect(btn_tool, SIGNAL(sig_delete()), this, SLOT(btn_delete_clicked()));
+	connect(btn_tool, SIGNAL(sig_undo()), this, SLOT(btn_reset_clicked()));
     connect(cb_gauss, SIGNAL(toggled(bool)), this, SLOT(cb_gauss_toggled(bool)));
 	connect(combo_presets, SIGNAL(editTextChanged(QString)), this, SLOT(text_changed(QString)));
 
@@ -113,6 +112,7 @@ void GUI_Equalizer::language_changed() {
 
 int GUI_Equalizer::find_combo_text(QString text){
 	int ret = -1;
+
 	for(int i=0; i<combo_presets->count(); i++){
 		if(combo_presets->itemText(i).compare(text, Qt::CaseInsensitive) == 0){
 			ret = i;
@@ -138,6 +138,9 @@ void GUI_Equalizer::sli_released(int idx){
 static double scale[] = {1.0, 0.6, 0.20, 0.06, 0.01};
 
 void GUI_Equalizer::sli_changed(int idx, int new_val) {
+
+	btn_tool->show_undo(true);
+
 	EqSlider* s = _sliders[idx];
 	s->getLabel()->setText(calc_lab(new_val));
 
@@ -181,8 +184,8 @@ void GUI_Equalizer::fill_eq_presets() {
 
 	combo_presets->insertItems(0, items);
 
-	btn_save->setEnabled(combo_presets->currentText().size() > 0);
-	btn_delete->setEnabled(combo_presets->currentIndex() > 0);
+	btn_tool->show_save(combo_presets->currentText().size() > 0);
+	btn_tool->show_delete(combo_presets->currentIndex() > 0);
 
 	connect(combo_presets, SIGNAL(currentIndexChanged(int)), this, SLOT(preset_changed(int)));
 
@@ -196,10 +199,12 @@ void GUI_Equalizer::fill_eq_presets() {
 void GUI_Equalizer::preset_changed(int index) {
 
 
-	btn_delete->setEnabled(index > 0);
+	btn_tool->show_delete(index > 0);
 
 	if(index == 0) return;
 	if(index > _presets.size()) return;
+
+	btn_tool->show_undo(false);
 
 	QList<double> setting = _presets[index - 1].settings;
 
@@ -213,9 +218,13 @@ void GUI_Equalizer::preset_changed(int index) {
     _settings->set(Set::Eq_Last, index);
 }
 
+
+
 void GUI_Equalizer::cb_gauss_toggled(bool b){
     _settings->set(Set::Eq_Gauss, b);
 }
+
+
 
 void GUI_Equalizer::btn_save_clicked() {
 
@@ -242,6 +251,7 @@ void GUI_Equalizer::btn_save_clicked() {
 
 void GUI_Equalizer::btn_delete_clicked(){
 
+	btn_tool->show_undo(false);
 	int idx = combo_presets->currentIndex();
 
 	combo_presets->setCurrentIndex(0);
@@ -254,6 +264,7 @@ void GUI_Equalizer::btn_delete_clicked(){
 
 void GUI_Equalizer::btn_reset_clicked(){
 
+	btn_tool->show_undo(false);
 	QString text = combo_presets->currentText();
 
 	int found_idx = find_combo_text(text);
@@ -273,5 +284,5 @@ void GUI_Equalizer::btn_reset_clicked(){
 
 
 void GUI_Equalizer::text_changed(QString str){
-	btn_save->setEnabled(str.size() > 0);
+	btn_tool->show_save(str.size() > 0);
 }

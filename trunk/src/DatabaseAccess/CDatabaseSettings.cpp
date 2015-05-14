@@ -20,7 +20,7 @@
 
 
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "Settings/Settings.h"
 
 #include <QFile>

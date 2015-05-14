@@ -22,9 +22,6 @@
 #ifndef GSTENGINEHELPER_H
 #define GSTENGINEHELPER_H
 
-
-#include <QDebug>
-#include <QString>
 #include <gst/gst.h>
 #include <gst/gstcaps.h>
 #include "Engine/Engine.h"
@@ -35,20 +32,12 @@
 #define SAMPLE_RATE 44100 /* Samples per second we are sending */
 #define AUDIO_CAPS "audio/x-raw-int,channels=2,rate=%d,signed=(boolean)true,width=16,depth=16,endianness=BYTE_ORDER"
 
-#define LOOKUP_LOG(x) log_10[(int) (20000 * x)]
-
 const qint64 MRD = 1000000000;
 const qint64 MIO = 1000000;
 
 extern bool _debug;
 
-extern float log_10[20001];
-extern float lo_128[128];
 const int crop_spectrum_at = 75;
-
-extern bool __start_at_beginning;
-extern int __start_pos_beginning;
-
 
 class MyCaps {
 

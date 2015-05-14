@@ -21,13 +21,19 @@
 
 
 #include "TagEdit/TagEdit.h"
+#include "TagEdit/MetaDataChangeNotifier.h"
 #include "HelperStructs/Tagging/id3.h"
 
-TagEdit::TagEdit(QObject *parent, bool is_extern) :
+TagEdit::TagEdit(QObject *parent) :
+	QObject(parent),
 	SayonaraClass()
 {
 	_db = CDatabaseConnector::getInstance();
-	_is_extern = is_extern;
+	_is_extern = false;
+}
+
+TagEdit::~TagEdit(){
+
 }
 
 void TagEdit::update_track(int idx, const MetaData& md){
@@ -181,6 +187,7 @@ void TagEdit::write_tracks_to_db(){
 	}
 
 	emit sig_progress(-1);
-	emit sig_metadata_changed(v_md_orig, v_md);
+
+	MetaDataChangeNotifier::getInstance()->change_metadata(v_md_orig, v_md);
 }
 

@@ -21,13 +21,33 @@
 
 
 #include "Library/threads/ImportCachingThread.h"
-#include "HelperStructs/CDirectoryReader.h"
+#include "HelperStructs/DirectoryReader/DirectoryReader.h"
 #include "HelperStructs/Tagging/id3.h"
 #include "HelperStructs/Helper.h"
 
 #include <QDir>
-#include <QMap>
 
+bool get_info(QString filename){
+
+	qDebug() << "Inspecting  " << filename;
+
+
+	QFileInfo info(filename);
+	qDebug() << "Info: " << info.path();
+	qDebug() << "  1." << info.exists();
+	qDebug() << "  2." << info.isAbsolute();
+	qDebug() << "  3." << info.isBundle();
+	qDebug() << "  4." << info.isDir();
+	qDebug() << "  5." << info.isFile();
+	qDebug() << "  6." << info.isBundle();
+	qDebug() << "  7." << info.isReadable();
+	qDebug() << "  8." << info.baseName();
+	qDebug() << "  9." << info.bundleName();
+	qDebug() << "  0." << info.size();
+	qDebug() << "";
+
+	return info.exists();
+}
 
 
 ImportCachingThread::ImportCachingThread(QObject *parent) :
@@ -50,13 +70,17 @@ void ImportCachingThread::run() {
 
         if(_cancelled) break;
 
-        // file is a directory
-		// if "import dir" was selected
-        if(Helper::is_dir(file)) {
+		QFileInfo info(file);
+		if(!info.exists()){
+			qDebug() << "Error: File does not exist: " << file << ". Skipping...";
+			continue;
+		}
+
+		if(info.isDir()) {
 
 			QDir src_dir(file);
 
-			CDirectoryReader reader;
+			DirectoryReader reader;
 			reader.set_filter("*");
 			QStringList inner_files;
 
@@ -70,7 +94,7 @@ void ImportCachingThread::run() {
 
         // file is standard file
 		// if import files was selected
-        else if(Helper::is_file(file)) {
+		else if(info.isFile()) {
             _filelist.push_back(file);
         }
     }

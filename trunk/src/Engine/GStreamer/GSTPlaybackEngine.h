@@ -28,7 +28,7 @@
 #define EQ_TYPE_10B 1
 
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/Equalizer_presets.h"
 #include "Engine/GStreamer/GSTPlaybackPipeline.h"
 #include "Engine/GStreamer/StreamRecorder.h"
@@ -57,16 +57,10 @@ public:
 	virtual ~GSTPlaybackEngine();
 
 
-// public from Gstreamer Callbacks
 	void        emit_buffer(float inv_array_elements, float scale);
-
 	void		set_track_finished();
-
-	void		update_bitrate(quint32 bitrate);
 	void		update_duration();
-
 	void		set_track_ready();
-
 	void		set_about_to_finish(qint64 time2go);
 	void		set_cur_position_ms(qint64 pos_ms);
 
@@ -74,7 +68,7 @@ public:
 	MyCaps*		get_caps();
 	void		unmute();
 
-	virtual void init();
+	virtual bool init();
 
 
 private:
@@ -107,12 +101,14 @@ public slots:
 	virtual void jump_rel(double percent);
 
 
+	virtual void update_md(const MetaData&);
 	virtual void change_track(const MetaData&);
 	virtual void change_track(const QString&);
 
 	virtual void eq_changed(int, int);
 
 	virtual void psl_set_speed(float f);
+    virtual void record_button_toggled(bool b);
 
 private slots:
 	void _change_sr_active();

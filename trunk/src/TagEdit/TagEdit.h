@@ -36,12 +36,13 @@ signals:
 	void sig_progress(int);
 
 	void sig_metadata_received(const MetaDataList&);
-	void sig_metadata_changed(const MetaDataList&, const MetaDataList&);
 	void sig_metadata_changed(int);
 
 
 public:
-	explicit TagEdit(QObject *parent = 0, bool is_extern=false);
+
+	TagEdit(QObject* parent=0);
+	virtual ~TagEdit();
 
 	void undo(int idx);
 	void undo_all();

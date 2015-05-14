@@ -31,10 +31,9 @@
 
 
 #include <QThread>
-#include <QString>
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include <HelperStructs/CDirectoryReader.h>
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/DirectoryReader/DirectoryReader.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 
 class ReloadThread : public QThread {

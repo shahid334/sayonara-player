@@ -58,7 +58,7 @@ void DBusMediaKeysInterface::sl_media_key_pressed(const QString& program_name, c
 		_play_manager->previous();
 	}
 
-	else if(key.contains("stop"), Qt::CaseInsensitive){
+	else if(key.contains("stop", Qt::CaseInsensitive)){
 		event = new QKeyEvent (QEvent::KeyPress, Qt::Key_MediaStop, Qt::NoModifier);
 		_play_manager->stop();
 	}

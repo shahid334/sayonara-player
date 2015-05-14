@@ -113,6 +113,8 @@ void DBusMPRIS::MediaPlayer2::init(){
 		return;
 	}
 
+	qDebug() << "DBus: " << _service_name << " registered";
+
 	QDBusConnection::sessionBus().registerObject(_object_path, this);
 	create_message("DesktopEntry", QString("sayonara"));
 
@@ -365,8 +367,6 @@ void DBusMPRIS::MediaPlayer2::playlist_len_changed(int len){
 	create_message("CanGoNext", _can_next);
 
 	_len_playlist = len;
-
-
 }
 
 void DBusMPRIS::MediaPlayer2::track_changed(const MetaData& md){
@@ -378,8 +378,6 @@ void DBusMPRIS::MediaPlayer2::track_changed(const MetaData& md){
 
 	QVariantMap map = Metadata();
 	create_message("Metadata", map);
-	Play();
-
 }
 
 void DBusMPRIS::MediaPlayer2::playstate_changed(PlayManager::PlayState state){

@@ -39,8 +39,8 @@ LibraryItemDelegateArtists::LibraryItemDelegateArtists(QTableView* parent) : QIt
 
 	_parent = parent;
 
-	_icon_single_album = Helper::getPixmap("play_orange", QSize(16, 16), false);
-	_icon_multi_album = Helper::getPixmap("fwd_orange", QSize(16, 16), false);
+	_icon_single_album = Helper::getPixmap("play", QSize(16, 16), false);
+	_icon_multi_album = Helper::getPixmap("sampler", QSize(16, 16), false);
 
 }
 

@@ -29,7 +29,7 @@
 #ifndef GUI_PLAYLISTENTRY_H_
 #define GUI_PLAYLISTENTRY_H_
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "GUI/ui_GUI_PlaylistEntryBig.h"
 #include "GUI/playlist/entry/GUI_PlaylistEntry.h"
 #include <QFrame>

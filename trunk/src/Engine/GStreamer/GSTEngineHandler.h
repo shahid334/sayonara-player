@@ -36,7 +36,7 @@ public:
 	virtual ~GSTEngineHandler();
 
 	void fill_engines(const QVector<Engine*>& engines);
-	void init();
+	virtual bool init();
 
 
 public slots:

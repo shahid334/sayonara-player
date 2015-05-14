@@ -25,7 +25,7 @@
 
 #include <QObject>
 #include "HelperStructs/globals.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
 
 
@@ -57,6 +57,9 @@ class PlayManager : public QObject, protected SayonaraClass
 		void sig_track_changed(const MetaData& v_md);
 		void sig_track_idx_changed(int idx);
 		void sig_playlist_changed(int len);
+		void sig_duration_changed(quint64 ms);
+		void sig_playlist_finished();
+        void sig_record(bool);
 
 
 
@@ -68,27 +71,29 @@ class PlayManager : public QObject, protected SayonaraClass
 		void previous();
 		void next();
 		void stop();
+        void record(bool);
 		void seek_rel(double percent);
 		void seek_abs_ms(quint64 ms);
 		void seek_rel_ms(quint64 ms);
 		void set_position_ms(quint64 ms);
 		void change_track(const MetaData& md);
 		void change_track_idx(int idx);
-		void playlist_changed(const MetaDataList& v_md);
-
+		void duration_changed(quint64 duration_ms);
 
 	public:
-		PlayState get_play_state();
-
+		PlayState	get_play_state();
+		quint64		get_cur_position_ms();
+		quint64		get_duration_ms();
+		MetaData	get_cur_track();
 
 	private:
+		quint64		_position;
+		quint64		_duration;
 		PlayState	_playstate;
 		int			_cur_idx;
-		int			_playlist_len;
-		qint64		_start_position;
+		MetaData	_md;
 
 		bool		playlist_dead();
-
 };
 
 #endif

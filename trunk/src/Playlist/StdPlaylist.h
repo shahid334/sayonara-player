@@ -29,7 +29,7 @@ class StdPlaylist : public Playlist
 {
 
 public:
-	explicit StdPlaylist(int idx, QString name="");
+	explicit StdPlaylist(int idx, QString name);
     
     virtual void play();
     virtual void pause();
@@ -42,9 +42,6 @@ public:
 	virtual int create_playlist(const MetaDataList& v_md);
 
 	virtual void metadata_changed(const MetaDataList& old_md, const MetaDataList& new_md);
-
-    virtual void save_to_m3u_file(QString filepath, bool relative);
-    
 };
 
 #endif // STDPLAYLISTR_H

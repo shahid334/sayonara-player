@@ -1,6 +1,6 @@
 /* LFMTrackChangedThread.h
 
- * Copyright (C) 2012  
+ * Copyright (C) 2012
  *
  * This file is part of sayonara-player
  *
@@ -17,8 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- * created by Lucio Carreras, 
- * Jul 18, 2012 
+ * created by Lucio Carreras,
+ * Jul 18, 2012
  *
  */
 
@@ -28,10 +28,11 @@
 #include <QThread>
 #include <QList>
 #include <QMap>
+#include <QDomDocument>
 
 #include "StreamPlugins/LastFM/LFMGlobals.h"
-#include "HelperStructs/SmartComparison.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/SmartCompare/SmartCompare.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
 
 #define LFM_THREAD_TASK_UPDATE_TRACK 		1<<0
@@ -42,69 +43,64 @@
 #define LFM_THREAD_TASK_FETCH_USER_INFO 	1<<5
 
 enum Quality{
-    Quality_Poor = 0,
-    Quality_Well = 1,
-    Quality_Very_Good = 2
+	Quality_Poor = 0,
+	Quality_Well = 1,
+	Quality_Very_Good = 2
 };
 
 struct ArtistMatch{
 
-    static const int Quality_Poor = 0;
-    static const int Quality_Well = 1;
-    static const int Quality_Very_Good = 2;
+	QMap<QString, double> very_good;
+	QMap<QString, double> well;
+	QMap<QString, double> poor;
 
-    QMap<QString, double> very_good;
-    QMap<QString, double> well;
-    QMap<QString, double> poor;
+	QString artist;
 
-    QString artist;
+	bool is_valid(){
+		return  (very_good.size() > 0 ||
+				well.size() > 0  ||
+				poor.size() > 0);
+	}
 
-    bool operator ==(ArtistMatch am) {
-        return (artist == am.artist);
-    }
+	bool operator ==(ArtistMatch am) {
+		return (artist == am.artist);
+	}
 
-    void add(QString artist, double match) {
-        if(match > 0.15) very_good[artist] = match;
-        else if(match > 0.05) well[artist] = match;
-        else poor[artist] = match;
-    }
+	void add(QString artist, double match) {
+		if(match > 0.15) very_good[artist] = match;
+		else if(match > 0.05) well[artist] = match;
+		else poor[artist] = match;
+	}
 
-    QMap<QString, double> get(Quality q) {
-        switch(q) {
-            case Quality_Poor:
+	QMap<QString, double> get(Quality q) {
+		switch(q) {
+			case Quality_Poor:
 				return poor;
-            case Quality_Well:
-                return well;
-            case Quality_Very_Good:
-                return very_good;
-            default:
-                return very_good;
-        }
+			case Quality_Well:
+				return well;
+			case Quality_Very_Good:
+				return very_good;
+		}
 
-        return very_good;
-    }
-
-
+		return very_good;
+	}
 };
 
 class LFMTrackChangedThread : public QThread, protected SayonaraClass {
 
 	Q_OBJECT
 
-	signals:
-		void sig_corrected_data_available(const QString&);
-		void sig_album_info_available(const QString&);
-		void sig_artist_info_available(const QString&);
-		void sig_user_info_available(const QString&);
-		void sig_similar_artists_available(const QString&, const QList<int>&);
-
-
+signals:
+	void sig_corrected_data_available();
+	void sig_album_info_available();
+	void sig_artist_info_available();
+	void sig_similar_artists_available(const QList<int>&);
 
 protected:
-		void run();
+	void run();
 
 public:
-	LFMTrackChangedThread(QString target_class);
+	LFMTrackChangedThread(QObject* parent=0);
 	virtual ~LFMTrackChangedThread();
 
 	/*
@@ -150,13 +146,11 @@ public:
 	bool fetch_artist_info(QMap<QString, QString>& info);
 
 	void setThreadTask(int task);
-	void setTargetClass(QString name);
 
 
 private:
 
-	SmartComparison* _smart_comparison;
-	QString		_target_class;
+	SmartCompare* _smart_comparison;
 	int			_thread_tasks;
 
 	MetaData 	_md;
@@ -172,6 +166,8 @@ private:
 	QList<int>	_chosen_ids;
 
 	bool search_similar_artists();
+	ArtistMatch parse_similar_artists(const QDomDocument& doc);
+
 	QMap<QString, int> filter_available_artists(const QMap<QString, double>& artists);
 
 
@@ -187,7 +183,7 @@ private:
 	QMap<QString, QString>		_album_data;
 	QMap<QString, QString>		_artist_data;
 	QMap<QString, QString>		_user_data;
-    QMap<QString, ArtistMatch >   _sim_artists_cache;
+	QMap<QString, ArtistMatch >   _sim_artists_cache;
 
 	bool 		get_corrected_track_info(MetaData& md, bool& loved, bool& corrected);
 	bool 		get_artist_info(QString artist);

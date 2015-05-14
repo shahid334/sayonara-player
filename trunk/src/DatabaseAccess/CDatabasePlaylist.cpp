@@ -18,24 +18,62 @@
  */
 
 #include "DatabaseAccess/CDatabaseConnector.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 
 #include <QFile>
 #include <QSqlQuery>
 #include <QMap>
 
-bool CDatabaseConnector::getAllPlaylistChooser(QMap<int, QString>& mapping) {
+bool CDatabaseConnector::getAllPlaylistSkeletons(QList<CustomPlaylistSkeleton>& skeletons, CDatabaseConnector::PlaylistChooserType type, SortOrderPlaylists sortorder) {
 
-	mapping.clear();
+	skeletons.clear();
+
+	QString sortorder_str;
+	switch(sortorder){
+		case IDAsc:
+			sortorder_str = " ORDER BY playlists.playlistID ASC ";
+			break;
+		case IDDesc:
+			sortorder_str = " ORDER BY playlists.playlistID DESC ";
+			break;
+		case NameAsc:
+			sortorder_str = " ORDER BY playlists.playlist ASC ";
+			break;
+		case NameDesc:
+			sortorder_str = " ORDER BY playlists.playlist DESC ";
+			break;
+		default:
+			break;
+	}
+
+	QString type_clause;
+	switch(type){
+		case CDatabaseConnector::OnlyTemporary:
+			type_clause = " AND playlists.temporary = 1 ";
+			break;
+		case CDatabaseConnector::OnlyNoTemporary:
+			type_clause = " AND playlists.temporary = 0 ";
+			break;
+		default:
+			break;
+
+	}
 
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	QSqlQuery q(*_database);
 
-	QString querytext = QString("SELECT playlists.playlistID, playlists.playlist ") +
-			"FROM playlists, playlisttotracks " +
-			"WHERE playlists.playlistid = playlisttotracks.playlistid " +
-			"GROUP BY playlists.playlistID, playlists.playlist;";
+	QString querytext = QString() +
+
+			"SELECT "
+			"playlists.playlistID, "
+			"playlists.playlist, "
+			"playlists.temporary "
+
+			"FROM playlists, playlisttotracks "
+			"WHERE playlists.playlistid = playlisttotracks.playlistid " + type_clause +
+			"GROUP BY playlists.playlistID, playlists.playlist " + sortorder_str +
+			";";
 
 	q.prepare(querytext);
 
@@ -45,23 +83,65 @@ bool CDatabaseConnector::getAllPlaylistChooser(QMap<int, QString>& mapping) {
 	}
 
 	while(q.next()) {
-		int playlist_id = q.value(0).toInt();
-		QString playlist_name = q.value(1).toString();
-		mapping[playlist_id] = playlist_name;
+		CustomPlaylistSkeleton skeleton;
+		skeleton.id = q.value(0).toInt();
+		skeleton.name =	q.value(1).toString();
+		skeleton.is_temporary =	(q.value(2).toInt() == 1) ? true : false;
+		skeletons << skeleton;
 	}
 
 	return true;
 }
 
-bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
+bool CDatabaseConnector::getPlaylistSkeletonById(CustomPlaylistSkeleton& skeleton){
+	DB_RETURN_NOT_OPEN_BOOL(_database);
+
+	if(skeleton.id < 0){
+		qDebug() << "Cannot fetch playlist -1";
+		return false;
+	}
+
+	QSqlQuery q(*_database);
+
+	QString querytext = QString() +
+
+			"SELECT "
+			"playlists.playlistID, "
+			"playlists.playlist, "
+			"playlists.temporary "
+			"FROM playlists "
+			"WHERE playlists.playlistid = :playlist_id "
+			"GROUP BY playlists.playlistID, playlists.playlist "
+			"ORDER BY playlists.playlist;";
+
+	q.prepare(querytext);
+	q.bindValue(":playlist_id", skeleton.id);
+
+	if(!q.exec()) {
+		show_error("Cannot fetch all playlists", q);
+		return false;
+	}
+
+	if(q.next()) {
+		skeleton.id = q.value(0).toInt();
+		skeleton.name =	q.value(1).toString();
+		skeleton.is_temporary =	(q.value(2).toInt() == 1) ? true : false;
+		return true;
+	}
+
+	return false;
+}
+
+bool CDatabaseConnector::getPlaylistById(CustomPlaylist& pl) {
+
+	if(!getPlaylistSkeletonById(pl)){
+		qDebug() << "Get playlist by id: cannot fetch skeleton id " << pl.id;
+		return false;
+	}
 
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	pl.tracks.clear();
-	pl.num_tracks = 0;
-	pl.length = 0;
-	pl.id = playlist_id;
-	pl.name = getPlaylistNameById(playlist_id);
 
 	QSqlQuery q(*_database);
 
@@ -86,17 +166,14 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
 			"AND tracks.artistID = artists.artistID "
             "ORDER BY playlistToTracks.position ASC; ";
 
-
 	q.prepare(querytext);
-	q.bindValue(":playlist_id", playlist_id);
-
+	q.bindValue(":playlist_id", pl.id);
 
 	if (!q.exec()) {
-		show_error(QString("Cannot get tracks for playlist ") + QString::number(playlist_id), q);
+		show_error(QString("Cannot get tracks for playlist ") + QString::number(pl.id), q);
 	}
 
 	else{
-
         while (q.next()) {
             MetaData data;
 			data.set_filepath(q.value(0).toString());
@@ -113,14 +190,11 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
             data.is_extern = false;
 
             pl.tracks.push_back(data);
-            pl.num_tracks++;
-            pl.length += (data.length_ms / 1000);
         }
     }
 
-
-
-	QString querytext2 = QString("SELECT ") +
+	QString querytext2 = QString()+
+			"SELECT "
 			"playlisttotracks.filepath AS filepath, "
 			"playlisttotracks.position AS position "
 			"FROM playlists, playlisttotracks "
@@ -129,13 +203,12 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
 			"AND playlistToTracks.trackID <= 0 "
 			"ORDER BY playlistToTracks.position ASC; ";
 
-
     QSqlQuery q2(*_database);
     q2.prepare(querytext2);
-	q2.bindValue(":playlist_id", playlist_id);
+	q2.bindValue(":playlist_id", pl.id);
 
     if(!q2.exec()) {
-		show_error(QString("Playlist by id: Cannot fetch playlist ") + QString::number(playlist_id), q2);
+		show_error(QString("Playlist by id: Cannot fetch playlist ") + QString::number(pl.id), q2);
         return false;
     }
 
@@ -148,10 +221,9 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
         data.id = -1;
         data.is_extern = true;
 
-        for(int row=0; row<pl.tracks.size(); row++) {
+		for(int row=0; row<=pl.tracks.size(); row++) {
             if( row >= position) {
                 pl.tracks.insert(row, data);
-                pl.num_tracks++;
                 break;
             }
         }
@@ -162,18 +234,18 @@ bool CDatabaseConnector::getPlaylistById(int playlist_id, CustomPlaylist& pl) {
 
 // negative, if error
 // nonnegative else
-int CDatabaseConnector::getPlaylistIdByName(QString playlist_name) {
+int CDatabaseConnector::getPlaylistIdByName(const QString& name) {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
 	QSqlQuery q(*_database);
 
 	q.prepare("SELECT playlistid FROM playlists WHERE playlist = :playlist_name;");
-	q.bindValue(":playlist_name", playlist_name);
+	q.bindValue(":playlist_name", name);
 
 	if(!q.exec()) {
-		show_error(QString("Playlist by name: Cannot fetch playlist ") + playlist_name, q);
-		return -2;
+		show_error(QString("Playlist by name: Cannot fetch playlist ") + name, q);
+		return -1;
 	}
 
 	else {
@@ -181,33 +253,8 @@ int CDatabaseConnector::getPlaylistIdByName(QString playlist_name) {
 		      return q.value(0).toInt();
 		  }
 
-		  show_error(QString("Playlist ") + playlist_name + " is empty", q);
 		  return -1;
 	}
-}
-
-QString CDatabaseConnector::getPlaylistNameById(int playlist_id) {
-	
-	DB_RETURN_NOT_OPEN_STRING(_database);
-
-		QSqlQuery q(*_database);
-
-		q.prepare("SELECT playlist FROM playlists WHERE playlistid = :playlist_id;");
-		q.bindValue(":playlist_id", playlist_id);
-		if(!q.exec()) {
-			show_error(QString("Get Playlist name by ID: Cannot fetch playlist ") + QString::number(playlist_id), q);
-			return "";
-		}
-
-		else {
-			if(q.next()) {
-				return q.value(0).toString();
-			}
-
-			show_error(QString("Playlist ") + playlist_id + " is empty", q);
-
-			return "";
-		}
 }
 
 
@@ -238,18 +285,21 @@ bool CDatabaseConnector::insertTrackIntoPlaylist(const MetaData& md, int playlis
 }
 
 
-// returns 0 if everything ok
+// returns id if everything ok
 // negative otherwise
-int CDatabaseConnector::createPlaylist(QString playlist_name) {
+int CDatabaseConnector::createPlaylist(QString playlist_name, bool temporary) {
 
 	DB_RETURN_NOT_OPEN_INT(_database);
 
-	QString query_string = "INSERT INTO playlists (playlist) VALUES (:playlist_name);";
+	int temporary_int = (temporary) ? 1 : 0;
+
+	QString query_string = "INSERT INTO playlists (playlist, temporary) VALUES (:playlist_name, :temporary);";
 
 	QSqlQuery q(*_database);
 
 	q.prepare(query_string);
 	q.bindValue(":playlist_name", QVariant(playlist_name));
+	q.bindValue(":temporary", QVariant(temporary_int));
 
 	if(!q.exec()) {
 		show_error("Cannot create playlist", q);
@@ -260,22 +310,41 @@ int CDatabaseConnector::createPlaylist(QString playlist_name) {
 
 }
 
-
-bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playlist_name) {
+bool CDatabaseConnector::updatePlaylistTempState(int playlist_id, bool temporary){
 
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 
+	int temporary_int = (temporary) ? 1 : 0;
 
-	// create playlist if neccessary
+	QSqlQuery q(*_database);
+	QString query_string = QString("UPDATE playlists SET temporary=:temporary WHERE playlistID = :playlist_id;");
+	q.prepare(query_string);
+	q.bindValue(":playlist_id", playlist_id);
+	q.bindValue(":temporary", temporary_int);
+
+	if(!q.exec()){
+		show_error("Cannot update playlist", q);
+		return false;
+	}
+
+	return true;
+}
+
+bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playlist_name, bool temporary) {
+
+	DB_RETURN_NOT_OPEN_BOOL(_database);
 
 	int playlist_id = getPlaylistIdByName(playlist_name);
+	if(playlist_name.isEmpty()){
+		qDebug() << "Warning! Try to save empty playlist";
+	}
 
 	if(playlist_id >= 0) {
 		emptyPlaylist(playlist_id);
 	}
 
 	else {
-		playlist_id = createPlaylist(playlist_name);
+		playlist_id = createPlaylist(playlist_name, temporary);
 		if( playlist_id < 0) {
 			return false;
 		}
@@ -303,18 +372,26 @@ bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, QString playl
 
 
 
-bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_id) {
+bool CDatabaseConnector::storePlaylist(const MetaDataList& vec_md, int playlist_id, bool temporary) {
 
 	DB_RETURN_NOT_OPEN_BOOL(_database);
 
-	QString playlist_name = getPlaylistNameById(playlist_id);
+	CustomPlaylist pl;
+	pl.id = playlist_id;
 
-	if(playlist_name.size() >= 0) {
+	bool success = getPlaylistById(pl);
+	if(!success){
+		qDebug() << "Store: Cannot fetch playlist: " << pl.id;
+		return false;
+	}
+
+	if( !pl.name.isEmpty() ) {
 		emptyPlaylist(playlist_id);
 	}
 
 	else {
-		playlist_id = createPlaylist(playlist_name);
+
+		playlist_id = createPlaylist(pl.name, temporary);
 
 		if( playlist_id < 0) {
 			return false;
@@ -380,7 +457,7 @@ bool CDatabaseConnector::deletePlaylist(int playlist_id) {
 }
 
 
-bool CDatabaseConnector::deleteFromAllPlaylistChooser(int track_id) {
+bool CDatabaseConnector::deleteTrackFromPlaylists(int track_id) {
 
 	DB_TRY_OPEN(_database);
 	DB_RETURN_NOT_OPEN_BOOL(_database);

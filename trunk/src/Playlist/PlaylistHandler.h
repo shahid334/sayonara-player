@@ -30,7 +30,7 @@
 #define PLAYLISTHANDLER_H_
 
 #include "GUI/playlist/model/PlaylistItemModel.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/PlaylistMode.h"
 #include "HelperStructs/globals.h"
 #include "HelperStructs/SayonaraClass.h"
@@ -38,6 +38,9 @@
 #include "Playlist/PlaylistLoader.h"
 #include "Playlist/Playlist.h"
 #include "PlayManager.h"
+#include <QTimer>
+#include "HelperStructs/Shutdown/Shutdown.h"
+
 
 
 
@@ -46,33 +49,38 @@ class PlaylistHandler : public QObject, protected SayonaraClass {
 
 	Q_OBJECT
 
-public:
+
 
 	SINGLETON_QOBJECT(PlaylistHandler)
 
-	uint get_num_tracks();
+public:
 
-	int add_new_playlist(QString name="");
-	bool change_playlist_index(int idx);
-	void close_playlist(int idx);
-	void load_old_playlist();
-	QString request_first_playlist_name();
+	enum PlaylistIndex {
+		PlaylistIndex_Current=0,
+		PlaylistIndex_Active
+	};
+
+	int		add_new_playlist(const QString& name, bool editable, PlaylistType type=PlaylistTypeStd);
+	bool	change_playlist_index(int idx);
+	void	close_playlist(int idx);
+	int		load_old_playlists();
 	QString request_new_playlist_name();
+	const MetaDataList& get_tracks(PlaylistIndex which);
+
+
 
 signals:
-
-	void sig_playlist_created(const MetaDataList&, int cur_track_idx, PlaylistType type, int playlist_idx=-1);
+	void sig_playlist_created(const Playlist* pl);
 	void sig_cur_track_idx_changed(int track_idx, int playlist_idx);
-
-	void sig_playlist_prepared(int, const MetaDataList&);
-	void sig_playlist_prepared(QString, const MetaDataList&);
 
 	void sig_playlist_mode_changed(const PlaylistMode&);
 	void sig_selection_changed(const MetaDataList&);
 
-	void sig_new_playlist_added(int, QString);
-	void sig_playlist_index_changed(int);
+	void sig_new_playlist_added(int idx, const QString& name);
+	void sig_playlist_index_changed(int idx, bool temporary);
 	void sig_playlist_closed(int);
+	void sig_tab_name_changed(int, const QString&);
+	void sig_playlists_changed();
 
 
 public slots:
@@ -95,13 +103,21 @@ public slots:
 	void similar_artists_available(const QList<int>&);
 
 	void save_playlist(QString filename, bool relative);
-	void prepare_playlist_for_save(int id);
-	void prepare_playlist_for_save(QString name);
 
-	void create_playlist(const QStringList&, QString name="");
-	void create_playlist(const MetaDataList&, QString name="");
-	void create_playlist(const CustomPlaylist&, QString name="");
-	void create_playlist(const QString& dir, QString name="");
+	PlaylistDBInterface::SaveAsAnswer save_playlist(int idx);
+	PlaylistDBInterface::SaveAsAnswer save_cur_playlist();
+
+	PlaylistDBInterface::SaveAsAnswer save_playlist_as(int idx, const QString& name, bool force_override);
+	PlaylistDBInterface::SaveAsAnswer save_cur_playlist_as(const QString& name, bool force_override);
+
+	void delete_playlist(int idx);
+
+
+	int create_playlist(const QStringList&, QString name, bool temporary=true, PlaylistType type=PlaylistTypeStd);
+	int create_playlist(const MetaDataList&, QString name, bool temporary=true, PlaylistType type=PlaylistTypeStd);
+	int create_playlist(const QString& dir, QString name, bool temporary=true, PlaylistType type=PlaylistTypeStd);
+	int create_playlist(const CustomPlaylist& pl);
+	int create_empty_playlist(const QString name, bool editable=true);
 
 
 private slots:
@@ -114,18 +130,18 @@ private slots:
 
 private:
 
-	CDatabaseConnector* _db;
-	PlayManager*		_play_manager;
-	PlaylistLoader*		_playlist_loader;
+	QStringList				_extern_playlists;
+	CDatabaseConnector*		_db;
+	PlaylistDBConnector*	_playlist_db_connector;
+	PlayManager*			_play_manager;
 
-	QList<Playlist*>    _playlists;
+	QList<Playlist*>		_playlists;
+	Playlist*				_dummy_playlist;
 
-	int					_cur_playlist_idx;
-	int					_active_playlist_idx;
-	int					_max_playlist_name;
+	int						_cur_playlist_idx;
+	int						_active_playlist_idx;
 
 
-	PlaylistType determine_playlist_type(const MetaDataList& v_md);
 	Playlist* new_playlist(PlaylistType type, int idx, QString name="");
 
 	Playlist* get_active();
@@ -133,6 +149,9 @@ private:
 
 	void emit_playlist_created(Playlist* pl=NULL);
 	void emit_cur_track_changed(Playlist* pl=NULL);
+
+	void set_active_idx(int idx);
+
 
 	int exists(QString name);
 };

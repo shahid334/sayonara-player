@@ -34,7 +34,7 @@ class GUI_SoundCloudLibrary : public GUI_AbstractLibrary, protected Ui::GUI_Soun
 	Q_OBJECT
 
 public:
-	explicit GUI_SoundCloudLibrary(SoundcloudLibrary* library, GUI_InfoDialog* info_dialog, QWidget *parent = 0);
+	explicit GUI_SoundCloudLibrary(SoundcloudLibrary* library, QWidget *parent = 0);
 
 protected:
 	virtual AbstractLibrary::TrackDeletionMode show_delete_dialog(int n_tracks);

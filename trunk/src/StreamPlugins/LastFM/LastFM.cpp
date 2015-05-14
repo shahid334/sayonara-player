@@ -37,7 +37,7 @@
 
 #include <curl/curl.h>
 #include <string>
-#include <time.h>
+
 
 using namespace std;
 
@@ -49,10 +49,10 @@ LastFM::LastFM() :
 	_play_manager = PlayManager::getInstance();
 
 	lfm_wa_init();
-	_class_name = QString("LastFM");
+
 	_logged_in = false;
 	_track_changed_thread = 0;
-    _login_thread = new LFMLoginThread();
+	_login_thread = new LFMLoginThread(this);
 
 	connect(_login_thread, SIGNAL(finished()), this, SLOT(_login_thread_finished()));
 	connect(_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
@@ -85,14 +85,14 @@ void LastFM::get_login(QString& user, QString& pw){
 
 bool LastFM::_lfm_init_track_changed_thread() {
 
-    _track_changed_thread = new LFMTrackChangedThread(_class_name);
+	_track_changed_thread = new LFMTrackChangedThread(this);
 
 	if(_track_changed_thread) {
-			connect( _track_changed_thread, SIGNAL(sig_corrected_data_available(const QString&)),
-					 this, 					SLOT(_sl_corrected_data_available(const QString&)));
+			connect( _track_changed_thread, SIGNAL(sig_corrected_data_available()),
+					 this, 					SLOT(_sl_corrected_data_available()));
 
-			connect( _track_changed_thread, SIGNAL(sig_similar_artists_available(const QString&, const QList<int>&)),
-					 this, 					SLOT(_sl_similar_artists_available(const QString&, const QList<int>&)));
+			connect( _track_changed_thread, SIGNAL(sig_similar_artists_available(const QList<int>&)),
+					 this, 					SLOT(_sl_similar_artists_available(const QList<int>&)));
 
 			return true;
 	}
@@ -246,16 +246,12 @@ void LastFM::scrobble(const MetaData& metadata) {
 
 
 // private slot
-void LastFM::_sl_similar_artists_available(const QString& target_class, const QList<int>& ids) {
-	if(target_class.compare(_class_name) != 0) return;
-
+void LastFM::_sl_similar_artists_available(const QList<int>& ids) {
 	emit sig_similar_artists_available(ids);
 }
 
 // private slot
-void LastFM::_sl_corrected_data_available(const QString& target_class) {
-
-	if(target_class.compare(_class_name) != 0) return;
+void LastFM::_sl_corrected_data_available() {
 
 	MetaData md;
 	bool loved;

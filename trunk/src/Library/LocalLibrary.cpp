@@ -77,9 +77,6 @@ void LocalLibrary::reload_thread_finished() {
 
 	load();
 
-	MetaDataList v_md_broken;
-	ID3::checkForBrokenFiles(_vec_md, v_md_broken);
-
 	emit sig_reload_library_finished();
 }
 

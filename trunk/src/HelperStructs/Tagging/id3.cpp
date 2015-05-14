@@ -155,20 +155,3 @@ bool ID3::setMetaDataOfFile(MetaData& md) {
 
 	return true;
 }
-
-
-
-void ID3::checkForBrokenFiles(MetaDataList v_md, MetaDataList& v_md_broken) {
-	return;
-	int i=0;
-	foreach(MetaData md, v_md) {
-		ID3_FileHeader header(md.filepath());
-		if(header.is_broken()) {
-			qDebug() << md.title << "by (" << md.artist << ") on " << md.album << " is broken";
-			v_md_broken.push_back(md);
-			i++;
-		}
-	}
-
-	qDebug() << "Found " << i << " broken files";
-}

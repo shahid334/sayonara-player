@@ -47,6 +47,41 @@ static void notification_closed(gpointer notification, void* data){
 
 }
 
+void LN_Notification::notification_show(const QString& title, const QString& label){
+	if(!_initialized) {
+		return;
+	}
+
+	QString pixmap_path;
+
+	not_close();
+
+	pixmap_path = Helper::getSharePath() + "logo.png";
+
+#if (NOTIFY_VERSION_MINOR > 6 && NOTIFY_VERSION_MAJOR >= 0)
+	NotifyNotification* n = notify_notification_new( title.toLocal8Bit().data(),
+												 label.toLocal8Bit().data(),
+												pixmap_path.toLocal8Bit().data());
+#else
+	 NotifyNotification* n = notify_notification_new( title.toLocal8Bit().data(),
+												 label.toLocal8Bit().data(),
+												pixmap_path.toLocal8Bit().data(), NULL);
+#endif
+
+	 g_signal_connect(n, "closed", G_CALLBACK(notification_closed), NULL);
+
+   _not = n;
+
+	int timeout = _settings->get(Set::Notification_Timeout);
+
+	notify_notification_set_timeout     (n, timeout);
+	notify_notification_show            (n, NULL);
+}
+
+void LN_Notification::notification_show(const QString& str){
+	notification_show("Sayonara", str);
+}
+
 void LN_Notification::notification_show(const MetaData& md) {
 
 	if(!_initialized) {

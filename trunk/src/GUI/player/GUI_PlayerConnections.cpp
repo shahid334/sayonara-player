@@ -19,6 +19,7 @@
  */
 
 #include "GUI/player/GUI_Player.h"
+#include "TagEdit/MetaDataChangeNotifier.h"
 
 void GUI_Player::setupConnections() {
 
@@ -29,17 +30,17 @@ void GUI_Player::setupConnections() {
 	connect(btn_bw,		SIGNAL(clicked()),	this, SLOT(prev_clicked()));
 	connect(btn_stop,	SIGNAL(clicked()),	this, SLOT(stop_clicked()));
 	connect(btn_mute,	SIGNAL(released()),	this, SLOT(muteButtonPressed()));
-	connect(btn_rec,	SIGNAL(toggled(bool)), this, SLOT(sl_rec_button_toggled(bool)));
+    connect(btn_rec,	SIGNAL(toggled(bool)), this, SLOT(rec_clicked(bool)));
 	connect(btn_correct,SIGNAL(clicked()), this, SLOT(correct_btn_clicked()));
 	connect(albumCover, SIGNAL(clicked()), this, SLOT(coverClicked()));
 
-	connect(m_play_manager, SIGNAL(sig_playstate_changed(PlayManager::PlayState)),
+	connect(_play_manager, SIGNAL(sig_playstate_changed(PlayManager::PlayState)),
 			this,			SLOT(playstate_changed(PlayManager::PlayState)));
 
-	connect(m_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
+	connect(_play_manager, SIGNAL(sig_track_changed(const MetaData&)),
 			this,			SLOT(track_changed(const MetaData&)));
 
-	connect(m_play_manager, SIGNAL(sig_position_changed_ms(quint64)),
+	connect(_play_manager, SIGNAL(sig_position_changed_ms(quint64)),
 			this,			SLOT(psl_set_cur_pos_ms(quint64)));
 
 	// file
@@ -74,21 +75,25 @@ void GUI_Player::setupConnections() {
 
 
 	// preferencesF
-	connect(action_Language, SIGNAL(triggered(bool)), this,
-            SLOT(sl_action_language_toggled(bool)));
-	connect(action_lastFM, SIGNAL(triggered(bool)), this,
-			SLOT(lastFMClicked(bool)));
-	connect(action_setLibPath, SIGNAL(triggered(bool)), this,
-			SLOT(sl_libpath_clicked(bool)));
-	connect(action_startup, SIGNAL(triggered(bool)), ui_startup_dialog,
+	connect(action_Language, SIGNAL(triggered()), this,
+			SLOT(sl_action_language_toggled()));
+	connect(action_lastFM, SIGNAL(triggered()), this,
+			SLOT(lastFMClicked()));
+	connect(action_setLibPath, SIGNAL(triggered()), this,
+			SLOT(sl_libpath_clicked()));
+	connect(action_startup, SIGNAL(triggered()), ui_startup_dialog,
             SLOT(show()));
 	connect(action_min2tray, SIGNAL(toggled(bool)), this,
 			SLOT(min2tray_toggled(bool)));
 	connect(action_only_one_instance, SIGNAL(toggled(bool)), this,
-				SLOT(only_one_instance_toggled(bool)));
+            SLOT(only_one_instance_toggled(bool)));
 
 	connect(action_streamrecorder, SIGNAL(triggered(bool)), this,
-			SLOT(sl_action_streamripper_toggled(bool)));
+			SLOT(sl_streamrecorder_toggled()));
+
+	connect(action_broadcasting, SIGNAL(triggered()), this,
+			SLOT(sl_broadcasting_clicked()));
+
 	connect(action_notifications, SIGNAL(triggered(bool)), ui_notifications,
             SLOT(show()));
 	connect(action_SocketConnection, SIGNAL(triggered(bool)), this,
@@ -104,7 +109,7 @@ void GUI_Player::setupConnections() {
 	connect(action_about, SIGNAL(triggered(bool)), this, SLOT(about(bool)));
 
 	connect(action_help, SIGNAL(triggered(bool)), this, SLOT(help(bool)));
-    connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
+	connect(_tray_icon, SIGNAL(onVolumeChangedByWheel(int)), this, SLOT(volumeChangedByTick(int)));
 
 
 	connect(volumeSlider, SIGNAL(sig_slider_moved(int)), this,
@@ -114,20 +119,24 @@ void GUI_Player::setupConnections() {
 			SLOT(seek(int)));
 
 
+	MetaDataChangeNotifier* md_change_notifier = MetaDataChangeNotifier::getInstance();
+	connect(md_change_notifier, SIGNAL(sig_metadata_changed(const MetaDataList&, const MetaDataList&)),
+			this,				SLOT(psl_id3_tags_changed(const MetaDataList&,const MetaDataList&)));
+
 
 	// cover lookup
-	connect(m_cov_lookup, SIGNAL(sig_cover_found(const CoverLocation&)),
+	connect(_cov_lookup, SIGNAL(sig_cover_found(const CoverLocation&)),
 			this, SLOT(sl_cover_found(const CoverLocation&)));
 
-	connect(m_AlternativeCovers, SIGNAL(sig_cover_changed(const CoverLocation&)),
+	connect(_ui_alternative_covers, SIGNAL(sig_cover_changed(const CoverLocation&)),
 			this,				SLOT(sl_alternate_cover_available(const CoverLocation&)));
 
-    connect(m_AlternativeCovers, SIGNAL(sig_no_cover()),
+	connect(_ui_alternative_covers, SIGNAL(sig_no_cover()),
             this,				SLOT(sl_no_cover_available()));
 
 
-    connect(m_awa_version, SIGNAL(finished()), this, SLOT(awa_version_finished()));
-    connect(m_awa_translators, SIGNAL(finished()), this, SLOT(awa_translators_finished()));
+	connect(_awa_version, SIGNAL(finished()), this, SLOT(awa_version_finished()));
+	connect(_awa_translators, SIGNAL(finished()), this, SLOT(awa_translators_finished()));
 
 	connect(ui_libpath, SIGNAL(sig_library_path_set()), this, SLOT(sl_libpath_clicked()));
 

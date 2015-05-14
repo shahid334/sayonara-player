@@ -4,14 +4,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.7)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR})
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src/playlist)
-FIND_PACKAGE(Qt4 REQUIRED)
 
 INCLUDE(${QT_USE_FILE})
-#ADD_DEFINITIONS(${QT_DEFINITIONS} -std=c++11)
 
 SET(HEADERS
-    Playlist.h
-    StdPlaylist.h
     StreamPlaylist.h
     PlaylistHandler.h
     PlaylistLoader.h
@@ -23,12 +19,15 @@ SET(SOURCES
     StreamPlaylist.cpp
     PlaylistHandler.cpp
     PlaylistLoader.cpp
+    PlaylistDBInterface.cpp
+    PlaylistDBConnector.cpp
 )
 
 QT4_WRAP_CPP(HEADERS_MOC ${HEADERS})
 
 ADD_LIBRARY(sayonara_playlist STATIC ${SOURCES} ${HEADERS_MOC})
 TARGET_LINK_LIBRARIES(sayonara_playlist
+
     sayonara_helper
     sayonara_db
 )

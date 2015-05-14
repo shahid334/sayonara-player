@@ -19,7 +19,8 @@
  */
 
 #include "Library/LibraryImporter.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
+#include "TagEdit/MetaDataChangeNotifier.h"
 
 #include <QMap>
 #include <QDir>
@@ -36,8 +37,8 @@ LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
 	_caching_thread = new ImportCachingThread(this);
 	_copy_thread = new ImportCopyThread(this);
 
-	_tag_edit = new TagEdit(this, true);
-	_import_dialog = new GUI_ImportFolder(_main_window, _tag_edit, true);
+	_tag_edit = new TagEdit(this);
+	_import_dialog = new GUI_ImportFolder(_main_window, true);
 
 	_lib_path = _settings->get(Set::Lib_Path);
 
@@ -53,11 +54,12 @@ LibraryImporter::LibraryImporter(QWidget* main_window, QObject *parent) :
 	connect(_caching_thread, SIGNAL(finished()), this, SLOT(caching_thread_finished()));
 	connect(_caching_thread, SIGNAL(sig_done()), this, SLOT(caching_thread_done()));
 	connect(_caching_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
-
 	connect(_copy_thread, SIGNAL(finished()), this, SLOT(copy_thread_finished()));
 	connect(_copy_thread, SIGNAL(sig_progress(int)), this, SLOT(import_progress(int)));
-	connect(_tag_edit, SIGNAL(sig_metadata_changed(const MetaDataList&, const MetaDataList&)),
-		   this, SLOT(metadata_changed(const MetaDataList&, const MetaDataList&)));
+
+	MetaDataChangeNotifier* md_change_notifier = MetaDataChangeNotifier::getInstance();
+	connect(md_change_notifier, SIGNAL(sig_metadata_changed(const MetaDataList&,const MetaDataList&)),
+			this, SLOT(metadata_changed(const MetaDataList&,const MetaDataList&)));
 }
 
 

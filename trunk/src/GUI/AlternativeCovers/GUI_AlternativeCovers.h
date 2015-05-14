@@ -33,7 +33,7 @@
 #include "GUI/AlternativeCovers/AlternativeCoverItemDelegate.h"
 #include "GUI/AlternativeCovers/AlternativeCoverItemModel.h"
 #include "CoverLookup/CoverLookupAlternative.h"
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "HelperStructs/SayonaraClass.h"
 
 #include <QPixmap>
@@ -44,7 +44,7 @@ class GUI_AlternativeCovers : public SayonaraDialog, private Ui::AlternativeCove
 
 	Q_OBJECT
 public:
-	GUI_AlternativeCovers(QWidget* parent, QString calling_class);
+	GUI_AlternativeCovers(QWidget* parent=0);
 	virtual ~GUI_AlternativeCovers();
 
 signals:

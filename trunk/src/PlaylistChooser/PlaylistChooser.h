@@ -27,9 +27,9 @@
 #define STATE_IMPORT_SUCCESS 1
 #define STATE_IMPORT_FAIL 2
 
-#include "HelperStructs/MetaData.h"
+#include "HelperStructs/MetaData/MetaData.h"
 #include "Playlist/PlaylistHandler.h"
-#include "DatabaseAccess/CDatabaseConnector.h"
+#include "Playlist/PlaylistDBConnector.h"
 
 #include <QMap>
 
@@ -42,31 +42,29 @@ public:
 	virtual ~PlaylistChooser();
 
 	void delete_playlist(int id);
-	void load_all_playlists();
-	void load_single_playlist(int id, QString name);
 
-	void save_playlist(int id);
+	void load_single_playlist(int id);
+
 	void save_playlist(QString playlist_name);
 	void save_playlist_file(QString filename, bool);
 	void clear_playlist();
 	void playlist_files_selected(const QStringList& lst);
 
 signals:
-	void sig_all_playlists_loaded(const QMap<int, QString>&);
-	void sig_playlist_created(const MetaDataList&, int, PlaylistType);
+	void sig_all_playlists_loaded(const QList<CustomPlaylistSkeleton>&);
 
-private slots:
-	void save_playlist_as_custom(QString name, const MetaDataList& vec_md);
-	void save_playlist_as_custom(int id, const MetaDataList& vec_md);
-	void playlist_created(const MetaDataList& v_md, int cur_idx, PlaylistType type);
+
+public slots:
+	void load_all_playlists();
 
 
 private:
-	QMap<int, QString>		_mapping;
+	QList<CustomPlaylistSkeleton> _skeletons;
 	int						_import_state;
 
 	PlaylistHandler*		_playlist_handler;
-	CDatabaseConnector*		_db;
+	PlaylistDBConnector*	_playlist_db_connector;
+	CustomPlaylist			find_custom_playlist(int id);
 
 
 };

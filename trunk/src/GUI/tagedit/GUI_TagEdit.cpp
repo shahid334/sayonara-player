@@ -28,12 +28,12 @@
 #include <QMessageBox>
 
 
-GUI_TagEdit::GUI_TagEdit(TagEdit* tag_edit, QWidget* parent) :
+GUI_TagEdit::GUI_TagEdit(QWidget* parent) :
 	SayonaraWidget(parent)
 {
 	setupUi(this);
 
-	_tag_edit = tag_edit;
+	_tag_edit = new TagEdit(this);
 
 	connect(btn_next, SIGNAL(clicked()), this, SLOT(next_button_clicked()));
 	connect(btn_prev, SIGNAL(clicked()), this, SLOT(prev_button_clicked()));
@@ -66,13 +66,16 @@ GUI_TagEdit::GUI_TagEdit(TagEdit* tag_edit, QWidget* parent) :
 
 
 GUI_TagEdit::~GUI_TagEdit(){
-
+	delete _tag_edit;
 }
 
 void GUI_TagEdit::language_changed(){
 	retranslateUi(this);
 }
 
+TagEdit* GUI_TagEdit::get_tag_edit(){
+	return _tag_edit;
+}
 
 void GUI_TagEdit::btn_cancel_clicked(){
 	emit sig_cancelled();

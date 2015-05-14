@@ -157,7 +157,7 @@ EngineCallbacks::spectrum_handler (GstBus * bus, GstMessage * message, gpointer 
     return TRUE;
 }
 
-
+int blupp=0;
 gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpointer data) {
 
     (void) bus;
@@ -165,6 +165,8 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 	Engine* engine = (Engine*) data;
 
 	int msg_type = GST_MESSAGE_TYPE(msg);
+	quint32 br;
+	MetaData md;
 
 	switch (msg_type) {
 
@@ -176,6 +178,7 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
             break;
 
         case GST_MESSAGE_ELEMENT:
+
             if(!engine) break;
 
             if(engine->get_show_spectrum())
@@ -188,18 +191,24 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
 		case GST_MESSAGE_TAG:
             GstTagList* tags;
-			quint32 br;
-
+			gchar* title;
             bool success;
 
             tags = NULL;
             gst_message_parse_tag(msg, &tags);
 			success = gst_tag_list_get_uint(tags, GST_TAG_BITRATE, &br);
+			if(success){
+				md.bitrate = (quint32) (br / 1000) * 1000;
+			}
 
-			if(br != 0 && success) {
+			success = gst_tag_list_get_string(tags, GST_TAG_TITLE, (gchar**) &title);
+			if(success){
+				md.title = title;
+				g_free(title);
+			}
 
-				br = (quint32) (br / 1000) * 1000;
-				engine->update_bitrate(br);
+			if(success) {
+				engine->update_md(md);
             }
 
 			gst_tag_list_unref(tags);
@@ -208,16 +217,14 @@ gboolean EngineCallbacks::bus_state_changed(GstBus *bus, GstMessage *msg, gpoint
 
 		case GST_MESSAGE_STATE_CHANGED:
 			GstState old_state, new_state, pending_state;
-//			const gchar* old_state_str, *new_state_str, *pending_state_str;
 
 			gst_message_parse_state_changed(msg, &old_state, &new_state, &pending_state);
 
-			/*old_state_str = gst_element_state_get_name(old_state);
-			new_state_str = gst_element_state_get_name(new_state);
-			pending_state_str = gst_element_state_get_name(pending_state);*/
 
-			if( /*old_state == GST_STATE_PAUSED &&*/ new_state == GST_STATE_PLAYING){
-				engine->set_track_ready();
+			if( new_state == GST_STATE_PLAYING){
+				if(engine->is_first_track()){
+					engine->set_track_ready();
+				}
 			}
 
 			break;

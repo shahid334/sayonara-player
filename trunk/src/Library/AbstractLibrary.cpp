@@ -21,16 +21,23 @@
 
 
 #include "Library/AbstractLibrary.h"
+#include "TagEdit/MetaDataChangeNotifier.h"
 
 AbstractLibrary::AbstractLibrary(QObject *parent) :
 	QObject(parent),
 	SayonaraClass()
 {
+
+
 	_playlist = PlaylistHandler::getInstance();
 	_sortorder = _settings->get(Set::Lib_Sorting);
 
 	_filter.by_searchstring = BY_FULLTEXT;
 	_filter.filtertext = "";
+
+	MetaDataChangeNotifier* md_change_notifier = MetaDataChangeNotifier::getInstance();
+	connect(md_change_notifier, SIGNAL(sig_metadata_changed(const MetaDataList&, const MetaDataList&)),
+			this,				SLOT(psl_metadata_changed(const MetaDataList&,const MetaDataList&)));
 
 	REGISTER_LISTENER(Set::Lib_Sorting, _sl_sortorder_changed);
 }
@@ -136,13 +143,13 @@ void AbstractLibrary::refresh() {
 
 void AbstractLibrary::psl_prepare_artist_for_playlist(int idx) {
 	Q_UNUSED(idx);
-	_playlist->create_playlist(_vec_md);
+	_playlist->create_playlist(_vec_md, "", true);
 }
 
 
 void AbstractLibrary::psl_prepare_album_for_playlist(int idx) {
 	Q_UNUSED(idx);
-	_playlist->create_playlist(_vec_md);
+	_playlist->create_playlist(_vec_md, "", true);
 }
 
 
@@ -159,7 +166,7 @@ void AbstractLibrary::psl_prepare_tracks_for_playlist(QList<int> idx_lst) {
 		v_md.push_back(_vec_md[idx]);
 	}
 
-	_playlist->create_playlist(v_md);
+	_playlist->create_playlist(v_md, "", true);
 }
 
 
@@ -210,7 +217,11 @@ void AbstractLibrary::restore_album_selection(const QList<int>& old_selected_idx
 
 	QList<int> new_selected_albums;
 	for(int i=0; i<_vec_albums.size(); i++) {
-		if(!_selected_albums.contains(_vec_albums[i].id)) continue;
+
+		if(!_selected_albums.contains(_vec_albums[i].id)) {
+			continue;
+		}
+
 		_vec_albums[i].is_lib_selected = true;
 		new_selected_albums << _vec_albums[i].id;
 	}
@@ -223,9 +234,11 @@ void AbstractLibrary::restore_track_selection(const QList<int>& old_selected_idx
 
 	QList<int> new_selected_tracks;
 	for(int i=0; i<_vec_md.size(); i++) {
-		if(!old_selected_idx.contains(_vec_md[i].id)) continue;
 
-		qDebug() << "Restore tracks: " << i;
+		if(!old_selected_idx.contains(_vec_md[i].id)) {
+			continue;
+		}
+
 		_vec_md[i].is_lib_selected = true;
 		new_selected_tracks << _vec_md[i].id;
 	}

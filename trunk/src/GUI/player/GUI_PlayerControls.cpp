@@ -45,22 +45,22 @@ void GUI_Player::playstate_changed(PlayManager::PlayState state){
 
 
 void GUI_Player::play_clicked(){
-	m_play_manager->play_pause();
+	_play_manager->play_pause();
 }
 
 void GUI_Player::played() {
-	m_trayIcon->setPlaying(true);
+	_tray_icon->setPlaying(true);
 	btn_play->setIcon(Helper::getIcon("pause"));
 }
 
 void GUI_Player::paused() {
-	m_trayIcon->setPlaying(false);
+	_tray_icon->setPlaying(false);
 	btn_play->setIcon(Helper::getIcon("play"));
 }
 
 
 void GUI_Player::stop_clicked(){
-	m_play_manager->stop();
+	_play_manager->stop();
 }
 
 
@@ -68,9 +68,10 @@ void GUI_Player::stopped() {
 
 	setWindowTitle("Sayonara");
 
+    _tray_icon->setPlaying(false);
+    _tray_icon->stop();
+
 	btn_play->setIcon(Helper::getIcon("play"));
-    m_trayIcon->setPlaying(false);
-	m_trayIcon->stop();
 
 	lab_title->hide();
 	lab_sayonara->show();
@@ -90,30 +91,25 @@ void GUI_Player::stopped() {
 	curTime->setText("00:00");
 	maxTime->setText("00:00");
 
-	m_metadata_available = false;
+	_md_available = false;
 	set_std_cover( false );
 
 	if(btn_rec->isVisible() && btn_rec->isChecked()) {
 		btn_rec->setChecked(false);
-		emit sig_rec_button_toggled(false);
 	}
 }
 
 void GUI_Player::prev_clicked() {
-	m_play_manager->previous();
+	_play_manager->previous();
 }
 
 void GUI_Player::next_clicked() {
-	m_play_manager->next();
+	_play_manager->next();
 }
 
-
-void GUI_Player::sl_rec_button_toggled(bool b) {
-
-    emit sig_rec_button_toggled(b);
+void GUI_Player::rec_clicked(bool b){
+    _play_manager->record(b);
 }
-
-
 
 /** PROGRESS BAR **/
 
@@ -146,11 +142,11 @@ void GUI_Player::total_time_changed(qint64 total_time) {
 
 
 void GUI_Player::jump_forward_ms(){
-	m_play_manager->seek_rel_ms(10000);
+	_play_manager->seek_rel_ms(10000);
 }
 
 void GUI_Player::jump_backward_ms(){
-	m_play_manager->seek_rel_ms(-10000);
+	_play_manager->seek_rel_ms(-10000);
 }
 
 
@@ -169,7 +165,7 @@ void GUI_Player::seek(int val) {
 	set_cur_pos_label(val);
 
 	double percent = (val * 1.0) / songProgress->maximum();
-	m_play_manager->seek_rel(percent);
+	_play_manager->seek_rel(percent);
 }
 
 void GUI_Player::psl_set_cur_pos_ms(quint64 pos_ms) {
@@ -193,7 +189,6 @@ void GUI_Player::psl_set_cur_pos_ms(quint64 pos_ms) {
 
 	QString curPosString = Helper::cvt_ms_to_string(pos_ms);
 	curTime->setText(curPosString);
-
 }
 
 /** PROGRESS BAR END **/
@@ -214,10 +209,9 @@ void GUI_Player::volumeChanged(int volume_percent) {
 
 void GUI_Player::volumeChangedByTick(int val) {
 
-
 	int currentVolumeOrig_perc = this -> volumeSlider->value();
     int currentVolume_perc = currentVolumeOrig_perc;
-    int vol_step = m_trayIcon->get_vol_step();
+	int vol_step = _tray_icon->get_vol_step();
 
     if (val > 0) {
         //increase volume
@@ -237,10 +231,7 @@ void GUI_Player::volumeChangedByTick(int val) {
         else currentVolume_perc = 0;
     }
 
-
-
     if (currentVolumeOrig_perc != currentVolume_perc) {
-
         volumeChanged(currentVolume_perc);
     }
 }
@@ -259,19 +250,19 @@ void GUI_Player::setupVolButton(int percent) {
 	QString butFilename = "vol_";
 
     if (percent <= 1) {
-		butFilename += QString("mute") + m_skinSuffix;
+		butFilename += QString("mute") + _skin_suffix;
 	}
 
 	else if (percent < 40) {
-		butFilename += QString("1") + m_skinSuffix;
+		butFilename += QString("1") + _skin_suffix;
 	}
 
 	else if (percent < 80) {
-		butFilename += QString("2") + m_skinSuffix;
+		butFilename += QString("2") + _skin_suffix;
 	}
 
 	else {
-		butFilename += QString("3") + m_skinSuffix;
+		butFilename += QString("3") + _skin_suffix;
 	}
 
 	btn_mute->setIcon( Helper::getIcon(butFilename) );
@@ -280,15 +271,15 @@ void GUI_Player::setupVolButton(int percent) {
 
 void GUI_Player::muteButtonPressed() {
 
-	m_mute = !m_mute;
+	_mute = !_mute;
 
 	int vol = 0;
-	if (!m_mute) {
+	if (!_mute) {
 		vol = volumeSlider->value();
 	}
 
-	volumeSlider->setDisabled(m_mute);
-    m_trayIcon->setMute(m_mute);
+	volumeSlider->setDisabled(_mute);
+	_tray_icon->setMute(_mute);
 	setupVolButton(vol);
 
 	_settings->set(Set::Engine_Vol, vol);

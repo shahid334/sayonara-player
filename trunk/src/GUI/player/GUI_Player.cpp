@@ -23,9 +23,9 @@
 #include "GUI/player/GUI_TrayIcon.h"
 #include "GUI/AlternativeCovers/GUI_AlternativeCovers.h"
 
-#include "HelperStructs/Style.h"
 #include "HelperStructs/globals.h"
-#include "HelperStructs/AsyncWebAccess.h"
+#include "HelperStructs/Style/Style.h"
+#include "HelperStructs/WebAccess/AsyncWebAccess.h"
 #include "CoverLookup/CoverLookup.h"
 
 #include "StreamPlugins/LastFM/LastFM.h"
@@ -37,7 +37,7 @@
 GUI_Player* obj_ref = 0;
 
 #ifdef Q_OS_UNIX
-#include <signal.h>
+#include <csignal>
 
 void signal_handler(int sig) {
 
@@ -68,39 +68,37 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	initGUI();
 
-    m_translator = translator;
-	m_play_manager = PlayManager::getInstance();
+	_translator = translator;
+	_play_manager = PlayManager::getInstance();
 
 	QString version = _settings->get(Set::Player_Version);
 
-
-    m_awa_version = new AsyncWebAccess(this);
-    m_awa_translators = new AsyncWebAccess(this);
+	_awa_version = new AsyncWebAccess(this);
+	_awa_translators = new AsyncWebAccess(this);
 
 	lab_sayonara->setText(tr("Sayonara Player"));
 	lab_version->setText( version );
 	lab_writtenby->setText(tr("Written by") + " Lucio Carreras");
 	lab_copyright->setText(tr("Copyright") + " 2011-2014");
 
-    m_metadata_available = false;
+	_md_available = false;
 
-	m_mute = false;
+	_mute = false;
 
 	ui_playlist = 0;
 
+	ui_streamrecorder = new GUI_StreamRecorder(this);
+	ui_broadcasting = new GUI_BroadcastSetup(this);
     ui_notifications = new GUI_Notifications(this);
     ui_startup_dialog = new GUI_Startup_Dialog(this);
     ui_language_chooser= new GUI_LanguageChooser(this);
 
-	m_skinSuffix = "";
-	m_class_name = "Player";
-	m_converter_active = false;
+	_skin_suffix = "";
 
-	m_cov_lookup = new CoverLookup(this);
-	m_AlternativeCovers = new GUI_AlternativeCovers(this->centralWidget(), m_class_name);
+	_cov_lookup = new CoverLookup(this);
+	_ui_alternative_covers = new GUI_AlternativeCovers(this->centralWidget());
 
-	m_min2tray = _settings->get(Set::Player_Min2Tray);
-	action_min2tray->setChecked(m_min2tray);
+	action_min2tray->setChecked(_settings->get(Set::Player_Min2Tray));
 
 	bool one_instance = _settings->get(Set::Player_OneInstance);
 	action_only_one_instance->setChecked(one_instance);
@@ -112,7 +110,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 	action_showOnlyTracks->setChecked(show_only_tracks);
 
 	QSizePolicy p = library_widget->sizePolicy();
-	m_library_stretch_factor = p.horizontalStretch();
+	_library_stretch_factor = p.horizontalStretch();
 
 	bool show_library = _settings->get(Set::Lib_Show);
 	action_viewLibrary->setChecked(show_library);
@@ -146,7 +144,7 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
         this->setGeometry(rect);
     }
 
-    m_library_width = 600;
+	_ui_library_width = 600;
 
 	ui_libpath = new GUI_LibraryPath( library_widget );
 
@@ -155,17 +153,16 @@ GUI_Player::GUI_Player(QTranslator* translator, QWidget *parent) :
 
 	/* SIGNALS AND SLOTS */
     this->setupConnections();
-    m_awa_version->set_url("http://sayonara.luciocarreras.de/current_version");
-    m_awa_translators->set_url("http://sayonara.luciocarreras.de/translators");
+	_awa_version->set_url("http://sayonara.luciocarreras.de/current_version");
+	_awa_translators->set_url("http://sayonara.luciocarreras.de/translators");
 
 	if(_settings->get(Set::Player_NotifyNewVersion)){
-		m_awa_version->start();
+		_awa_version->start();
 	}
 
-    m_awa_translators->start();
+	_awa_translators->start();
 
 	plugin_widget->resize(plugin_widget->width(), 0);
-    ui_info_dialog = 0;
 
 	stopped();
 
@@ -184,7 +181,7 @@ GUI_Player::~GUI_Player() {
 void GUI_Player::language_changed() {
 
 	QString language = _settings->get(Set::Player_Language);
-    m_translator->load(language, Helper::getSharePath() + "translations/");
+	_translator->load(language, Helper::getSharePath() + "translations/");
 
 	retranslateUi(this);
 
@@ -246,7 +243,7 @@ void GUI_Player::initGUI() {
 void GUI_Player::track_changed(const MetaData & md) {
 
 	_md = md;
-	m_metadata_available = true;
+	_md_available = true;
 
 	lab_sayonara->hide();
 	lab_title->show();
@@ -285,7 +282,7 @@ void GUI_Player::track_changed(const MetaData & md) {
 
 	fetch_cover();
 
-	m_trayIcon->show_notification(_md);
+	_tray_icon->show_notification(_md);
 }
 
 void GUI_Player::set_album_label(){
@@ -303,7 +300,7 @@ void GUI_Player::set_album_label(){
 
 void GUI_Player::psl_md_changed(const MetaData& md) {
 
-	if(_md != md){
+	if(_md != md && md.title == _md.title){
 		return;
 	}
 
@@ -315,12 +312,13 @@ void GUI_Player::psl_md_changed(const MetaData& md) {
 		rating_text += ", " + QString::number( (double) (_md.filesize / 1024) / 1024.0, 'f', 2) + " MB";
 	}
 
+	_md.title = md.title;
+
 	lab_rating->setText(rating_text);
 	lab_rating->setToolTip(rating_text);
 
 	total_time_changed(_md.length_ms);
-
-
+	lab_title->setText( md.title );
 }
 
 
@@ -340,7 +338,7 @@ void GUI_Player::psl_id3_tags_changed(const MetaDataList& v_md_old, const MetaDa
 	lab_title->setText(_md.title);
 	btn_correct->setVisible(false);
 
-	m_trayIcon->show_notification(_md);
+	_tray_icon->show_notification(_md);
 
 	setWindowTitle(QString("Sayonara - ") + _md.title);
 	fetch_cover();
@@ -360,7 +358,7 @@ void GUI_Player::last_fm_logged_in(bool b) {
 
 void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected) {
 
-    m_metadata_corrected = md;
+	_md_corrected = md;
 
 	bool radio_off = ( _md.radio_mode() == RadioModeOff );
 	bool get_lfm_corrections = _settings->get(Set::LFM_Corrections);
@@ -378,36 +376,29 @@ void GUI_Player::lfm_info_fetched(const MetaData& md, bool loved, bool corrected
 
 void GUI_Player::correct_btn_clicked(bool b) {
 
-    if(!ui_info_dialog)
-        return;
-
-    MetaData md = m_metadata_corrected;
-	m_metadata_corrected = _md;
+	MetaData md = _md_corrected;
+	_md_corrected = _md;
 
 	bool same_artist = (_md.artist.compare(md.artist) == 0);
 	bool same_album = (_md.album.compare(md.album) == 0);
 	bool same_title = (_md.title.compare(md.title) == 0);
 
     if(!same_artist) {
-        m_metadata_corrected.artist = md.artist;
-        m_metadata_corrected.artist_id = -1;
+		_md_corrected.artist = md.artist;
+		_md_corrected.artist_id = -1;
     }
 
     if(!same_album) {
-        m_metadata_corrected.album = md.album;
-        m_metadata_corrected.album_id = -1;
+		_md_corrected.album = md.album;
+		_md_corrected.album_id = -1;
     }
 
     if(!same_title) {
-        m_metadata_corrected.title = md.title;
+		_md_corrected.title = md.title;
     }
 
 	MetaDataList lst;
-	lst.push_back(m_metadata_corrected);
-	ui_info_dialog->set_metadata(lst);
-
-    ui_info_dialog->show(TAB_EDIT);
-
+	lst.push_back(_md_corrected);
 }
 /** LAST FM **/
 
@@ -422,8 +413,8 @@ void GUI_Player::skin_changed() {
 
 	this->setStyleSheet(stylesheet);
 
-	if (dark) 	m_skinSuffix = QString("_dark");
-	else 		m_skinSuffix = QString("");
+	if (dark) 	_skin_suffix = QString("_dark");
+	else 		_skin_suffix = QString("");
 
 	setupVolButton(volumeSlider->value());
 }
@@ -434,34 +425,35 @@ void GUI_Player::skin_changed() {
 void GUI_Player::setupTrayActions() {
 
 
-	m_trayIcon = new GUI_TrayIcon(this);
+	_tray_icon = new GUI_TrayIcon(this);
 
 
-	connect(m_trayIcon, SIGNAL(sig_stop_clicked()), this, SLOT(stop_clicked()));
-	connect(m_trayIcon, SIGNAL(sig_bwd_clicked()), this, SLOT(prev_clicked()));
-	connect(m_trayIcon, SIGNAL(sig_fwd_clicked()), this, SLOT(next_clicked()));
-    connect(m_trayIcon, SIGNAL(sig_mute_clicked()), this, SLOT(muteButtonPressed()));
-    connect(m_trayIcon, SIGNAL(sig_close_clicked()), this, SLOT(really_close()));
-	connect(m_trayIcon, SIGNAL(sig_play_clicked()), this, SLOT(play_clicked()));
-	connect(m_trayIcon, SIGNAL(sig_pause_clicked()), this, SLOT(play_clicked()));
-    connect(m_trayIcon, SIGNAL(sig_show_clicked()), this, SLOT(showNormal()));
+	connect(_tray_icon, SIGNAL(sig_stop_clicked()), this, SLOT(stop_clicked()));
+	connect(_tray_icon, SIGNAL(sig_bwd_clicked()), this, SLOT(prev_clicked()));
+	connect(_tray_icon, SIGNAL(sig_fwd_clicked()), this, SLOT(next_clicked()));
+	connect(_tray_icon, SIGNAL(sig_mute_clicked()), this, SLOT(muteButtonPressed()));
+	connect(_tray_icon, SIGNAL(sig_close_clicked()), this, SLOT(really_close()));
+	connect(_tray_icon, SIGNAL(sig_play_clicked()), this, SLOT(play_clicked()));
+	connect(_tray_icon, SIGNAL(sig_pause_clicked()), this, SLOT(play_clicked()));
+	connect(_tray_icon, SIGNAL(sig_show_clicked()), this, SLOT(showNormal()));
 
-    connect(m_trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+	connect(_tray_icon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
       		this, 		SLOT(trayItemActivated(QSystemTrayIcon::ActivationReason)));
 
-    connect(m_trayIcon, SIGNAL(onVolumeChangedByWheel(int)),
+	connect(_tray_icon, SIGNAL(onVolumeChangedByWheel(int)),
    			this, 		SLOT(volumeChangedByTick(int)));
 
 
-    m_trayIcon->setPlaying(false);
+	_tray_icon->setPlaying(false);
 
-    m_trayIcon->show();
+	_tray_icon->show();
 
 }
 
 
 void GUI_Player::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
 
+	bool min_to_tray = _settings->get(Set::Player_Min2Tray);
     switch (reason) {
 
     case QSystemTrayIcon::Trigger:
@@ -472,7 +464,7 @@ void GUI_Player::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
             this->activateWindow();
         }
 
-        else if(m_min2tray) {
+		else if( min_to_tray ) {
             this->setHidden(true);
         }
 
@@ -481,7 +473,7 @@ void GUI_Player::trayItemActivated (QSystemTrayIcon::ActivationReason reason) {
 
         break;
     case QSystemTrayIcon::MiddleClick:
-		m_trayIcon->show_notification(_md);
+		_tray_icon->show_notification(_md);
         break;
     default:
         break;
@@ -583,10 +575,11 @@ void GUI_Player::setRadioMode(int radio) {
 		btn_play->setVisible(true);
 	}
 
-	m_trayIcon->set_enable_fwd(true);
+	_tray_icon->set_enable_fwd(true);
 	songProgress->setEnabled( (_md.length_ms / 1000) > 0 );
 
-	emit sig_rec_button_toggled(btn_rec->isChecked() && btn_rec->isVisible());
+    _play_manager->record(btn_rec->isChecked() && btn_rec->isVisible());
+
 }
 
 
@@ -615,9 +608,7 @@ void GUI_Player::ui_loaded() {
 
     #ifdef Q_OS_UNIX
 		obj_ref = this;
-
         signal(SIGWINCH, signal_handler);
-
 	#endif
 
 	QString lib_path = _settings->get(Set::Lib_Path);
@@ -698,6 +689,10 @@ void GUI_Player::resizeEvent(QResizeEvent* e) {
         return;
     }
 
+	set_album_label();
+	lab_artist->setText(Helper::elide_text(_md.artist, lab_artist, 1));
+	lab_title->setText(Helper::elide_text(_md.title, lab_title, 2));
+
     _pph->resize(sz);
 
 	_settings->set(Set::Player_Size, this->size());
@@ -752,7 +747,9 @@ void GUI_Player::showEvent(QShowEvent *e){
 
 void GUI_Player::closeEvent(QCloseEvent* e) {
 
-    if(m_min2tray) {
+	bool min_to_tray = _settings->get(Set::Player_Min2Tray);
+
+	if(min_to_tray) {
         e->ignore();
         this->hide();
     }
@@ -760,7 +757,7 @@ void GUI_Player::closeEvent(QCloseEvent* e) {
 
 void GUI_Player::really_close(bool) {
 
-	m_min2tray = false;
+	_settings->set(Set::Player_Min2Tray, false);
 	this->close();
 }
 
@@ -768,7 +765,7 @@ void GUI_Player::really_close(bool) {
 void GUI_Player::awa_version_finished() {
 
 
-    QString new_version = *(m_awa_version->get_data());
+	QString new_version = *(_awa_version->get_data());
 	QString cur_version = _settings->get(Set::Player_Version);
 	bool notify_new_version = _settings->get(Set::Player_NotifyNewVersion);
 	bool dark = (_settings->get(Set::Player_Style) == 1);
@@ -790,14 +787,14 @@ void GUI_Player::awa_version_finished() {
 
 void GUI_Player::awa_translators_finished() {
 
- QString data = QString::fromUtf8(m_awa_translators->get_data()->toStdString().c_str());
+ QString data = QString::fromUtf8(_awa_translators->get_data()->toStdString().c_str());
  QStringList translators = data.split('\n');
 
- m_translators.clear();
+ _translators.clear();
 
 	foreach(QString str, translators) {
 		if(str.trimmed().size() > 0) {
-			m_translators.push_back(str);
+			_translators.push_back(str);
 		}
 	}
 }

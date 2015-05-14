@@ -26,7 +26,7 @@
  */
 
 
-#include "HelperStructs/WebAccess.h"
+#include "HelperStructs/WebAccess/WebAccess.h"
 #include "CoverLookup/CoverDownloader.h"
 
 #include <curl/curl.h>
