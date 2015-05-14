@@ -10,7 +10,7 @@ depends=('qt4' 'curl' 'taglib' 'gst-plugins-base' 'gst-plugins-good' 'gst-plugin
 optdepends=('lame': mp3 converter, broadcasting
 			'gst-plugins-ugly: mp3 converter, broadcasting')
 makedepends=('cmake')
-source=(http://sayonara.luciocarreras.de/packages/sayonara-player-0.6.6-r1041.tar.gz)
+source=(http://sayonara.luciocarreras.de/packages/sayonara-player-0.6.6-r1042.tar.gz)
 md5sums=('c0c0f1b0584589e7c654fc218501d96c')
  
 build() {
