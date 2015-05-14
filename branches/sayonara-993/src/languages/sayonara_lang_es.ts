@@ -1,1 +1,0 @@
-sayonara_lang_mx.ts
